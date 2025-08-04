@@ -49,15 +49,6 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                 <Separator className="my-6" />
 
                 <CardContent className="p-0">
-                    <div>
-                        <h4 className="font-semibold text-lg mb-2">Cliente:</h4>
-                        <p className="font-medium text-primary">{quote.contactName}</p>
-                        {quote.contactCompanyName && <p className="text-sm font-semibold">{quote.contactCompanyName}</p>}
-                        {quote.contactCif && <p className="text-sm text-muted-foreground">CIF: {quote.contactCif}</p>}
-                        <p className="text-sm text-muted-foreground">{quote.contactEmail}</p>
-                        {quote.contactAddress && <p className="text-sm text-muted-foreground">{quote.contactAddress}</p>}
-                    </div>
-
                     <div className="rounded-md border my-8 overflow-hidden">
                         <Table>
                             <TableHeader>

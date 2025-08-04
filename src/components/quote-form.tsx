@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2, PlusCircle, Loader2 } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { AddLineItemDialog } from '@/components/add-line-item-dialog';
 import type { LineItem } from '@/lib/types';
-import { Input } from './ui/input';
 
 
 interface QuoteFormProps {
@@ -23,19 +21,6 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   
-  const [contactInfo, setContactInfo] = useState({
-      name: '',
-      companyName: '',
-      cif: '',
-      email: '',
-      address: ''
-  });
-
-  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setContactInfo(prev => ({ ...prev, [name]: value }));
-  }
-
   const addLineItem = (newItem: Omit<LineItem, 'id'>) => {
     setLineItems([...lineItems, { ...newItem, id: Date.now() }]);
   };
@@ -56,14 +41,6 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
   const formatCurrency = (value: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
 
   const handleSaveWrapper = async () => {
-    if (!contactInfo.name) {
-        toast({
-            variant: "destructive",
-            title: "Falta Cliente",
-            description: "Por favor, introduce un nombre para el cliente."
-        });
-        return;
-    }
     if (lineItems.length === 0) {
         toast({
             variant: "destructive",
@@ -74,11 +51,7 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
     }
 
     const quoteData = {
-        contactName: contactInfo.name,
-        contactCompanyName: contactInfo.companyName,
-        contactCif: contactInfo.cif,
-        contactEmail: contactInfo.email,
-        contactAddress: contactInfo.address,
+        contactName: 'Cliente',
         lineItems: lineItems.map(({id, ...rest}) => rest),
         subtotal,
         tax,
@@ -91,34 +64,6 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
 
   return (
     <div className="flex flex-col gap-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Información del Cliente</CardTitle>
-        </CardHeader>
-        <CardContent className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="name">Nombre Cliente</Label>
-            <Input id="name" name="name" value={contactInfo.name} onChange={handleContactChange} placeholder="Nombre del cliente"/>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Cliente</Label>
-            <Input id="email" name="email" type="email" value={contactInfo.email} onChange={handleContactChange} placeholder="Correo electrónico"/>
-          </div>
-           <div className="space-y-2">
-            <Label htmlFor="companyName">Empresa</Label>
-            <Input id="companyName" name="companyName" value={contactInfo.companyName} onChange={handleContactChange} placeholder="Nombre de la empresa"/>
-          </div>
-           <div className="space-y-2">
-            <Label htmlFor="cif">CIF/NIF</Label>
-            <Input id="cif" name="cif" value={contactInfo.cif} onChange={handleContactChange} placeholder="CIF o NIF"/>
-          </div>
-          <div className="md:col-span-2 space-y-2">
-            <Label htmlFor="address">Dirección</Label>
-            <Input id="address" name="address" value={contactInfo.address} onChange={handleContactChange} placeholder="Dirección completa"/>
-          </div>
-        </CardContent>
-      </Card>
-      
       <Card>
         <CardHeader>
           <CardTitle>Conceptos del Presupuesto</CardTitle>
