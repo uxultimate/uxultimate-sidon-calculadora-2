@@ -266,12 +266,5 @@ export const tarifa2025 = {
       { "Producto": "Kit porta-pendientes", "Rango_Ancho": "165", "Precio": 78, "Acabado": "Antracita" },
       { "Producto": "Kit modular 2-4-6 espacios", "Rango_Ancho": "165", "Precio": 65, "Acabado": "Antracita" }
     ]
-  },
-  "LED": {
-    "Descripcion": "Tira LED de aluminio negro, orientable, con sensores inalámbricos de apertura.",
-    "Productos": [
-      { "Producto": "LED Recto", "Acabado": "Plata/Negro", "Largo": 2500, "Precio": 260 },
-      { "Producto": "LED Redirigido", "Acabado": "Negro", "Largo": 2500, "Precio": 320 }
-    ]
   }
 }

@@ -1059,7 +1059,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
     );
 };
 
-const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void, category: 'Accesorios Axia' | 'Accesorios Essenza' | 'LED' }> = ({ onSave, category }) => {
+const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void, category: 'Accesorios Axia' | 'Accesorios Essenza' }> = ({ onSave, category }) => {
     const products = tarifa2025[category].Productos;
     const [selectedProduct, setSelectedProduct] = useState(products[0]);
     const [quantity, setQuantity] = useState(1);
@@ -1164,7 +1164,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                   </DialogHeader>
                   <div className="py-4">
                       <Tabs defaultValue="paneles" className="w-full">
-                          <TabsList className="grid w-full grid-cols-2 md:grid-cols-9 h-auto">
+                          <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
                               <TabsTrigger value="paneles">Paneles</TabsTrigger>
                               <TabsTrigger value="abatible">Abatible</TabsTrigger>
                               <TabsTrigger value="corredera">Corredera</TabsTrigger>
@@ -1173,7 +1173,6 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                               <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
                               <TabsTrigger value="axia">Axia</TabsTrigger>
                               <TabsTrigger value="essenza">Essenza</TabsTrigger>
-                              <TabsTrigger value="led">LED</TabsTrigger>
                           </TabsList>
                           <TabsContent value="paneles" className="pt-4">
                              <PanelesDivisoriosCalculator onSave={handleSave} />
@@ -1198,9 +1197,6 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                           </TabsContent>
                            <TabsContent value="essenza" className="pt-4">
                               <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
-                          </TabsContent>
-                          <TabsContent value="led" className="pt-4">
-                              <AxiaEssenzaLedCalculator onSave={handleSave} category="LED"/>
                           </TabsContent>
                       </Tabs>
                   </div>
