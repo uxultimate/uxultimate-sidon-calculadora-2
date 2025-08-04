@@ -1,6 +1,5 @@
-import type {Config} from 'tailwindcss';
-
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   darkMode: ['class'],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,8 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['PT Sans', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
+        headline: ['var(--font-inter)', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -96,4 +95,4 @@ export default {
     },
   },
   plugins: [require('tailwindcss-animate')],
-} satisfies Config;
+};

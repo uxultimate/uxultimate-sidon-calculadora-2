@@ -1,0 +1,108 @@
+"use client";
+
+import React from 'react';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { CompanyProfile, Quote } from '@/lib/types';
+import Image from 'next/image';
+
+interface QuotePDFPreviewProps {
+    quote: Quote;
+    company: CompanyProfile;
+}
+
+const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(price);
+};
+
+export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company }) => {
+
+    const creationDate = quote.createdAt ? (quote.createdAt as Date).toLocaleDateString('es-ES') : 'Pendiente';
+    const displayQuoteNumber = quote.quoteNumber || quote.id.slice(0, 6).toUpperCase();
+
+    return (
+        <div className="w-full">
+            <Card className="p-8 shadow-lg border bg-white">
+                <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4">
+                    <div>
+                        {company?.logoUrl ? (
+                            <Image src={company.logoUrl} alt={company.name || "Logo"} width={194} height={40} className="object-contain h-[40px] w-[194px] mb-2" />
+                        ) : <h2 className="text-2xl font-bold text-primary">{company?.name || "Nombre Empresa"}</h2>}
+                        
+                        {company && (
+                            <>
+                                <p className="text-sm text-muted-foreground">{company.address}</p>
+                                <p className="text-sm text-muted-foreground">CIF: {company.cif}</p>
+                                <p className="text-sm text-muted-foreground">{company.phone}</p>
+                                <p className="text-sm text-muted-foreground">{company.email}</p>
+                            </>
+                        )}
+                    </div>
+                    <div className="text-right">
+                        <h3 className="text-lg font-semibold">PRESUPUESTO</h3>
+                        <p className="text-sm text-muted-foreground">{displayQuoteNumber}</p>
+                        <p className="mt-2 text-sm"><span className="font-semibold">Fecha:</span> {creationDate}</p>
+                    </div>
+                </CardHeader>
+
+                <Separator className="my-6" />
+
+                <CardContent className="p-0">
+                    <div>
+                        <h4 className="font-semibold text-lg mb-2">Cliente:</h4>
+                        <p className="font-medium text-primary">{quote.contactName}</p>
+                        {quote.contactCompanyName && <p className="text-sm font-semibold">{quote.contactCompanyName}</p>}
+                        {quote.contactCif && <p className="text-sm text-muted-foreground">CIF: {quote.contactCif}</p>}
+                        <p className="text-sm text-muted-foreground">{quote.contactEmail}</p>
+                        {quote.contactAddress && <p className="text-sm text-muted-foreground">{quote.contactAddress}</p>}
+                    </div>
+
+                    <div className="rounded-md border my-8 overflow-hidden">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Descripción</TableHead>
+                                    <TableHead className="text-center w-[100px]">Cantidad</TableHead>
+                                    <TableHead className="text-right w-[120px]">Precio Unit.</TableHead>
+                                    <TableHead className="text-right w-[120px]">Total</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {quote.lineItems.map((item: any, index: number) => (
+                                    <TableRow key={index}>
+                                        <TableCell className="font-medium">
+                                        <p className="font-bold">{item.name}</p>
+                                        <p className="text-sm text-muted-foreground break-words whitespace-normal">{item.details}</p>
+                                        </TableCell>
+                                        <TableCell className="text-center">{item.quantity}</TableCell>
+                                        <TableCell className="text-right">{formatPrice(item.price)}</TableCell>
+                                        <TableCell className="text-right font-medium">{formatPrice(item.total)}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+
+                <CardFooter className="flex flex-col items-end gap-4 p-0">
+                    <div className="w-full max-w-xs space-y-2">
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Subtotal</span>
+                            <span>{formatPrice(quote.subtotal)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">IVA (21%)</span>
+                            <span>{formatPrice(quote.tax)}</span>
+                        </div>
+                        <Separator />
+                        <div className="flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span>{formatPrice(quote.total)}</span>
+                        </div>
+                    </div>
+                </CardFooter>
+            </Card>
+        </div>
+    );
+}

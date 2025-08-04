@@ -1,0 +1,72 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSuperAdmin(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+             get(/databases/$(database)/documents/users/$(userId)).data.role == 'superadmin';
+    }
+
+    function isAdmin(userId) {
+      let userRole = get(/databases/$(database)/documents/users/$(userId)).data.role;
+      return exists(/databases/$(database)/documents/users/$(userId)) &&
+             (userRole == 'admin' || userRole == 'superadmin');
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // USERS
+    match /users/{userId} {
+      allow read: if request.auth.uid != null;
+      allow create: if request.auth.uid == userId;
+      // Admins can update users, but cannot change the role field.
+      allow update: if isOwner(userId) || (isAdmin(request.auth.uid) && !('role' in request.resource.data));
+    }
+    // Only a superadmin can change a user's role.
+    match /users/{userId} {
+       allow update: if isSuperAdmin(request.auth.uid);
+    }
+
+    // COMPANY
+    match /company/{docId} {
+      allow read: if request.auth.uid != null;
+      allow write: if isAdmin(request.auth.uid);
+    }
+    
+    // SETTINGS
+    match /settings/{docId} {
+      allow read: if request.auth.uid != null;
+      allow write: if isSuperAdmin(request.auth.uid);
+    }
+
+    // QUOTES
+    match /quotes/{quoteId} {
+      allow read, update, delete: if isAdmin(request.auth.uid) || resource.data.userId == request.auth.uid;
+      allow create: if request.auth.uid == request.resource.data.userId;
+    }
+
+    // CONTACTS
+    match /contacts/{contactId} {
+      // Admins can read any contact. Users can read their own contacts OR any contact that is shared.
+      allow read: if isAdmin(request.auth.uid) || resource.data.userId == request.auth.uid || resource.data.shared == true;
+      allow update, delete: if isAdmin(request.auth.uid) || resource.data.userId == request.auth.uid;
+      allow create: if request.auth.uid == request.resource.data.userId;
+    }
+    
+    // INTERACTIONS
+    match /interactions/{interactionId} {
+      allow read, update, delete: if isAdmin(request.auth.uid) || resource.data.userId == request.auth.uid;
+      allow create: if request.auth.uid == request.resource.data.userId;
+    }
+    
+    // NOTIFICATIONS
+    match /notifications/{notificationId} {
+        allow read, update: if resource.data.userId == request.auth.uid;
+        allow create: if request.auth.uid == request.resource.data.userId;
+    }
+  }
+}
