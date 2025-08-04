@@ -17,7 +17,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Minus, Plus, Check as CheckIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 
 interface AddLineItemDialogProps {
@@ -922,7 +921,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="/images/productos/cajones.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Cajones y Accesorios"
                     width={600}
                     height={400}
@@ -1038,7 +1037,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="/images/productos/tiradores.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Tiradores"
                     width={600}
                     height={400}
@@ -1125,7 +1124,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="/images/productos/accesorios.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Accesorios"
                     width={600}
                     height={400}
@@ -1165,7 +1164,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                   </DialogHeader>
                   <div className="py-4">
                       <Tabs defaultValue="paneles" className="w-full">
-                          <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
+                          <TabsList className="grid w-full grid-cols-2 md:grid-cols-9 h-auto">
                               <TabsTrigger value="paneles">Paneles</TabsTrigger>
                               <TabsTrigger value="abatible">Abatible</TabsTrigger>
                               <TabsTrigger value="corredera">Corredera</TabsTrigger>
@@ -1174,6 +1173,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                               <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
                               <TabsTrigger value="axia">Axia</TabsTrigger>
                               <TabsTrigger value="essenza">Essenza</TabsTrigger>
+                              <TabsTrigger value="led">LED</TabsTrigger>
                           </TabsList>
                           <TabsContent value="paneles" className="pt-4">
                              <PanelesDivisoriosCalculator onSave={handleSave} />
@@ -1198,6 +1198,9 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                           </TabsContent>
                            <TabsContent value="essenza" className="pt-4">
                               <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
+                          </TabsContent>
+                          <TabsContent value="led" className="pt-4">
+                              <AxiaEssenzaLedCalculator onSave={handleSave} category="LED"/>
                           </TabsContent>
                       </Tabs>
                   </div>
