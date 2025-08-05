@@ -229,7 +229,7 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="room divider"
+                    data-ai-hint="divider"
                 />
                 <Card>
                     <CardHeader>
@@ -425,7 +425,7 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="closet door"
+                    data-ai-hint="closet"
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
@@ -608,7 +608,7 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="sliding door"
+                    data-ai-hint="sliding"
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
@@ -836,7 +836,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="closet"
+                    data-ai-hint="wardrobe"
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
@@ -923,7 +923,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                         <Label>Cantidad</Label>
                          <div className="flex items-center gap-2">
                              <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                            <Input type="number" className="text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                            <Input type="number" className="w-20 text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                          </div>
                     </div>
@@ -1020,7 +1020,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                         <Label>Cantidad</Label>
                          <div className="flex items-center gap-2">
                              <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                            <Input type="number" className="text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                            <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                          </div>
                     </div>
@@ -1120,7 +1120,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                         <Label>Cantidad</Label>
                         <div className="flex items-center gap-2">
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                            <Input type="number" className="text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                            <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                         </div>
                     </div>
