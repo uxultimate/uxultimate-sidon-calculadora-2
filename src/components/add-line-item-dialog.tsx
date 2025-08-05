@@ -837,7 +837,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint={"walk-in closet"}
+                    data-ai-hint="closet"
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
@@ -935,7 +935,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
+                    src="https://placehold.co/600x400"
                     alt="Cajones y Accesorios"
                     width={600}
                     height={400}
@@ -1053,7 +1053,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
+                    src="https://placehold.co/600x400"
                     alt="Tiradores"
                     width={600}
                     height={400}
@@ -1140,7 +1140,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
+                    src="https://placehold.co/600x400"
                     alt="Accesorios"
                     width={600}
                     height={400}
