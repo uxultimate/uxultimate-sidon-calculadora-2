@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { tarifa2025 } from '@/lib/tarifa';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -17,7 +17,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Minus, Plus, Check as CheckIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { useToast } from '@/hooks/use-toast';
 
 interface AddLineItemDialogProps {
     open: boolean;
@@ -225,7 +224,7 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="/images/productos/pre-paneles-divisorios.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Paneles Divisorios"
                     width={600}
                     height={400}
@@ -421,7 +420,7 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
             </div>
             <div className="md:col-span-1 space-y-4">
                 <Image
-                    src="/images/productos/frentes-abatibles.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Frente Abatible"
                     width={600}
                     height={400}
@@ -604,7 +603,7 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
             </div>
             <div className="md:col-span-1 space-y-4">
                 <Image
-                    src="/images/productos/frentes-correderas.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Frente Corredera"
                     width={600}
                     height={400}
@@ -832,7 +831,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
             </div>
             <div className="md:col-span-1 space-y-4">
                 <Image
-                    src="/images/productos/interiors.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Interior y Vestidor"
                     width={600}
                     height={400}
@@ -935,7 +934,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400"
+                    src="https://placehold.co/600x400.png"
                     alt="Cajones y Accesorios"
                     width={600}
                     height={400}
@@ -1053,7 +1052,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400"
+                    src="https://placehold.co/600x400.png"
                     alt="Tiradores"
                     width={600}
                     height={400}
@@ -1140,7 +1139,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400"
+                    src="https://placehold.co/600x400.png"
                     alt="Accesorios"
                     width={600}
                     height={400}

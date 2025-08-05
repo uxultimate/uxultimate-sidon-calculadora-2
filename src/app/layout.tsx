@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Logo } from '@/components/logo';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 const inter = Inter({
