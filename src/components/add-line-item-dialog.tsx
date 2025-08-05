@@ -939,7 +939,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="drawer accessory"
+                    data-ai-hint="drawer"
                 />
                 <Card>
                     <CardHeader>
@@ -1057,7 +1057,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="drawer handle"
+                    data-ai-hint="handle"
                 />
                  <Card>
                     <CardHeader>
@@ -1144,7 +1144,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="closet accessory"
+                    data-ai-hint="accessory"
                 />
                 <Card>
                     <CardHeader>
