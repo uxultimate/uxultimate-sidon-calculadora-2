@@ -61,9 +61,10 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
         setPanelSupplements(prev => ({ ...prev, [concepto]: { ...prev[concepto], quantity } }));
     };
     
-    const panelPriceData = pricingModel === 'coleccion' 
+    const panelPriceData = useMemo(() => pricingModel === 'coleccion' 
         ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Coleccion_Euro_m_lineal']]
-        : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']];
+        : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']], 
+    [pricingModel, panelType]);
 
     const handlePanelTypeChange = (newType: string) => {
         setPanelType(newType);
@@ -153,8 +154,8 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                         <Select value={panelType} onValueChange={handlePanelTypeChange}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal).map(type => (
-                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                {Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal).map((type, index) => (
+                                    <SelectItem key={`${type}-${index}`} value={type}>{type}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -182,8 +183,8 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                     >
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                            {Object.keys(panelPriceData).map(option => (
-                                <SelectItem key={option} value={option}>{option}</SelectItem>
+                            {Object.keys(panelPriceData).map((option, index) => (
+                                <SelectItem key={`${option}-${index}`} value={option}>{option}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -193,11 +194,11 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                     <h4 className="font-medium mb-2">Suplementos y Accesorios</h4>
                     <ScrollArea className="h-48 border rounded-md p-4">
                         <div className="space-y-2">
-                            {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map(supp => {
+                            {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                 if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
                                 const needsQuantity = supp.Valor.includes('€ ud');
                                 return (
-                                    <div key={supp.Concepto} className="flex items-center justify-between p-2 rounded-md border">
+                                    <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                         <div className="flex items-center gap-2">
                                             <Checkbox
                                                 id={`supp-${supp.Concepto}`}
@@ -373,9 +374,9 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                     <div>
                         <Label className="mb-2 block">Color</Label>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
-                             {(material.startsWith('Laca_') ? colorOptions['Laca'] : colorOptions['Melamina_colores']).map(color => (
+                             {(material.startsWith('Laca_') ? colorOptions['Laca'] : colorOptions['Melamina_colores']).map((color, index) => (
                                 <ColorSwatch 
-                                    key={color.name}
+                                    key={`${color.name}-${index}`}
                                     color={color.hex}
                                     name={color.name}
                                     isSelected={selectedColor === color.name}
@@ -389,11 +390,11 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                     <h4 className="font-medium mb-2">Suplementos y Accesorios</h4>
                      <ScrollArea className="h-48 border rounded-md p-4">
                         <div className="space-y-2">
-                             {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map(supp => {
+                             {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
                                 if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
                                 const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
                                 return (
-                                    <div key={supp.Concepto} className="flex items-center justify-between p-2 rounded-md border">
+                                    <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                         <div className="flex items-center gap-2">
                                             <Checkbox
                                                 id={`supp-abatible-${supp.Concepto}`}
@@ -566,9 +567,9 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
                     <div>
                         <Label className="mb-2 block">Color</Label>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
-                             {colorOptions.map(color => (
+                             {colorOptions.map((color, index) => (
                                 <ColorSwatch 
-                                    key={color.name}
+                                    key={`${color.name}-${index}`}
                                     color={color.hex}
                                     name={color.name}
                                     isSelected={selectedColor === color.name}
@@ -582,10 +583,10 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
                     <h4 className="font-medium mb-2">Suplementos y Accesorios</h4>
                      <ScrollArea className="h-48 border rounded-md p-4">
                         <div className="space-y-2">
-                             {tarifa2025["Frente Corredera"].Suplementos_y_Accesorios.map(supp => {
+                             {tarifa2025["Frente Corredera"].Suplementos_y_Accesorios.map((supp, index) => {
                                 if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('ud')) return null;
                                 return (
-                                    <div key={supp.Concepto} className="flex items-center justify-between p-2 rounded-md border">
+                                    <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                         <div className="flex items-center gap-2">
                                             <Checkbox
                                                 id={`supp-corredera-${supp.Concepto}`}
@@ -784,9 +785,9 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                     <div>
                         <Label className="mb-2 block">Color</Label>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
-                             {colorOptions.map(color => (
+                             {colorOptions.map((color, index) => (
                                 <ColorSwatch 
-                                    key={color.name}
+                                    key={`${color.name}-${index}`}
                                     color={color.hex}
                                     name={color.name}
                                     isSelected={selectedColor === color.name}
@@ -800,11 +801,11 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                     <h4 className="font-medium mb-2">Suplementos y Añadidos</h4>
                      <ScrollArea className="h-48 border rounded-md p-4">
                         <div className="space-y-2">
-                             {tarifa2025["Interior y Vestidor"].Suplementos_y_Anadidos.map(supp => {
+                             {tarifa2025["Interior y Vestidor"].Suplementos_y_Anadidos.map((supp, index) => {
                                 if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('metro lineal')) return null;
                                 const needsQuantity = supp.Valor.includes('ud');
                                 return (
-                                    <div key={supp.Concepto} className="flex items-center justify-between p-2 rounded-md border">
+                                    <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                         <div className="flex items-center gap-2">
                                             <Checkbox
                                                 id={`supp-interior-${supp.Concepto}`}
@@ -896,8 +897,8 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                         <Select value={itemType} onValueChange={handleItemTypeChange}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {Object.keys(tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho).map(type => (
-                                    <SelectItem key={type} value={type}>{type.replace(/_/g, ' ')}</SelectItem>
+                                {Object.keys(tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho).map((type, index) => (
+                                    <SelectItem key={`${type}-${index}`} value={type}>{type.replace(/_/g, ' ')}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -907,8 +908,8 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                         <Select value={material} onValueChange={setMaterial}>
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {Object.keys(itemData).map(mat => (
-                                    <SelectItem key={mat} value={mat}>{mat.replace(/_/g, ' ')}</SelectItem>
+                                {Object.keys(itemData).map((mat, index) => (
+                                    <SelectItem key={`${mat}-${index}`} value={mat}>{mat.replace(/_/g, ' ')}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -1028,9 +1029,9 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                  <div>
                     <Label className="mb-2 block">Acabado / Color</Label>
                      <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        {selectedTirador.colors.map(color => (
+                        {selectedTirador.colors.map((color, index) => (
                             <ColorSwatch
-                                key={color}
+                                key={`${color}-${index}`}
                                 color={colorHexMap[color] || "#FFFFFF"}
                                 name={color}
                                 isSelected={selectedColor === color}
