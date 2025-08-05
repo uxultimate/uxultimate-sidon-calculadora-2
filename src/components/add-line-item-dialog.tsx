@@ -65,14 +65,20 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
         ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Coleccion_Euro_m_lineal']]
         : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']];
 
-    React.useEffect(() => {
-        const availableOptions = Object.keys(panelPriceData);
-        const currentSelection = pricingModel === 'coleccion' ? panelCollection : panelCristal;
-        if (!availableOptions.includes(currentSelection)) {
-            if (pricingModel === 'coleccion') setPanelCollection(availableOptions[0]);
-            else setPanelCristal(availableOptions[0]);
+    const handlePanelTypeChange = (newType: string) => {
+        setPanelType(newType);
+        const newPriceData = pricingModel === 'coleccion' 
+            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal[newType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Coleccion_Euro_m_lineal']]
+            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[newType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']];
+        
+        if (pricingModel === 'coleccion') {
+            const firstOption = Object.keys(newPriceData)[0];
+            setPanelCollection(firstOption);
+        } else {
+            const firstOption = Object.keys(newPriceData)[0];
+            setPanelCristal(firstOption);
         }
-    }, [panelType, panelPriceData, panelCollection, panelCristal, pricingModel]);
+    };
     
     const { total, details, name } = useMemo(() => {
         const widthInMeters = measurements.width / 1000;
@@ -144,7 +150,7 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div>
                         <Label>Tipo de Apertura</Label>
-                        <Select value={panelType} onValueChange={setPanelType}>
+                        <Select value={panelType} onValueChange={handlePanelTypeChange}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 {Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal).map(type => (
@@ -450,11 +456,14 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
     
     const materials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[doorCount];
 
-    useEffect(() => {
-        if (!materials[material as keyof typeof materials]) {
-            setMaterial(Object.keys(materials)[0]);
+    const handleDoorCountChange = (newDoorCount: '2_puertas' | '3_o_mas_puertas') => {
+        setDoorCount(newDoorCount);
+        const newMaterials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[newDoorCount];
+        if (!newMaterials[material as keyof typeof newMaterials]) {
+            setMaterial(Object.keys(newMaterials)[0]);
         }
-    }, [doorCount, material, materials]);
+    };
+
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -533,7 +542,7 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <Label>Nº Puertas</Label>
-                        <Select value={doorCount} onValueChange={(val) => setDoorCount(val as typeof doorCount)}>
+                        <Select value={doorCount} onValueChange={(val) => handleDoorCountChange(val as typeof doorCount)}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="2_puertas">2 puertas</SelectItem>
@@ -630,11 +639,14 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
     
     const materialsForThickness = tarifa2025["Interior y Vestidor"].Precios_por_metro_lineal_unidad[thickness];
 
-    useEffect(() => {
-        if (!materialsForThickness[materialKey as keyof typeof materialsForThickness]) {
-            setMaterialKey(Object.keys(materialsForThickness)[0]);
+    const handleThicknessChange = (newThickness: '19mm' | '30mm') => {
+        setThickness(newThickness);
+        const newMaterials = tarifa2025["Interior y Vestidor"].Precios_por_metro_lineal_unidad[newThickness];
+        if (!newMaterials[materialKey as keyof typeof newMaterials]) {
+            setMaterialKey(Object.keys(newMaterials)[0]);
         }
-    }, [thickness, materialKey, materialsForThickness]);
+    };
+
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -746,7 +758,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <Label>Grosor</Label>
-                        <Select value={thickness} onValueChange={(val) => setThickness(val as typeof thickness)}>
+                        <Select value={thickness} onValueChange={(val) => handleThicknessChange(val as typeof thickness)}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="19mm">19mm</SelectItem>
@@ -844,13 +856,14 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
     
     const itemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[itemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
     const materialData = itemData[material as keyof typeof itemData];
-
-    useEffect(() => {
-        if (!itemData[material as keyof typeof itemData]) {
-            setMaterial(Object.keys(itemData)[0]);
+    
+    const handleItemTypeChange = (newItemType: string) => {
+        setItemType(newItemType);
+        const newItemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[newItemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
+        if (!newItemData[material as keyof typeof newItemData]) {
+            setMaterial(Object.keys(newItemData)[0]);
         }
-    }, [itemType, material, itemData]);
-
+    };
 
     const getPriceForWidth = () => {
         if (!materialData) return 0;
@@ -880,7 +893,7 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <Label>Tipo de Accesorio</Label>
-                        <Select value={itemType} onValueChange={setItemType}>
+                        <Select value={itemType} onValueChange={handleItemTypeChange}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
                                 {Object.keys(tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho).map(type => (
@@ -948,9 +961,14 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
     const [quantity, setQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState(tarifa2025.Tiradores[0].colors[0]);
 
-    useEffect(() => {
-        setSelectedColor(selectedTirador.colors[0]);
-    }, [selectedTirador]);
+    const handleTiradorChange = (modulo: string) => {
+        const tirador = tarifa2025.Tiradores.find(t => t.Modulo === modulo);
+        if (tirador) {
+            setSelectedTirador(tirador);
+            setSelectedColor(tirador.colors[0]);
+        }
+    };
+
 
     const colorHexMap: Record<string, string> = {
         "Inox": "#C0C0C0",
@@ -988,10 +1006,7 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                         <Label>Modelo de Tirador</Label>
                         <Select
                             value={selectedTirador.Modulo}
-                            onValueChange={(modulo) => {
-                                const tirador = tarifa2025.Tiradores.find(t => t.Modulo === modulo);
-                                if (tirador) setSelectedTirador(tirador);
-                            }}
+                            onValueChange={handleTiradorChange}
                         >
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
