@@ -1010,8 +1010,8 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                         >
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {tarifa2025.Tiradores.map(t => (
-                                    <SelectItem key={t.Modulo} value={t.Modulo}>{t.Modulo} - {t.Acabado}</SelectItem>
+                                {tarifa2025.Tiradores.map((t, index) => (
+                                    <SelectItem key={`${t.Modulo}-${index}`} value={t.Modulo}>{t.Modulo} - {t.Acabado}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -1087,7 +1087,7 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
         const details = `Acabado: ${product.Acabado}${widthInfo}`;
         
         onSave({
-            name: `${category === 'LED' ? '' : category + ': '}${product.Producto}`,
+            name: `${category}: ${product.Producto}`,
             details: details,
             quantity,
             price: product.Precio,
@@ -1110,8 +1110,8 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                         >
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {products.map(p => (
-                                    <SelectItem key={p.Producto} value={p.Producto}>{p.Producto}</SelectItem>
+                                {products.map((p, index) => (
+                                    <SelectItem key={`${p.Producto}-${index}`} value={p.Producto}>{p.Producto}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
