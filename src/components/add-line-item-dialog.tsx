@@ -1172,7 +1172,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl h-full md:h-auto">
-              <ScrollArea className="max-h-[90vh] md:max-h-auto">
+              <ScrollArea className="max-h-[90vh] md:max-h-auto p-0">
                 <div className="p-1 sm:p-6">
                   <DialogHeader className="pb-4">
                       <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
@@ -1226,3 +1226,5 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         </Dialog>
     );
 }
+
+    
