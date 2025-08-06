@@ -1173,7 +1173,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[95vh] flex flex-col">
-                <DialogHeader className="p-6 pb-0">
+                <DialogHeader>
                     <div className="flex items-center gap-4">
                       <Logo />
                       <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
@@ -1182,7 +1182,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                       Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="px-6 pb-6 flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden px-6 pb-6">
                     <Tabs defaultValue="paneles" className="w-full h-full flex flex-col">
                         <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
                             <TabsTrigger value="paneles">Paneles</TabsTrigger>
@@ -1194,7 +1194,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                             <TabsTrigger value="axia">Axia</TabsTrigger>
                             <TabsTrigger value="essenza">Essenza</TabsTrigger>
                         </TabsList>
-                        <ScrollArea className="flex-1 pr-3">
+                        <ScrollArea className="flex-1 pr-3 -mr-3">
                             <TabsContent value="paneles" className="pt-4">
                                <PanelesDivisoriosCalculator onSave={handleSave} />
                             </TabsContent>
@@ -1222,7 +1222,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                         </ScrollArea>
                     </Tabs>
                 </div>
-                <DialogFooter className="px-6 pb-6 pt-4 border-t">
+                <DialogFooter>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cerrar</Button>
                     </DialogClose>
