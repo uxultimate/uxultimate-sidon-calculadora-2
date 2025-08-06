@@ -1172,64 +1172,62 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl h-full md:h-auto">
-              <ScrollArea className="max-h-[90vh] md:max-h-auto p-0">
-                <div className="p-1 sm:p-6">
-                  <DialogHeader className="pb-4">
-                      <div className="flex items-center gap-4">
-                        <Logo />
-                        <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
-                      </div>
-                      <DialogDescription>
-                        Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
-                      </DialogDescription>
-                  </DialogHeader>
-                  <div className="py-4">
-                      <Tabs defaultValue="paneles" className="w-full">
-                          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto">
-                              <TabsTrigger value="paneles">Paneles</TabsTrigger>
-                              <TabsTrigger value="abatible">Abatible</TabsTrigger>
-                              <TabsTrigger value="corredera">Corredera</TabsTrigger>
-                              <TabsTrigger value="interior">Interior</TabsTrigger>
-                              <TabsTrigger value="cajones">Cajones</TabsTrigger>
-                              <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
-                              <TabsTrigger value="axia">Axia</TabsTrigger>
-                              <TabsTrigger value="essenza">Essenza</TabsTrigger>
-                          </TabsList>
-                          <TabsContent value="paneles" className="pt-4">
-                             <PanelesDivisoriosCalculator onSave={handleSave} />
-                          </TabsContent>
-                          <TabsContent value="abatible" className="pt-4">
-                               <FrenteAbatibleCalculator onSave={handleSave} />
-                          </TabsContent>
-                          <TabsContent value="corredera" className="pt-4">
-                               <FrenteCorrederaCalculator onSave={handleSave} />
-                          </TabsContent>
-                          <TabsContent value="interior" className="pt-4">
-                              <InteriorVestidorCalculator onSave={handleSave} />
-                          </TabsContent>
-                           <TabsContent value="cajones" className="pt-4">
-                              <CajonesCalculator onSave={handleSave} />
-                          </TabsContent>
-                           <TabsContent value="tiradores" className="pt-4">
-                              <TiradoresCalculator onSave={handleSave} />
-                          </TabsContent>
-                           <TabsContent value="axia" className="pt-4">
-                              <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Axia"/>
-                          </TabsContent>
-                           <TabsContent value="essenza" className="pt-4">
-                              <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
-                          </TabsContent>
-                      </Tabs>
-                  </div>
-                  <DialogFooter className="pr-1 sm:pr-0">
-                      <DialogClose asChild>
-                          <Button type="button" variant="outline">Cerrar</Button>
-                      </DialogClose>
-                  </DialogFooter>
+            <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
+                <DialogHeader className="p-6">
+                    <div className="flex items-center gap-4">
+                      <Logo />
+                      <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
+                    </div>
+                    <DialogDescription>
+                      Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="px-6 pb-6">
+                    <Tabs defaultValue="paneles" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
+                            <TabsTrigger value="paneles">Paneles</TabsTrigger>
+                            <TabsTrigger value="abatible">Abatible</TabsTrigger>
+                            <TabsTrigger value="corredera">Corredera</TabsTrigger>
+                            <TabsTrigger value="interior">Interior</TabsTrigger>
+                            <TabsTrigger value="cajones">Cajones</TabsTrigger>
+                            <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
+                            <TabsTrigger value="axia">Axia</TabsTrigger>
+                            <TabsTrigger value="essenza">Essenza</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="paneles" className="pt-4">
+                           <PanelesDivisoriosCalculator onSave={handleSave} />
+                        </TabsContent>
+                        <TabsContent value="abatible" className="pt-4">
+                             <FrenteAbatibleCalculator onSave={handleSave} />
+                        </TabsContent>
+                        <TabsContent value="corredera" className="pt-4">
+                             <FrenteCorrederaCalculator onSave={handleSave} />
+                        </TabsContent>
+                        <TabsContent value="interior" className="pt-4">
+                            <InteriorVestidorCalculator onSave={handleSave} />
+                        </TabsContent>
+                         <TabsContent value="cajones" className="pt-4">
+                            <CajonesCalculator onSave={handleSave} />
+                        </TabsContent>
+                         <TabsContent value="tiradores" className="pt-4">
+                            <TiradoresCalculator onSave={handleSave} />
+                        </TabsContent>
+                         <TabsContent value="axia" className="pt-4">
+                            <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Axia"/>
+                        </TabsContent>
+                         <TabsContent value="essenza" className="pt-4">
+                            <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
+                        </TabsContent>
+                    </Tabs>
                 </div>
-              </ScrollArea>
+                <DialogFooter className="px-6 pb-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pt-4">
+                    <DialogClose asChild>
+                        <Button type="button" variant="outline">Cerrar</Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
+
+    
