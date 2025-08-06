@@ -17,6 +17,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Minus, Plus, Check as CheckIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Logo } from './logo';
 
 interface AddLineItemDialogProps {
     open: boolean;
@@ -1175,7 +1176,10 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
               <ScrollArea className="max-h-[90vh] md:max-h-auto p-0">
                 <div className="p-1 sm:p-6">
                   <DialogHeader className="pb-4">
-                      <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
+                      <div className="flex items-center gap-4">
+                        <Logo />
+                        <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
+                      </div>
                   </DialogHeader>
                   <div className="py-4">
                       <Tabs defaultValue="paneles" className="w-full">
@@ -1226,5 +1230,3 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         </Dialog>
     );
 }
-
-    
