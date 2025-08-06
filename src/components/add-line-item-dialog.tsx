@@ -4,7 +4,7 @@
 import React, { useState, useMemo } from 'react';
 import { tarifa2025 } from '@/lib/tarifa';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -1180,6 +1180,9 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                         <Logo />
                         <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
                       </div>
+                      <DialogDescription>
+                        Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
+                      </DialogDescription>
                   </DialogHeader>
                   <div className="py-4">
                       <Tabs defaultValue="paneles" className="w-full">
