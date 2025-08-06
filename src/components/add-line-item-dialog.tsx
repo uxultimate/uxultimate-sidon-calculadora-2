@@ -1172,8 +1172,8 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
-                <DialogHeader className="p-6">
+            <DialogContent className="max-w-4xl max-h-[95vh] flex flex-col">
+                <DialogHeader className="p-6 pb-0">
                     <div className="flex items-center gap-4">
                       <Logo />
                       <DialogTitle>Añadir Concepto al Presupuesto</DialogTitle>
@@ -1182,8 +1182,8 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                       Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="px-6 pb-6">
-                    <Tabs defaultValue="paneles" className="w-full">
+                <div className="px-6 pb-6 flex-1 overflow-hidden">
+                    <Tabs defaultValue="paneles" className="w-full h-full flex flex-col">
                         <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
                             <TabsTrigger value="paneles">Paneles</TabsTrigger>
                             <TabsTrigger value="abatible">Abatible</TabsTrigger>
@@ -1194,33 +1194,35 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                             <TabsTrigger value="axia">Axia</TabsTrigger>
                             <TabsTrigger value="essenza">Essenza</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="paneles" className="pt-4">
-                           <PanelesDivisoriosCalculator onSave={handleSave} />
-                        </TabsContent>
-                        <TabsContent value="abatible" className="pt-4">
-                             <FrenteAbatibleCalculator onSave={handleSave} />
-                        </TabsContent>
-                        <TabsContent value="corredera" className="pt-4">
-                             <FrenteCorrederaCalculator onSave={handleSave} />
-                        </TabsContent>
-                        <TabsContent value="interior" className="pt-4">
-                            <InteriorVestidorCalculator onSave={handleSave} />
-                        </TabsContent>
-                         <TabsContent value="cajones" className="pt-4">
-                            <CajonesCalculator onSave={handleSave} />
-                        </TabsContent>
-                         <TabsContent value="tiradores" className="pt-4">
-                            <TiradoresCalculator onSave={handleSave} />
-                        </TabsContent>
-                         <TabsContent value="axia" className="pt-4">
-                            <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Axia"/>
-                        </TabsContent>
-                         <TabsContent value="essenza" className="pt-4">
-                            <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
-                        </TabsContent>
+                        <ScrollArea className="flex-1 pr-3">
+                            <TabsContent value="paneles" className="pt-4">
+                               <PanelesDivisoriosCalculator onSave={handleSave} />
+                            </TabsContent>
+                            <TabsContent value="abatible" className="pt-4">
+                                 <FrenteAbatibleCalculator onSave={handleSave} />
+                            </TabsContent>
+                            <TabsContent value="corredera" className="pt-4">
+                                 <FrenteCorrederaCalculator onSave={handleSave} />
+                            </TabsContent>
+                            <TabsContent value="interior" className="pt-4">
+                                <InteriorVestidorCalculator onSave={handleSave} />
+                            </TabsContent>
+                             <TabsContent value="cajones" className="pt-4">
+                                <CajonesCalculator onSave={handleSave} />
+                            </TabsContent>
+                             <TabsContent value="tiradores" className="pt-4">
+                                <TiradoresCalculator onSave={handleSave} />
+                            </TabsContent>
+                             <TabsContent value="axia" className="pt-4">
+                                <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Axia"/>
+                            </TabsContent>
+                             <TabsContent value="essenza" className="pt-4">
+                                <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
+                            </TabsContent>
+                        </ScrollArea>
                     </Tabs>
                 </div>
-                <DialogFooter className="px-6 pb-6 sticky bottom-0 bg-background/95 backdrop-blur-sm pt-4">
+                <DialogFooter className="px-6 pb-6 pt-4 border-t">
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cerrar</Button>
                     </DialogClose>
@@ -1229,5 +1231,3 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         </Dialog>
     );
 }
-
-    
