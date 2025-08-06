@@ -1174,9 +1174,9 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl w-full max-h-[90vh] flex flex-col p-0">
                 <DialogHeader className="p-4 sm:p-6 pb-0">
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-start gap-2">
                       <Logo />
-                      <DialogTitle className="text-lg sm:text-xl">Añadir Concepto al Presupuesto</DialogTitle>
+                      <DialogTitle className="text-lg sm:text-xl font-bold">Añadir Concepto al Presupuesto</DialogTitle>
                     </div>
                     <DialogDescription>
                       Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
@@ -1230,3 +1230,5 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         </Dialog>
     );
 }
+
+    
