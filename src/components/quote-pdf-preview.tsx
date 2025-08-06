@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { CompanyProfile, Quote } from '@/lib/types';
 import Image from 'next/image';
+import { PdfLogo } from './pdf-logo';
 
 interface QuotePDFPreviewProps {
     quote: Quote;
@@ -27,10 +28,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
             <Card className="p-8 shadow-lg border bg-white">
                 <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4">
                     <div>
-                        {company?.logoUrl ? (
-                            <Image src={company.logoUrl} alt={company.name || "Logo"} width={194} height={40} className="object-contain h-[40px] w-[194px] mb-2" />
-                        ) : <h2 className="text-2xl font-bold text-primary">{company?.name || "Nombre Empresa"}</h2>}
-                        
+                        <PdfLogo />
                         {company && (
                             <>
                                 <p className="text-sm text-muted-foreground">{company.address}</p>

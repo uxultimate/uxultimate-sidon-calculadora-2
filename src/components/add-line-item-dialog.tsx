@@ -1186,7 +1186,7 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
                   </DialogHeader>
                   <div className="py-4">
                       <Tabs defaultValue="paneles" className="w-full">
-                          <TabsList className="grid w-full grid-cols-2 md:grid-cols-8 h-auto">
+                          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto">
                               <TabsTrigger value="paneles">Paneles</TabsTrigger>
                               <TabsTrigger value="abatible">Abatible</TabsTrigger>
                               <TabsTrigger value="corredera">Corredera</TabsTrigger>
