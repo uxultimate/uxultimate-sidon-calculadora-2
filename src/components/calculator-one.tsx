@@ -106,13 +106,13 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     
             // Add the first page, respecting top padding
             pdf.addImage(imgData, 'PNG', PADDING, position, contentWidth, contentHeight);
-            heightLeft -= (pageHeight - (PADDING * 2));
+            heightLeft -= (pageHeight - PADDING * 2); // Account for top and bottom padding
     
             while (heightLeft > 0) {
                 position = heightLeft - contentHeight + PADDING; // Adjust position for the new page
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', PADDING, position, contentWidth, contentHeight);
-                heightLeft -= (pageHeight - (PADDING * 2));
+                heightLeft -= (pageHeight - PADDING * 2); // Account for top and bottom padding
             }
             
             pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
