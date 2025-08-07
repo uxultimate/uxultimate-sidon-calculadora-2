@@ -122,7 +122,7 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
       
        <div className="flex flex-wrap justify-end gap-2">
             <Button onClick={onCancel} variant="outline" disabled={isSaving}>
-                Cancelar
+                Empezar de nuevo
             </Button>
             <Button onClick={handleSaveWrapper} disabled={isSaving || lineItems.length === 0}>
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
