@@ -16,6 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { cn } from '@/lib/utils';
 import { Minus, Plus, Check as CheckIcon } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { useToast } from '@/hooks/use-toast';
 
 interface AddLineItemFormProps {
     onAddItem: (item: Omit<LineItem, 'id'>) => void;
@@ -1198,9 +1199,14 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
 
 
 export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
+    const { toast } = useToast();
     
     const handleSave = (item: Omit<LineItem, 'id'>) => {
         onAddItem(item);
+        toast({
+            title: "Concepto añadido",
+            description: `${item.name} se ha añadido al presupuesto.`,
+        });
     };
 
     return (
