@@ -16,9 +16,10 @@ interface QuoteFormProps {
     isSaving: boolean;
     lineItems: LineItem[];
     removeLineItem: (id: number) => void;
+    onCancel: () => void;
 }
 
-export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem }: QuoteFormProps) {
+export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCancel }: QuoteFormProps) {
   const { toast } = useToast();
   
   const calculateSubtotal = () => {
@@ -120,7 +121,10 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem }: Quote
       </Card>
       
        <div className="flex flex-wrap justify-end gap-2">
-            <Button onClick={handleSaveWrapper} disabled={isSaving}>
+            <Button onClick={onCancel} variant="destructive" disabled={isSaving}>
+                Cancelar
+            </Button>
+            <Button onClick={handleSaveWrapper} disabled={isSaving || lineItems.length === 0}>
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Calcular y Previsualizar
             </Button>

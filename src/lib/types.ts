@@ -7,7 +7,7 @@ export interface Quote {
   contactCif?: string;
   contactEmail: string;
   contactAddress?: string;
-  lineItems: LineItem[];
+  lineItems: Omit<LineItem, 'id'>[];
   subtotal: number;
   tax: number;
   total: number;

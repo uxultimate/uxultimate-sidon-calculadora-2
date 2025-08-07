@@ -15,12 +15,14 @@ import { Download, Loader2 } from 'lucide-react';
 interface CalculatorOneProps {
     lineItems: LineItem[];
     removeLineItem: (id: number) => void;
+    currentQuote: Quote | null;
+    setCurrentQuote: (quote: Quote | null) => void;
+    handleCancel: () => void;
 }
 
-export function CalculatorOne({ lineItems, removeLineItem }: CalculatorOneProps) {
+export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurrentQuote, handleCancel }: CalculatorOneProps) {
     const { toast } = useToast();
     const [isSaving, setIsSaving] = useState(false);
-    const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
 
@@ -102,7 +104,7 @@ export function CalculatorOne({ lineItems, removeLineItem }: CalculatorOneProps)
     
     return (
         <div className="flex flex-col gap-8">
-            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} />
+            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} onCancel={handleCancel} />
 
             {currentQuote && (
                 <div className='mt-8'>
