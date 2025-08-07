@@ -1268,5 +1268,3 @@ export function AddLineItemDialog({ open, onOpenChange, onAddItem }: AddLineItem
         </Dialog>
     );
 }
-
-    
