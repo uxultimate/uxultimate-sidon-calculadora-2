@@ -126,7 +126,7 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
             </Button>
             <Button onClick={handleSaveWrapper} disabled={isSaving || lineItems.length === 0}>
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Calcular y Previsualizar
+                Generar Presupuesto
             </Button>
         </div>
       
