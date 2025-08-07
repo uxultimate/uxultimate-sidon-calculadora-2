@@ -11,6 +11,9 @@ import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { tarifa2025 } from '@/lib/tarifa';
 
 
 interface CalculatorTwoProps {
@@ -24,6 +27,7 @@ export function CalculatorTwo({ lineItems, removeLineItem }: CalculatorTwoProps)
     const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+    const [panelType, setPanelType] = useState('Corredera');
 
     // Mock company profile
     const companyProfile: CompanyProfile = {
@@ -110,8 +114,22 @@ export function CalculatorTwo({ lineItems, removeLineItem }: CalculatorTwoProps)
                         Aquí construiremos la nueva calculadora paso a paso.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-4">
                     <p>Añade un concepto para empezar.</p>
+                     <div className="w-full sm:w-1/2">
+                        <Label>Tipo de Apertura</Label>
+                        <Select value={panelType} onValueChange={setPanelType}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                {Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal).map((type, index) => (
+                                    <SelectItem key={`${type}-${index}`} value={type}>{type}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <p className="text-sm text-muted-foreground mt-2">
+                            Selected: {panelType}
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         );
