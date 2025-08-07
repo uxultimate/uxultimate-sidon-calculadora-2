@@ -72,24 +72,44 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
         const quoteElement = pdfRenderRef.current;
         if (!quoteElement) {
             toast({ variant: 'destructive', title: 'Error', description: 'No se pudo encontrar el contenido del presupuesto para generar el PDF.' });
-            return null;
+            return;
         }
 
         setIsProcessingPdf(true);
         try {
             const canvas = await html2canvas(quoteElement, {
-                 scale: 2, 
+                 scale: 2,
                  useCORS: true,
-                 width: 800,
-                 windowWidth: 800,
+                 logging: false,
+                 width: quoteElement.offsetWidth,
+                 height: quoteElement.offsetHeight,
+                 windowWidth: document.documentElement.offsetWidth,
+                 windowHeight: document.documentElement.offsetHeight,
             });
-            const imgData = canvas.toDataURL('image/jpeg', 0.85);
-            
-            const pdf = new jsPDF({ orientation: 'p', unit: 'px', format: 'a4', hotfixes: ['px_scaling'] });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
             
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+            const ratio = canvasWidth / pdfWidth;
+            const imgHeight = canvasHeight / ratio;
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
             
             pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
             toast({ title: "PDF Descargado", description: "El presupuesto se ha guardado como PDF." });
@@ -115,10 +135,14 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
                             Descargar PDF
                         </Button>
                     </div>
-                    <QuotePDFPreview quote={currentQuote} company={companyProfile} />
+                     <div className="w-full">
+                        <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
+                            <QuotePDFPreview quote={currentQuote} company={companyProfile} />
+                        </div>
+                    </div>
                     {/* Hidden element for PDF generation */}
-                    <div className="absolute -left-[9999px] top-auto" style={{ width: '800px', height: 'auto' }}>
-                        <div ref={pdfRenderRef}>
+                    <div className="fixed -left-[9999px] top-0 p-8" style={{ width: '210mm' }}>
+                         <div ref={pdfRenderRef}>
                              <QuotePDFPreview quote={currentQuote} company={companyProfile} />
                         </div>
                     </div>
