@@ -1,4 +1,3 @@
-
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
@@ -9,10 +8,10 @@ export function PdfLogo(props: { className?: string }) {
     <img
       src="/images/sidon-logo-2x.png"
       alt="Logo de Sidon"
-      width={194}
-      height={70}
+      width={145}
+      height={30}
       className={props.className}
-      style={{ objectFit: 'contain', height: '70px', width: '194px' }}
+      style={{ width: '145px', height: '30px' }}
     />
   );
 }
