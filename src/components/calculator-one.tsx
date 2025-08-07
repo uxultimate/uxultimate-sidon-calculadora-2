@@ -1,16 +1,23 @@
+
 "use client";
 
 import React, { useState } from 'react';
 import { QuoteForm } from '@/components/quote-form';
 import { useToast } from '@/hooks/use-toast';
 import { QuotePDFPreview } from '@/components/quote-pdf-preview';
-import type { CompanyProfile, Quote } from '@/lib/types';
+import type { CompanyProfile, Quote, LineItem } from '@/lib/types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
 
-export function CalculatorOne() {
+
+interface CalculatorOneProps {
+    lineItems: LineItem[];
+    removeLineItem: (id: number) => void;
+}
+
+export function CalculatorOne({ lineItems, removeLineItem }: CalculatorOneProps) {
     const { toast } = useToast();
     const [isSaving, setIsSaving] = useState(false);
     const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
@@ -105,7 +112,7 @@ export function CalculatorOne() {
                     </p>
                 </div>
             </div>
-            <QuoteForm onSave={handleSave} isSaving={isSaving} />
+            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} />
 
             {currentQuote && (
                 <div className='mt-8'>

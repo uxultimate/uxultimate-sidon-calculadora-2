@@ -1,35 +1,26 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, PlusCircle, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { AddLineItemDialog } from '@/components/add-line-item-dialog';
 import type { LineItem } from '@/lib/types';
 
 
 interface QuoteFormProps {
     onSave: (data: any) => Promise<void>;
     isSaving: boolean;
+    lineItems: LineItem[];
+    removeLineItem: (id: number) => void;
 }
 
-export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
-  const [lineItems, setLineItems] = useState<LineItem[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem }: QuoteFormProps) {
   const { toast } = useToast();
   
-  const addLineItem = (newItem: Omit<LineItem, 'id'>) => {
-    setLineItems([...lineItems, { ...newItem, id: Date.now() }]);
-  };
-
-  const removeLineItem = (id: number) => {
-    setLineItems(lineItems.filter(item => item.id !== id));
-  };
-
   const calculateSubtotal = () => {
     return lineItems.reduce((acc, item) => acc + item.total, 0);
   };
@@ -106,12 +97,6 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
               </TableBody>
             </Table>
           </div>
-            <Button variant="outline" className="mt-4" onClick={() => setIsDialogOpen(true)}>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Añadir Concepto
-            </Button>
-            <AddLineItemDialog onAddItem={addLineItem} open={isDialogOpen} onOpenChange={setIsDialogOpen} />
-
         </CardContent>
         {lineItems.length > 0 && (
           <CardFooter className="flex flex-col items-end gap-4">
@@ -144,5 +129,3 @@ export function QuoteForm({ onSave, isSaving }: QuoteFormProps) {
     </div>
   );
 }
-
-    
