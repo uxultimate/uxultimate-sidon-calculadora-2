@@ -24,17 +24,16 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
     const displayQuoteNumber = quote.quoteNumber || quote.id.slice(0, 6).toUpperCase();
 
     return (
-        <Card className="p-8 shadow-none border-0 bg-white rounded-none">
+        <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
             <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4">
                 <div>
                     <PdfLogo />
                     {company && (
-                        <>
-                            <p className="text-sm text-muted-foreground">{company.address}</p>
-                            <p className="text-sm text-muted-foreground">CIF: {company.cif}</p>
-                            <p className="text-sm text-muted-foreground">{company.phone}</p>
+                        <div className='mt-4'>
+                            <p className="text-sm text-muted-foreground whitespace-pre-line">{company.address}</p>
                             <p className="text-sm text-muted-foreground">{company.email}</p>
-                        </>
+                            <p className="text-sm text-muted-foreground">{company.phone}</p>
+                        </div>
                     )}
                 </div>
                 <div className="text-right">

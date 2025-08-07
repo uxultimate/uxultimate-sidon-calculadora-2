@@ -30,10 +30,9 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     // Mock company profile
     const companyProfile: CompanyProfile = {
         name: "Sidon",
-        cif: "B12345678",
-        address: "Calle Falsa 123, Ciudad Real",
-        phone: "+34 123 456 789",
-        email: "contacto@sidon.es",
+        address: "C/ Pico Almanzor, 24-26\nArganda del Rey, Madrid",
+        phone: "+34 918 703 223",
+        email: "hola@sidonarmarios.com",
         logoUrl: "/images/sidon-logo-n.svg"
     };
 
@@ -108,15 +107,17 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     
             let heightLeft = contentHeight;
             let position = 0;
+            
+            const pageContentHeight = pageHeight - (PADDING * 2);
     
             pdf.addImage(imgData, 'PNG', PADDING, PADDING, contentWidth, contentHeight);
-            heightLeft -= (pageHeight - PADDING * 2);
+            heightLeft -= pageContentHeight;
     
-            while (heightLeft > PADDING) {
-                position -= (pageHeight - PADDING * 2);
+            while (heightLeft > 0) {
+                position -= pageContentHeight;
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', PADDING, position + PADDING, contentWidth, contentHeight);
-                heightLeft -= (pageHeight - PADDING * 2);
+                heightLeft -= pageContentHeight;
             }
             
             pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
