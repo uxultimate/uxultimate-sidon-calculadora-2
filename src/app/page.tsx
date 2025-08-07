@@ -8,13 +8,7 @@ import type { CompanyProfile, LineItem, Quote } from '@/lib/types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, MoreVertical } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Download, Loader2 } from 'lucide-react';
 
 export default function CalculatorPage() {
     const { toast } = useToast();
@@ -110,17 +104,6 @@ export default function CalculatorPage() {
                         Completa los detalles para generar un nuevo presupuesto.
                     </p>
                 </div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Test Item 1</DropdownMenuItem>
-                        <DropdownMenuItem>Test Item 2</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
             </div>
             <QuoteForm onSave={handleSave} isSaving={isSaving} />
 
