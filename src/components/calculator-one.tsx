@@ -17,10 +17,10 @@ interface CalculatorOneProps {
     removeLineItem: (id: number) => void;
     currentQuote: Quote | null;
     setCurrentQuote: (quote: Quote | null) => void;
-    handleCancel: () => void;
+    onCancel: () => void;
 }
 
-export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurrentQuote, handleCancel }: CalculatorOneProps) {
+export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurrentQuote, onCancel }: CalculatorOneProps) {
     const { toast } = useToast();
     const [isSaving, setIsSaving] = useState(false);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
@@ -102,17 +102,16 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
             const contentHeight = canvasHeight / ratio;
     
             let heightLeft = contentHeight;
-            let position = PADDING; // Start with top padding
+            let position = 0;
     
-            // Add the first page, respecting top padding
-            pdf.addImage(imgData, 'PNG', PADDING, position, contentWidth, contentHeight);
-            heightLeft -= (pageHeight - PADDING * 2); // Account for top and bottom padding
+            pdf.addImage(imgData, 'PNG', PADDING, PADDING, contentWidth, contentHeight);
+            heightLeft -= (pageHeight - PADDING * 2);
     
             while (heightLeft > 0) {
-                position = heightLeft - contentHeight + PADDING; // Adjust position for the new page
+                position = heightLeft - contentHeight;
                 pdf.addPage();
-                pdf.addImage(imgData, 'PNG', PADDING, position, contentWidth, contentHeight);
-                heightLeft -= (pageHeight - PADDING * 2); // Account for top and bottom padding
+                pdf.addImage(imgData, 'PNG', PADDING, position + PADDING, contentWidth, contentHeight);
+                heightLeft -= (pageHeight - PADDING * 2);
             }
             
             pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
@@ -128,7 +127,7 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     
     return (
         <div className="flex flex-col gap-8">
-            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} onCancel={handleCancel} />
+            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} onCancel={onCancel} />
 
             {currentQuote && (
                 <div className='mt-8'>

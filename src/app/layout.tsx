@@ -4,6 +4,8 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,10 +28,16 @@ export default function RootLayout({
       <head />
       <body className="font-body antialiased">
          <div className="flex min-h-screen w-full flex-col max-w-[1440px] mx-auto">
-            <header className="sticky top-0 flex h-16 items-center justify-between border-b bg-background px-4 sm:px-6 z-50">
+            <header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6 z-50">
               <Link href="/" className="flex items-center gap-2 font-semibold">
                   <Logo />
               </Link>
+              <Button asChild variant="outline">
+                <Link href="/">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Nuevo Presupuesto
+                </Link>
+              </Button>
             </header>
             <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
               {children}

@@ -5,7 +5,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, PlusCircle } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import type { LineItem } from '@/lib/types';
@@ -100,9 +100,9 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
           </div>
         </CardContent>
         {lineItems.length > 0 && (
-          <CardFooter className="flex flex-col items-end gap-4">
+          <CardFooter className="flex flex-col items-end gap-4 p-6 pt-0">
               <Separator />
-              <div className="w-full max-w-sm space-y-2">
+              <div className="w-full max-w-sm space-y-2 pt-4">
                   <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
                       <span>{formatCurrency(subtotal)}</span>
@@ -122,7 +122,7 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
       
        <div className="flex flex-wrap justify-end gap-2">
             <Button onClick={onCancel} variant="outline" disabled={isSaving}>
-                Empezar de nuevo
+                Nuevo Presupuesto
             </Button>
             <Button onClick={handleSaveWrapper} disabled={isSaving || lineItems.length === 0}>
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

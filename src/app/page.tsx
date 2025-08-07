@@ -43,7 +43,7 @@ export default function HomePage() {
                 removeLineItem={removeLineItem} 
                 currentQuote={currentQuote}
                 setCurrentQuote={setCurrentQuote}
-                handleCancel={handleCancel}
+                onCancel={handleCancel}
             />
 
         </div>
