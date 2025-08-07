@@ -7,6 +7,7 @@ import { AddLineItemDialog } from '@/components/add-line-item-dialog';
 import type { LineItem } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 export default function HomePage() {
     const [lineItems, setLineItems] = useState<LineItem[]>([]);
@@ -39,6 +40,15 @@ export default function HomePage() {
                 </div>
 
                 <CalculatorOne lineItems={lineItems} removeLineItem={removeLineItem} />
+
+                <Separator className="my-4" />
+
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight font-headline">Añadir Concepto al Presupuesto</h2>
+                    <p className="text-muted-foreground">
+                        Selecciona una categoría y completa los detalles para añadir un nuevo concepto al presupuesto.
+                    </p>
+                </div>
             </div>
 
             <AddLineItemDialog onAddItem={addLineItem} open={isDialogOpen} onOpenChange={setIsDialogOpen} />
