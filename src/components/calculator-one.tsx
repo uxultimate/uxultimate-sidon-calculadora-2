@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { QuoteForm } from '@/components/quote-form';
 import { useToast } from '@/hooks/use-toast';
 import { QuotePDFPreview } from '@/components/quote-pdf-preview';
@@ -25,6 +25,7 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     const [isSaving, setIsSaving] = useState(false);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+    const previewRef = useRef<HTMLDivElement>(null);
 
     // Mock company profile
     const companyProfile: CompanyProfile = {
@@ -55,6 +56,10 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
                 title: "Presupuesto Generado",
                 description: "El presupuesto se ha calculado y está listo para previsualizar y descargar."
             });
+            
+            setTimeout(() => {
+                previewRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
             
         } catch (error) {
             console.error("Error saving quote: ", error);
@@ -90,10 +95,10 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            
             const PADDING = 10;
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            
             const contentWidth = pageWidth - (PADDING * 2);
     
             const canvasWidth = canvas.width;
@@ -107,8 +112,8 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
             pdf.addImage(imgData, 'PNG', PADDING, PADDING, contentWidth, contentHeight);
             heightLeft -= (pageHeight - PADDING * 2);
     
-            while (heightLeft > 0) {
-                position = heightLeft - contentHeight;
+            while (heightLeft > PADDING) {
+                position -= (pageHeight - PADDING * 2);
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', PADDING, position + PADDING, contentWidth, contentHeight);
                 heightLeft -= (pageHeight - PADDING * 2);
@@ -130,9 +135,9 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
             <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} onCancel={onCancel} />
 
             {currentQuote && (
-                <div className='mt-8'>
+                <div className='mt-8' ref={previewRef}>
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold tracking-tight font-headline">Previsualización del Presupuesto</h2>
+                        <h2 className="text-2xl font-bold tracking-tight font-headline">Presupuesto Generado</h2>
                         <Button onClick={handleDownloadPdf} disabled={isProcessingPdf}>
                             {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
                             Descargar PDF
