@@ -19,4 +19,4 @@ run:
   build:
     command: npm ci
   start:
-    command: firebase emulators:start
+    command: npm run dev
