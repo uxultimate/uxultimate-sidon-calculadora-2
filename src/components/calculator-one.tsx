@@ -101,17 +101,7 @@ export function CalculatorOne({ lineItems, removeLineItem }: CalculatorOneProps)
     };
     
     return (
-        <div className="flex flex-col gap-8 py-4">
-             <div className="flex justify-between items-start">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight font-headline">
-                        Calculadora de Presupuestos Sidon
-                    </h1>
-                    <p className="text-muted-foreground">
-                        Completa los detalles para generar un nuevo presupuesto.
-                    </p>
-                </div>
-            </div>
+        <div className="flex flex-col gap-8">
             <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} />
 
             {currentQuote && (
