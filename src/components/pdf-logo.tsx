@@ -12,7 +12,7 @@ export function PdfLogo(props: { className?: string }) {
       width={194}
       height={70}
       className={props.className}
-      style={{ objectFit: 'contain', height: '70px', width: '194px', marginBottom: '8px' }}
+      style={{ objectFit: 'contain', height: '70px', width: '194px' }}
     />
   );
 }
