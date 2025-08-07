@@ -2,9 +2,7 @@
 "use client";
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogDescription } from '@/components/ui/dialog';
-import { Logo } from './logo';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { LineItem } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PanelesCalculator } from './calculators/paneles-calculator';
@@ -24,17 +22,8 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl w-full max-h-[90vh] flex flex-col p-0">
-                <DialogHeader className="p-4 sm:p-6 pb-0">
-                    <div className="flex flex-col items-start gap-2">
-                      <Logo />
-                      <DialogTitle className="text-lg sm:text-xl font-bold">Añadir Concepto (Calculadora 2)</DialogTitle>
-                    </div>
-                    <DialogDescription>
-                      Selecciona una categoría y completa los detalles para añadir un nuevo concepto.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            <DialogContent className="max-w-4xl w-full max-h-[90vh] flex flex-col p-6">
+                <div className="flex-1 overflow-y-auto">
                    <Tabs defaultValue="paneles" className="w-full">
                         <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
                             <TabsTrigger value="paneles">Paneles</TabsTrigger>
@@ -73,11 +62,6 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
                         </TabsContent>
                     </Tabs>
                 </div>
-                <DialogFooter className="p-4 sm:p-6 border-t bg-background">
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cerrar</Button>
-                    </DialogClose>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
