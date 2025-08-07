@@ -237,7 +237,9 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                         <CardTitle>Total del Concepto</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{formatCurrency(total)}</p>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
@@ -430,7 +432,11 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
-                    <CardContent><p className="text-3xl font-bold">{formatCurrency(total)}</p></CardContent>
+                    <CardContent>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
+                    </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
             </div>
@@ -474,12 +480,13 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
         setSupplements(prev => ({ ...prev, [concepto]: { ...prev[concepto], checked, quantity: prev[concepto]?.quantity || 1 } }));
     };
 
-    const { total, details } = useMemo(() => {
+    const { total, details, name } = useMemo(() => {
         const widthInMeters = measurements.width / 1000;
         const heightInMm = measurements.height;
         let basePricePerMeter = materials[material as keyof typeof materials] || 0;
         let baseTotal = basePricePerMeter * widthInMeters;
 
+        const finalName = "Frente Corredera";
         const detailsArray = [`${doorCount.replace(/_/g, ' ')}`, `${material.replace(/_/g, ' ')}`, `${measurements.width}x${measurements.height}mm`];
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
@@ -514,12 +521,12 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
             }
         });
 
-        return { total: finalTotal, details: detailsArray.join(', ') };
+        return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
     }, [measurements, material, materials, doorCount, supplements, showColorSwatches, selectedColor]);
 
     const handleSaveItem = () => {
         onSave({
-            name: "Frente Corredera",
+            name,
             details,
             quantity: 1,
             price: total,
@@ -613,7 +620,11 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
-                    <CardContent><p className="text-3xl font-bold">{formatCurrency(total)}</p></CardContent>
+                    <CardContent>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
+                    </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
             </div>
@@ -662,7 +673,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
     };
 
 
-    const { total, details } = useMemo(() => {
+    const { total, details, name } = useMemo(() => {
         const widthInMeters = measurements.width / 1000;
         const widthInMm = measurements.width;
         const heightInMm = measurements.height;
@@ -682,6 +693,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
         const basePricePerMeter = priceRange || 0;
         let baseTotal = basePricePerMeter * widthInMeters;
         
+        const finalName = "Interior y Vestidor";
         const materialName = materialKey.replace(/_/g, ' ');
         const detailsArray = [`${thickness} ${materialName}`, `${measurements.width}x${measurements.height}x${measurements.depth}mm`];
         
@@ -735,12 +747,12 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
         });
 
 
-        return { total: finalTotal, details: detailsArray.join(', ') };
+        return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
     }, [measurements, thickness, materialKey, materialsForThickness, supplements, showColorSwatches, selectedColor]);
 
     const handleSaveItem = () => {
         onSave({
-            name: "Interior y Vestidor",
+            name,
             details,
             quantity: 1,
             price: total,
@@ -841,7 +853,11 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
                 />
                 <Card>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
-                    <CardContent><p className="text-3xl font-bold">{formatCurrency(total)}</p></CardContent>
+                    <CardContent>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
+                    </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
             </div>
@@ -878,10 +894,16 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
     const pricePerUnit = getPriceForWidth();
     const total = pricePerUnit * quantity;
 
+    const {name, details} = useMemo(() => {
+        const finalName = `${itemType.replace(/_/g, ' ')}`;
+        const finalDetails = `Ancho: ${width}mm, Material: ${material.replace(/_/g, ' ')}`;
+        return { name: finalName, details: finalDetails };
+    }, [itemType, width, material]);
+
     const handleSaveItem = () => {
         onSave({
-            name: `${itemType.replace(/_/g, ' ')}`,
-            details: `Ancho: ${width}mm, Material: ${material.replace(/_/g, ' ')}`,
+            name,
+            details,
             quantity,
             price: pricePerUnit,
             total: total,
@@ -947,8 +969,10 @@ const CajonesCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void
                         <CardTitle>Total del Concepto</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{formatCurrency(total)}</p>
-                        <p className="text-sm text-muted-foreground">{formatCurrency(pricePerUnit)} / ud.</p>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(pricePerUnit)} / ud.</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
@@ -989,10 +1013,16 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
 
     const total = selectedTirador.Precio * quantity;
 
+    const {name, details} = useMemo(() => {
+        const finalName = `Tirador ${selectedTirador.Modulo}`;
+        const finalDetails = `Material: ${selectedTirador.Material}, Acabado: ${selectedColor}`;
+        return { name: finalName, details: finalDetails };
+    }, [selectedTirador, selectedColor]);
+
     const handleSaveItem = () => {
         onSave({
-            name: `Tirador ${selectedTirador.Modulo}`,
-            details: `Material: ${selectedTirador.Material}, Acabado: ${selectedColor}`,
+            name,
+            details,
             quantity,
             price: selectedTirador.Precio,
             total,
@@ -1065,8 +1095,10 @@ const TiradoresCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => vo
                         <CardTitle>Total del Concepto</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{formatCurrency(total)}</p>
-                        <p className="text-sm text-muted-foreground">{formatCurrency(selectedTirador.Precio)} / ud.</p>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(selectedTirador.Precio)} / ud.</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
@@ -1082,16 +1114,20 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
 
     const total = selectedProduct.Precio * quantity;
 
-    const handleSaveItem = () => {
+    const {name, details} = useMemo(() => {
         const product = selectedProduct as any;
         const widthInfo = product.Ancho ? `, Ancho: ${product.Ancho}` : (product.Rango_Ancho ? `, Rango Ancho: ${product.Rango_Ancho}` : '');
-        const details = `Acabado: ${product.Acabado}${widthInfo}`;
-        
+        const finalName = `${category}: ${product.Producto}`;
+        const finalDetails = `Acabado: ${product.Acabado}${widthInfo}`;
+        return { name: finalName, details: finalDetails };
+    }, [category, selectedProduct]);
+
+    const handleSaveItem = () => {
         onSave({
-            name: `${category}: ${product.Producto}`,
-            details: details,
+            name,
+            details,
             quantity,
-            price: product.Precio,
+            price: selectedProduct.Precio,
             total,
         });
     };
@@ -1152,8 +1188,10 @@ const AxiaEssenzaLedCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
                         <CardTitle>Total del Concepto</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{formatCurrency(total)}</p>
-                        <p className="text-sm text-muted-foreground">{formatCurrency(selectedProduct.Precio)} / ud.</p>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(selectedProduct.Precio)} / ud.</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
