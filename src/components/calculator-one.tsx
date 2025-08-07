@@ -141,7 +141,7 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
                         </div>
                     </div>
                     {/* Hidden element for PDF generation */}
-                    <div className="fixed -left-[9999px] top-0 p-8" style={{ width: '210mm' }}>
+                    <div className="fixed -left-[9999px] top-0 p-8 bg-white" style={{ width: '210mm' }}>
                          <div ref={pdfRenderRef}>
                              <QuotePDFPreview quote={currentQuote} company={companyProfile} />
                         </div>

@@ -24,7 +24,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
     const displayQuoteNumber = quote.quoteNumber || quote.id.slice(0, 6).toUpperCase();
 
     return (
-        <Card className="p-0 shadow-none border-0 bg-white rounded-none">
+        <Card className="p-8 shadow-none border-0 bg-white rounded-none">
             <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4">
                 <div>
                     <PdfLogo />
