@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogDescription } from '@/components/ui/dialog';
 import { Logo } from './logo';
 import type { LineItem } from '@/lib/types';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface AddLineItemDialogTwoProps {
     open: boolean;
@@ -16,7 +17,7 @@ interface AddLineItemDialogTwoProps {
 export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineItemDialogTwoProps) {
     
     const handleSave = () => {
-        // Placeholder for adding an item
+        // This is a placeholder for now. We will build the logic for each tab.
         const newItem = {
             name: "Nuevo Concepto (Calculadora 2)",
             details: "Detalles del nuevo concepto",
@@ -37,14 +38,51 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
                       <DialogTitle className="text-lg sm:text-xl font-bold">Añadir Concepto (Calculadora 2)</DialogTitle>
                     </div>
                     <DialogDescription>
-                      Esta es la Calculadora 2. ¡Lista para construir!
+                      Selecciona una categoría y completa los detalles para añadir un nuevo concepto.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-                   <p>Aquí construiremos la nueva calculadora paso a paso.</p>
+                   <Tabs defaultValue="paneles" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
+                            <TabsTrigger value="paneles">Paneles</TabsTrigger>
+                            <TabsTrigger value="abatible">Abatible</TabsTrigger>
+                            <TabsTrigger value="corredera">Corredera</TabsTrigger>
+                            <TabsTrigger value="interior">Interior</TabsTrigger>
+                            <TabsTrigger value="cajones">Cajones</TabsTrigger>
+                            <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
+                            <TabsTrigger value="axia">Axia</TabsTrigger>
+                            <TabsTrigger value="essenza">Essenza</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="paneles" className="mt-4">
+                            <p>Calculadora de Paneles irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="abatible" className="mt-4">
+                            <p>Calculadora de Frente Abatible irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="corredera" className="mt-4">
+                            <p>Calculadora de Frente Corredera irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="interior" className="mt-4">
+                           <p>Calculadora de Interior y Vestidor irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="cajones" className="mt-4">
+                           <p>Calculadora de Cajones irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="tiradores" className="mt-4">
+                           <p>Calculadora de Tiradores irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="axia" className="mt-4">
+                           <p>Calculadora de Accesorios Axia irá aquí.</p>
+                        </TabsContent>
+                        <TabsContent value="essenza" className="mt-4">
+                           <p>Calculadora de Accesorios Essenza irá aquí.</p>
+                        </TabsContent>
+                    </Tabs>
                 </div>
                 <DialogFooter className="p-4 sm:p-6 border-t bg-background">
-                    <Button onClick={handleSave}>Añadir al Presupuesto</Button>
+                    {/* The save button is temporarily disabled until we build the calculators */}
+                    <Button onClick={handleSave} disabled>Añadir al Presupuesto</Button>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cerrar</Button>
                     </DialogClose>
