@@ -27,7 +27,6 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
 
-    // Mock company profile
     const companyProfile: CompanyProfile = {
         name: "Sidon",
         address: "C/ Pico Almanzor, 24-26\nArganda del Rey, Madrid",
