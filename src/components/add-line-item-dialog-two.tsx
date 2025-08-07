@@ -4,7 +4,6 @@
 import React from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { LineItem } from '@/lib/types';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PanelesCalculator } from './calculators/paneles-calculator';
 
 interface AddLineItemDialogTwoProps {
@@ -24,43 +23,7 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl w-full max-h-[90vh] flex flex-col p-6">
                 <div className="flex-1 overflow-y-auto">
-                   <Tabs defaultValue="paneles" className="w-full">
-                        <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 h-auto mb-4">
-                            <TabsTrigger value="paneles">Paneles</TabsTrigger>
-                            <TabsTrigger value="abatible">Abatible</TabsTrigger>
-                            <TabsTrigger value="corredera">Corredera</TabsTrigger>
-                            <TabsTrigger value="interior">Interior</TabsTrigger>
-                            <TabsTrigger value="cajones">Cajones</TabsTrigger>
-                            <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
-                            <TabsTrigger value="axia">Axia</TabsTrigger>
-                            <TabsTrigger value="essenza">Essenza</TabsTrigger>
-                        </TabsList>
-                        
-                        <TabsContent value="paneles" className="mt-4">
-                            <PanelesCalculator onSave={handleSave} />
-                        </TabsContent>
-                        <TabsContent value="abatible" className="mt-4">
-                            <p>Calculadora de Frente Abatible irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="corredera" className="mt-4">
-                            <p>Calculadora de Frente Corredera irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="interior" className="mt-4">
-                           <p>Calculadora de Interior y Vestidor irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="cajones" className="mt-4">
-                           <p>Calculadora de Cajones irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="tiradores" className="mt-4">
-                           <p>Calculadora de Tiradores irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="axia" className="mt-4">
-                           <p>Calculadora de Accesorios Axia irá aquí.</p>
-                        </TabsContent>
-                        <TabsContent value="essenza" className="mt-4">
-                           <p>Calculadora de Accesorios Essenza irá aquí.</p>
-                        </TabsContent>
-                    </Tabs>
+                    <PanelesCalculator onSave={handleSave} />
                 </div>
             </DialogContent>
         </Dialog>
