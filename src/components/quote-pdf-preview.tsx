@@ -74,7 +74,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                 </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col items-end gap-4 p-0">
+            <CardFooter className="flex flex-col items-end gap-4 p-0 pt-8">
                 <div className="w-full max-w-xs space-y-2">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Subtotal</span>
