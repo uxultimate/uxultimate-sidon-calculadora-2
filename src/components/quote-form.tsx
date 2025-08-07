@@ -121,7 +121,7 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
       </Card>
       
        <div className="flex flex-wrap justify-end gap-2">
-            <Button onClick={onCancel} variant="destructive" disabled={isSaving}>
+            <Button onClick={onCancel} variant="outline" disabled={isSaving}>
                 Cancelar
             </Button>
             <Button onClick={handleSaveWrapper} disabled={isSaving || lineItems.length === 0}>
