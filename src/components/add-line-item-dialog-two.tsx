@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogC
 import { Logo } from './logo';
 import type { LineItem } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PanelesCalculator } from './calculators/paneles-calculator';
 
 interface AddLineItemDialogTwoProps {
     open: boolean;
@@ -16,16 +17,8 @@ interface AddLineItemDialogTwoProps {
 
 export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineItemDialogTwoProps) {
     
-    const handleSave = () => {
-        // This is a placeholder for now. We will build the logic for each tab.
-        const newItem = {
-            name: "Nuevo Concepto (Calculadora 2)",
-            details: "Detalles del nuevo concepto",
-            quantity: 1,
-            price: 100,
-            total: 100,
-        };
-        onAddItem(newItem);
+    const handleSave = (item: Omit<LineItem, 'id'>) => {
+        onAddItem(item);
         onOpenChange(false);
     };
 
@@ -55,7 +48,7 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
                         </TabsList>
                         
                         <TabsContent value="paneles" className="mt-4">
-                            <p>Calculadora de Paneles irá aquí.</p>
+                            <PanelesCalculator onSave={handleSave} />
                         </TabsContent>
                         <TabsContent value="abatible" className="mt-4">
                             <p>Calculadora de Frente Abatible irá aquí.</p>
@@ -81,8 +74,6 @@ export function AddLineItemDialogTwo({ open, onOpenChange, onAddItem }: AddLineI
                     </Tabs>
                 </div>
                 <DialogFooter className="p-4 sm:p-6 border-t bg-background">
-                    {/* The save button is temporarily disabled until we build the calculators */}
-                    <Button onClick={handleSave} disabled>Añadir al Presupuesto</Button>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cerrar</Button>
                     </DialogClose>
