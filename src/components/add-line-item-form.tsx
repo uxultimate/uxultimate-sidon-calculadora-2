@@ -41,10 +41,13 @@ const ColorSwatch: React.FC<{ color: string, name: string, isSelected: boolean, 
 const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) => void }> = ({ onSave }) => {
     const [pricingModel, setPricingModel] = useState<'coleccion' | 'cristal'>('coleccion');
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
-    const [panelType, setPanelType] = useState('Corredera');
+    const [openingType, setOpeningType] = useState('Corredera');
+    const [doorCount, setDoorCount] = useState(1);
     const [panelCollection, setPanelCollection] = useState('Meridian');
     const [panelCristal, setPanelCristal] = useState('Cristal Transparente');
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
+    
+    const openingOptions = ['Corredera', 'Fijo', 'Abatible', 'Plegable'];
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -58,31 +61,32 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
         setPanelSupplements(prev => ({ ...prev, [concepto]: { ...prev[concepto], quantity } }));
     };
     
-    const panelPriceData = useMemo(() => pricingModel === 'coleccion' 
-        ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Coleccion_Euro_m_lineal']]
-        : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[panelType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']], 
-    [pricingModel, panelType]);
+    const constructedPanelType = useMemo(() => {
+        if (openingType === 'Abatible' && doorCount === 2) return 'Abatible Doble';
+        if (openingType === 'Plegable' && doorCount > 1) return `Plegable ${doorCount} Puertas`;
+        return openingType;
+    }, [openingType, doorCount]);
 
-    const handlePanelTypeChange = (newType: string) => {
-        setPanelType(newType);
-        const newPriceData = pricingModel === 'coleccion' 
-            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal[newType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Coleccion_Euro_m_lineal']]
-            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal[newType as keyof typeof tarifa2025['Paneles Divisorios']['Precios_por_Cristal_Euro_m_lineal']];
-        
-        if (pricingModel === 'coleccion') {
-            const firstOption = Object.keys(newPriceData)[0];
-            setPanelCollection(firstOption);
-        } else {
-            const firstOption = Object.keys(newPriceData)[0];
-            setPanelCristal(firstOption);
-        }
-    };
+    const panelPriceData = useMemo(() => {
+        const source = pricingModel === 'coleccion' 
+            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
+            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
+
+        return source[constructedPanelType as keyof typeof source];
+    }, [pricingModel, constructedPanelType]);
+
     
     const { total, details, name } = useMemo(() => {
         const widthInMeters = measurements.width / 1000;
         
+        const priceData = pricingModel === 'coleccion' 
+            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
+            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
+        
+        const priceListForType = priceData[constructedPanelType as keyof typeof priceData] || {};
+        
         const selectedKey = pricingModel === 'coleccion' ? panelCollection : panelCristal;
-        let basePrice = (panelPriceData[selectedKey as keyof typeof panelPriceData] || 0) * widthInMeters;
+        let basePrice = (priceListForType[selectedKey as keyof typeof priceListForType] || 0) * widthInMeters;
 
         let total = basePrice;
         const detailsArray = [`${measurements.height}x${measurements.width}mm`];
@@ -121,15 +125,23 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
             }
         });
         
-        const finalName = `Panel Divisorio ${panelType} ${selectedKey}`;
+        const finalName = `Panel Divisorio ${constructedPanelType} ${selectedKey}`;
 
         return { total, details: detailsArray.join(', '), name: finalName };
-    }, [measurements, panelType, panelCollection, panelCristal, panelPriceData, panelSupplements, pricingModel]);
+    }, [measurements, constructedPanelType, panelCollection, panelCristal, panelSupplements, pricingModel]);
 
     const handleSaveItem = () => {
         const lineItem = { name, details, quantity: 1, price: total, total };
         onSave(lineItem);
     };
+    
+    const isDoorCountEnabled = useMemo(() => openingType === 'Abatible' || openingType === 'Plegable', [openingType]);
+    
+    React.useEffect(() => {
+        if (!isDoorCountEnabled) {
+            setDoorCount(1);
+        }
+    }, [isDoorCountEnabled]);
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -148,28 +160,40 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div>
                         <Label>Tipo de Apertura</Label>
-                        <Select value={panelType} onValueChange={handlePanelTypeChange}>
+                        <Select value={openingType} onValueChange={setOpeningType}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal).map((type, index) => (
-                                    <SelectItem key={`${type}-${index}`} value={type}>{type}</SelectItem>
+                                {openingOptions.map((type) => (
+                                    <SelectItem key={type} value={type}>{type}</SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                     </div>
-                    <div>
-                        <Label>Modelo de Precio</Label>
-                         <RadioGroup defaultValue="coleccion" value={pricingModel} onValueChange={(val) => setPricingModel(val as any)} className="flex items-center space-x-4 pt-2">
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="coleccion" id="coleccion" />
-                                <Label htmlFor="coleccion">Por Colección</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="cristal" id="cristal" />
-                                <Label htmlFor="cristal">Por Cristal</Label>
-                            </div>
-                        </RadioGroup>
+                     <div>
+                        <Label>Nº de Puertas</Label>
+                        <Input 
+                            type="number" 
+                            value={doorCount} 
+                            onChange={(e) => setDoorCount(Math.max(1, parseInt(e.target.value)))} 
+                            min="1"
+                            disabled={!isDoorCountEnabled}
+                        />
+                         {!isDoorCountEnabled && <p className="text-xs text-muted-foreground mt-1">Disponible para Abatible y Plegable</p>}
                     </div>
+                </div>
+                
+                <div>
+                     <Label>Modelo de Precio</Label>
+                     <RadioGroup defaultValue="coleccion" value={pricingModel} onValueChange={(val) => setPricingModel(val as any)} className="flex items-center space-x-4 pt-2">
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="coleccion" id="coleccion" />
+                            <Label htmlFor="coleccion">Por Colección</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="cristal" id="cristal" />
+                            <Label htmlFor="cristal">Por Cristal</Label>
+                        </div>
+                    </RadioGroup>
                 </div>
 
                 <div>
@@ -177,14 +201,16 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                     <Select 
                         value={pricingModel === 'coleccion' ? panelCollection : panelCristal} 
                         onValueChange={pricingModel === 'coleccion' ? setPanelCollection : setPanelCristal}
+                        disabled={!panelPriceData}
                     >
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
-                            {Object.keys(panelPriceData).map((option, index) => (
-                                <SelectItem key={`${option}-${index}`} value={option}>{option}</SelectItem>
+                            {panelPriceData && Object.keys(panelPriceData).map((option) => (
+                                <SelectItem key={option} value={option}>{option}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
+                    {!panelPriceData && <p className="text-xs text-destructive mt-1">La combinación de apertura y nº de puertas no es válida.</p>}
                 </div>
                 
                 <div>
