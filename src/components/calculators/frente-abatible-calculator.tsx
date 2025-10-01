@@ -21,6 +21,7 @@ interface FrenteAbatibleCalculatorProps {
 
 export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState({ width: 1000, height: 2400 });
+    const [doorCount, setDoorCount] = useState(2);
     const [material, setMaterial] = useState('Laca_blanca_lisa');
     const materials = tarifa2025["Frente Abatible y Plegable"].Precios_por_Material_Euro_m_lineal["19mm"];
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
@@ -49,7 +50,10 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
     };
 
     const handleSupplementChange = (concepto: string, checked: boolean) => {
-        setSupplements(prev => ({ ...prev, [concepto]: { ...prev[concepto], checked, quantity: prev[concepto]?.quantity || 1 } }));
+        const supplementInfo = tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
+        const needsQuantity = supplementInfo?.Valor.includes('ud') || supplementInfo?.Valor.includes('cada');
+        const defaultQuantity = needsQuantity ? doorCount : 1;
+        setSupplements(prev => ({ ...prev, [concepto]: { ...prev[concepto], checked, quantity: prev[concepto]?.quantity || defaultQuantity } }));
     };
 
     const handleSupplementQuantityChange = (concepto: string, quantity: number) => {
@@ -64,7 +68,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
@@ -97,8 +101,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         supplementPrice = baseTotal * percentage;
                     } else if (supplementInfo.Valor.includes('ud. puerta') || supplementInfo.Valor.includes('cada puerta')) {
                         const pricePerUnit = parseFloat(supplementInfo.Valor.replace(/€ (ud\. puerta|cada puerta)/i, ''));
-                        supplementPrice = pricePerUnit * (quantity || 1);
-                        description += ` (x${quantity || 1})`;
+                        const numItems = quantity || doorCount;
+                        supplementPrice = pricePerUnit * numItems;
+                        description += ` (x${numItems})`;
                     }
                     finalTotal += supplementPrice;
                     detailsArray.push(description);
@@ -107,7 +112,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         });
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, supplements, showColorSwatches, selectedColor]);
+    }, [measurements, material, materials, supplements, showColorSwatches, selectedColor, doorCount]);
 
     const handleSaveItem = () => {
         onSave({
@@ -128,7 +133,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
@@ -136,6 +141,10 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                             <div>
                                 <Label>Ancho (mm)</Label>
                                 <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                            </div>
+                            <div>
+                                <Label>Nº Puertas</Label>
+                                <Input name="doorCount" type="number" value={doorCount} min="1" onChange={(e) => setDoorCount(Number(e.target.value) || 1)} />
                             </div>
                         </div>
                         <div>
@@ -187,7 +196,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                                     type="number"
                                                     className="w-20 h-8"
                                                     min="1"
-                                                    value={supplements[supp.Concepto]?.quantity || 1}
+                                                    value={supplements[supp.Concepto]?.quantity || doorCount}
                                                     onChange={(e) => handleSupplementQuantityChange(supp.Concepto, parseInt(e.target.value) || 1)}
                                                 />
                                             )}

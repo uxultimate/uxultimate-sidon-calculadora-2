@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { tarifa2025 } from '@/lib/tarifa';
 import type { LineItem } from '@/lib/types';
@@ -21,7 +21,7 @@ interface FrenteCorrederaCalculatorProps {
 
 export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState({ width: 1800, height: 2400 });
-    const [doorCount, setDoorCount] = useState<'2_puertas' | '3_o_mas_puertas'>('2_puertas');
+    const [doorCount, setDoorCount] = useState(2);
     const [material, setMaterial] = useState('Melamina_blanco_liso');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     const [selectedColor, setSelectedColor] = useState<string>('Gris Antracita');
@@ -36,15 +36,15 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
     
     const showColorSwatches = material === 'Melamina_color';
     
-    const materials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[doorCount];
+    const doorCountKey = doorCount >= 3 ? '3_o_mas_puertas' : '2_puertas';
+    const materials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[doorCountKey];
 
-    const handleDoorCountChange = (newDoorCount: '2_puertas' | '3_o_mas_puertas') => {
-        setDoorCount(newDoorCount);
-        const newMaterials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[newDoorCount];
-        if (!newMaterials[material as keyof typeof newMaterials]) {
-            setMaterial(Object.keys(newMaterials)[0]);
+    useEffect(() => {
+        const currentMaterials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[doorCountKey];
+        if (!currentMaterials[material as keyof typeof currentMaterials]) {
+            setMaterial(Object.keys(currentMaterials)[0]);
         }
-    };
+    }, [doorCountKey, material]);
 
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
         let baseTotal = basePricePerMeter * widthInMeters;
 
         const finalName = "Frente Corredera";
-        const detailsArray = [`${doorCount.replace(/_/g, ' ')}`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
         }
@@ -118,7 +118,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                         <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
@@ -127,18 +127,13 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                 <Label>Ancho (mm)</Label>
                                 <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                             </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <Label>Nº Puertas</Label>
-                                <Select value={doorCount} onValueChange={(val) => handleDoorCountChange(val as typeof doorCount)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="2_puertas">2 puertas</SelectItem>
-                                        <SelectItem value="3_o_mas_puertas">3 o más puertas</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Input name="doorCount" type="number" value={doorCount} min="2" onChange={(e) => setDoorCount(Number(e.target.value) || 2)} />
                             </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            
                             <div>
                                 <Label>Material</Label>
                                 <Select value={material} onValueChange={setMaterial}>
