@@ -125,23 +125,17 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
             }
         });
         
-        const finalName = `Panel Divisorio ${constructedPanelType} ${selectedKey}`;
+        const doorString = doorCount > 1 ? `${doorCount} Puertas` : '1 Puerta';
+        const finalName = `Panel Divisorio ${openingType} ${doorString} ${selectedKey}`;
 
         return { total, details: detailsArray.join(', '), name: finalName };
-    }, [measurements, constructedPanelType, panelCollection, panelCristal, panelSupplements, pricingModel]);
+    }, [measurements, openingType, doorCount, panelCollection, panelCristal, panelSupplements, pricingModel, constructedPanelType]);
 
     const handleSaveItem = () => {
         const lineItem = { name, details, quantity: 1, price: total, total };
         onSave(lineItem);
     };
     
-    const isDoorCountEnabled = useMemo(() => openingType === 'Abatible' || openingType === 'Plegable', [openingType]);
-    
-    React.useEffect(() => {
-        if (!isDoorCountEnabled) {
-            setDoorCount(1);
-        }
-    }, [isDoorCountEnabled]);
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -176,9 +170,7 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
                             value={doorCount} 
                             onChange={(e) => setDoorCount(Math.max(1, parseInt(e.target.value)))} 
                             min="1"
-                            disabled={!isDoorCountEnabled}
                         />
-                         {!isDoorCountEnabled && <p className="text-xs text-muted-foreground mt-1">Disponible para Abatible y Plegable</p>}
                     </div>
                 </div>
                 
