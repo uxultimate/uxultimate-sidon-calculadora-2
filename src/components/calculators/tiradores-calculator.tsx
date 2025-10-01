@@ -1,0 +1,127 @@
+
+"use client";
+
+import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
+import { tarifa2025 } from '@/lib/tarifa';
+import type { LineItem } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Minus, Plus } from 'lucide-react';
+import { formatCurrency, ColorSwatch, colorHexMap } from './utils';
+
+interface TiradoresCalculatorProps {
+    onSave: (item: Omit<LineItem, 'id'>) => void;
+}
+
+export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
+    const [selectedTirador, setSelectedTirador] = useState(tarifa2025.Tiradores[0]);
+    const [quantity, setQuantity] = useState(1);
+    const [selectedColor, setSelectedColor] = useState(tarifa2025.Tiradores[0].colors[0]);
+
+    const handleTiradorChange = (modulo: string) => {
+        const tirador = tarifa2025.Tiradores.find(t => t.Modulo === modulo);
+        if (tirador) {
+            setSelectedTirador(tirador);
+            setSelectedColor(tirador.colors[0]);
+        }
+    };
+
+    const total = selectedTirador.Precio * quantity;
+
+    const {name, details} = useMemo(() => {
+        const finalName = `Tirador ${selectedTirador.Modulo}`;
+        const finalDetails = `Material: ${selectedTirador.Material}, Acabado: ${selectedColor}`;
+        return { name: finalName, details: finalDetails };
+    }, [selectedTirador, selectedColor]);
+
+    const handleSaveItem = () => {
+        onSave({
+            name,
+            details,
+            quantity,
+            price: selectedTirador.Precio,
+            total,
+        });
+    };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Modelo de Tirador</Label>
+                        <Select
+                            value={selectedTirador.Modulo}
+                            onValueChange={handleTiradorChange}
+                        >
+                            <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                {tarifa2025.Tiradores.map((t, index) => (
+                                    <SelectItem key={`${t.Modulo}-${index}`} value={t.Modulo}>{t.Modulo} - {t.Acabado}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                     <div>
+                        <Label>Cantidad</Label>
+                         <div className="flex items-center gap-2">
+                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                            <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                            <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                         </div>
+                    </div>
+                </div>
+                 <div>
+                    <Label className="mb-2 block">Acabado / Color</Label>
+                     <div className="flex flex-wrap gap-x-4 gap-y-2">
+                        {selectedTirador.colors.map((color, index) => (
+                            <ColorSwatch
+                                key={`${color}-${index}`}
+                                color={colorHexMap[color] || "#FFFFFF"}
+                                name={color}
+                                isSelected={selectedColor === color}
+                                onClick={() => setSelectedColor(color)}
+                            />
+                        ))}
+                    </div>
+                 </div>
+                 <Card>
+                    <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
+                    <CardContent className="text-sm grid grid-cols-2 gap-2">
+                        <p><b>Material:</b> {selectedTirador.Material}</p>
+                        <p><b>Acabado Predeterminado:</b> {selectedTirador.Acabado}</p>
+                        <p><b>Largo:</b> {selectedTirador.Largo || 'N/A'} mm</p>
+                        <p><b>Alto:</b> {selectedTirador.Alto || 'N/A'} mm</p>
+                        <p><b>Ancho:</b> {selectedTirador.Ancho || 'N/A'} mm</p>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="md:col-span-1 space-y-4">
+                 <Image
+                    src="https://placehold.co/600x400.png"
+                    alt="Tiradores"
+                    width={600}
+                    height={400}
+                    className="rounded-md object-cover aspect-[3/2]"
+                    data-ai-hint="handle"
+                />
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Total del Concepto</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(selectedTirador.Precio)} / ud.</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
+                    </CardContent>
+                </Card>
+                <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
+            </div>
+        </div>
+    );
+};

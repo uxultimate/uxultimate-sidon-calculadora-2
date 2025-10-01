@@ -1,0 +1,134 @@
+
+"use client";
+
+import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
+import { tarifa2025 } from '@/lib/tarifa';
+import type { LineItem } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Minus, Plus } from 'lucide-react';
+import { formatCurrency } from './utils';
+
+interface CajonesCalculatorProps {
+    onSave: (item: Omit<LineItem, 'id'>) => void;
+}
+
+export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) => {
+    const [itemType, setItemType] = useState('Cajones');
+    const [width, setWidth] = useState(500);
+    const [material, setMaterial] = useState('Melamina_blanco_o_lino_cancun_textil');
+    const [quantity, setQuantity] = useState(1);
+    
+    const itemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[itemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
+    const materialData = itemData[material as keyof typeof itemData];
+    
+    const handleItemTypeChange = (newItemType: string) => {
+        setItemType(newItemType);
+        const newItemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[newItemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
+        if (!newItemData[material as keyof typeof newItemData]) {
+            setMaterial(Object.keys(newItemData)[0]);
+        }
+    };
+
+    const getPriceForWidth = () => {
+        if (!materialData) return 0;
+        if (width <= 500) return materialData.hasta_500;
+        if (width <= 700) return materialData.hasta_700;
+        if (width <= 900) return materialData.hasta_900;
+        if (width <= 1100) return materialData.hasta_1100;
+        return 0;
+    };
+
+    const pricePerUnit = getPriceForWidth();
+    const total = pricePerUnit * quantity;
+
+    const {name, details} = useMemo(() => {
+        const finalName = `${itemType.replace(/_/g, ' ')}`;
+        const finalDetails = `Ancho: ${width}mm, Material: ${material.replace(/_/g, ' ')}`;
+        return { name: finalName, details: finalDetails };
+    }, [itemType, width, material]);
+
+    const handleSaveItem = () => {
+        onSave({
+            name,
+            details,
+            quantity,
+            price: pricePerUnit,
+            total: total,
+        });
+    };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Tipo de Accesorio</Label>
+                        <Select value={itemType} onValueChange={handleItemTypeChange}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                {Object.keys(tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho).map((type, index) => (
+                                    <SelectItem key={`${type}-${index}`} value={type}>{type.replace(/_/g, ' ')}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label>Material</Label>
+                        <Select value={material} onValueChange={setMaterial}>
+                            <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                {Object.keys(itemData).map((mat, index) => (
+                                    <SelectItem key={`${mat}-${index}`} value={mat}>{mat.replace(/_/g, ' ')}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <Label>Ancho del Hueco (mm)</Label>
+                        <Input type="number" value={width} onChange={e => setWidth(Number(e.target.value))} />
+                    </div>
+                    <div>
+                        <Label>Cantidad</Label>
+                         <div className="flex items-center gap-2">
+                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                            <Input type="number" className="w-20 text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                            <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                         </div>
+                    </div>
+                </div>
+                <div className="text-sm text-muted-foreground pt-4">
+                    <p>Calculadora para cajones, zapateros y otros accesorios. Selecciona el tipo, material, ancho del hueco y la cantidad.</p>
+                </div>
+            </div>
+            <div className="md:col-span-1 space-y-4">
+                 <Image
+                    src="https://placehold.co/600x400.png"
+                    alt="Cajones y Accesorios"
+                    width={600}
+                    height={400}
+                    className="rounded-md object-cover aspect-[3/2]"
+                    data-ai-hint="drawer"
+                />
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Total del Concepto</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(pricePerUnit)} / ud.</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                        <p className="text-xs text-muted-foreground break-words">{details}</p>
+                    </CardContent>
+                </Card>
+                <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
+            </div>
+        </div>
+    );
+};
