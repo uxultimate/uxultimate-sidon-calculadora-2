@@ -39,7 +39,7 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="paneles" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 h-auto mb-4">
+                    <TabsList className="grid w-full grid-cols-3 h-auto mb-4 bg-primary text-primary-foreground">
                         <TabsTrigger value="paneles">Paneles</TabsTrigger>
                         <TabsTrigger value="frentes">Armarios</TabsTrigger>
                         <TabsTrigger value="interiores">Interiores</TabsTrigger>
@@ -95,4 +95,3 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
         </Card>
     );
 }
-
