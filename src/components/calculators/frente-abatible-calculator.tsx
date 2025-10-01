@@ -137,6 +137,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                {measurements.height > 2400 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
+                                )}
                             </div>
                             <div>
                                 <Label>Ancho (mm)</Label>
@@ -179,7 +182,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
                                     const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">

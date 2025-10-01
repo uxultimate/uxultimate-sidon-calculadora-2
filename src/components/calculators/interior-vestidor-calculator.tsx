@@ -157,7 +157,13 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div><Label>Alto (mm)</Label><Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} /></div>
+                            <div>
+                                <Label>Alto (mm)</Label>
+                                <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                {measurements.height > 2400 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
+                                )}
+                            </div>
                             <div><Label>Ancho (mm)</Label><Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} /></div>
                             <div><Label>Fondo (mm)</Label><Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} /></div>
                         </div>
@@ -207,7 +213,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Interior y Vestidor"].Suplementos_y_Anadidos.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('metro lineal')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Concepto.startsWith('Fondos') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('metro lineal')) return null;
                                     const needsQuantity = supp.Valor.includes('ud');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">

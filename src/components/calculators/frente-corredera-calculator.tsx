@@ -122,6 +122,9 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                {measurements.height > 2400 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
+                                )}
                             </div>
                             <div>
                                 <Label>Ancho (mm)</Label>
@@ -167,7 +170,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Frente Corredera"].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('ud')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('ud')) return null;
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                             <div className="flex items-center gap-2">
