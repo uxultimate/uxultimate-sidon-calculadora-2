@@ -85,7 +85,7 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
         let basePrice = (panelPriceData[selectedKey as keyof typeof panelPriceData] || 0) * widthInMeters;
 
         let total = basePrice;
-        const detailsArray = [`${measurements.width}x${measurements.height}mm`];
+        const detailsArray = [`${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
             const discount = total * 0.25;
@@ -136,12 +136,12 @@ const PanelesDivisoriosCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'
             <div className="md:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <Label>Ancho (mm)</Label>
-                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
-                    </div>
-                    <div>
                         <Label>Alto (mm)</Label>
                         <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                    </div>
+                    <div>
+                        <Label>Ancho (mm)</Label>
+                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`${material.replace(/_/g, ' ')}`, `${measurements.width}x${measurements.height}mm`];
+        const detailsArray = [`${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
@@ -350,12 +350,12 @@ const FrenteAbatibleCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>) 
             <div className="md:col-span-2 space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <Label>Ancho (mm)</Label>
-                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
-                    </div>
-                    <div>
                         <Label>Alto (mm)</Label>
                         <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                    </div>
+                    <div>
+                        <Label>Ancho (mm)</Label>
+                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                     </div>
                 </div>
                  <div>
@@ -484,7 +484,7 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
         let baseTotal = basePricePerMeter * widthInMeters;
 
         const finalName = "Frente Corredera";
-        const detailsArray = [`${doorCount.replace(/_/g, ' ')}`, `${material.replace(/_/g, ' ')}`, `${measurements.width}x${measurements.height}mm`];
+        const detailsArray = [`${doorCount.replace(/_/g, ' ')}`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
         }
@@ -536,12 +536,12 @@ const FrenteCorrederaCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>)
             <div className="md:col-span-2 space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <Label>Ancho (mm)</Label>
-                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
-                    </div>
-                    <div>
                         <Label>Alto (mm)</Label>
                         <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                    </div>
+                    <div>
+                        <Label>Ancho (mm)</Label>
+                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -692,7 +692,7 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
         
         const finalName = "Interior y Vestidor";
         const materialName = materialKey.replace(/_/g, ' ');
-        const detailsArray = [`${thickness} ${materialName}`, `${measurements.width}x${measurements.height}x${measurements.depth}mm`];
+        const detailsArray = [`${thickness} ${materialName}`, `${measurements.height}x${measurements.width}x${measurements.depth}mm`];
         
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
@@ -761,8 +761,8 @@ const InteriorVestidorCalculator: React.FC<{ onSave: (item: Omit<LineItem, 'id'>
        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div><Label>Ancho (mm)</Label><Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} /></div>
                     <div><Label>Alto (mm)</Label><Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} /></div>
+                    <div><Label>Ancho (mm)</Label><Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} /></div>
                     <div><Label>Fondo (mm)</Label><Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} /></div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
