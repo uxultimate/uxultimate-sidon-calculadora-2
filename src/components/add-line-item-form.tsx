@@ -41,8 +41,8 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
                 <Tabs defaultValue="paneles" className="w-full">
                     <TabsList className="grid w-full grid-cols-3 h-auto mb-4">
                         <TabsTrigger value="paneles">Paneles</TabsTrigger>
-                        <TabsTrigger value="frentes">Frentes de Armario</TabsTrigger>
-                        <TabsTrigger value="interiores">Interiores y Accesorios</TabsTrigger>
+                        <TabsTrigger value="frentes">Armarios</TabsTrigger>
+                        <TabsTrigger value="interiores">Interiores</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="paneles" className="mt-4">
@@ -52,7 +52,7 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
                     <TabsContent value="frentes" className="mt-4">
                         <Tabs defaultValue="abatible" className="w-full">
                             <TabsList className="grid w-full grid-cols-2 h-auto mb-4">
-                                <TabsTrigger value="abatible">Abatible y Plegable</TabsTrigger>
+                                <TabsTrigger value="abatible">Abatible</TabsTrigger>
                                 <TabsTrigger value="corredera">Corredera</TabsTrigger>
                             </TabsList>
                             <TabsContent value="abatible" className="mt-4">
@@ -67,11 +67,11 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
                     <TabsContent value="interiores" className="mt-4">
                          <Tabs defaultValue="interior" className="w-full">
                             <TabsList className="grid w-full grid-cols-5 h-auto mb-4">
-                                <TabsTrigger value="interior">Interior y Vestidor</TabsTrigger>
-                                <TabsTrigger value="cajones">Cajones y Bandejas</TabsTrigger>
+                                <TabsTrigger value="interior">Interior</TabsTrigger>
+                                <TabsTrigger value="cajones">Cajones</TabsTrigger>
                                 <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
-                                <TabsTrigger value="axia">Accesorios Axia</TabsTrigger>
-                                <TabsTrigger value="essenza">Accesorios Essenza</TabsTrigger>
+                                <TabsTrigger value="axia">Axia</TabsTrigger>
+                                <TabsTrigger value="essenza">Essenza</TabsTrigger>
                             </TabsList>
                             <TabsContent value="interior" className="mt-4">
                                 <InteriorVestidorCalculator onSave={handleSave} />
