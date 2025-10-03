@@ -14,6 +14,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency, ColorSwatch } from './utils';
+import { TiradoresCalculator } from './tiradores-calculator';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -80,7 +81,6 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
             const extraCost = baseTotal * (extraHeightCm * 0.10);
             finalTotal += extraCost;
-            detailsArray.push(`Suplemento altura > 2400mm`);
         } else if (heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
             detailsArray.push('Dto. altura < 800mm');
@@ -128,9 +128,10 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
                  <Tabs defaultValue="config" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="config">Configuración</TabsTrigger>
                         <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
+                        <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -208,6 +209,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                 })}
                             </div>
                         </ScrollArea>
+                    </TabsContent>
+                     <TabsContent value="tiradores" className="pt-4">
+                        <TiradoresCalculator onSave={onSave} />
                     </TabsContent>
                  </Tabs>
             </div>
