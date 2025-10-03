@@ -76,7 +76,10 @@ export function QuoteForm({ onSave, isSaving, lineItems, removeLineItem, onCance
                 {lineItems.length > 0 ? lineItems.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">
-                      <p className="font-bold">{item.name}</p>
+                      <p className="font-bold">
+                        {item.name}
+                        {item.quantity > 1 && <span className="font-medium"> (x{item.quantity})</span>}
+                      </p>
                       <p className="text-sm text-muted-foreground break-words whitespace-normal">{item.details}</p>
                     </TableCell>
                     <TableCell className="text-right font-medium">
