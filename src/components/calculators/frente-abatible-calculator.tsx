@@ -103,6 +103,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         const numItems = quantity || doorCount;
                         supplementPrice = pricePerUnit * numItems;
                         description += ` (x${numItems})`;
+                    } else if (supplementInfo.Valor.includes('metro lineal')) {
+                        const pricePerMeter = parseFloat(supplementInfo.Valor.replace('€ metro lineal', ''));
+                        supplementPrice = pricePerMeter * widthInMeters;
                     }
                     finalTotal += supplementPrice;
                     detailsArray.push(description);
