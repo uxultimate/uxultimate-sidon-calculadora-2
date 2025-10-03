@@ -189,7 +189,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                         </ScrollArea>
                     </TabsContent>
                     <TabsContent value="tiradores" className="pt-4">
-                        <TiradoresCalculator onSave={onSave} />
+                        <TiradoresCalculator onSave={onSave} isEmbedded={true} />
                     </TabsContent>
                 </Tabs>
             </div>

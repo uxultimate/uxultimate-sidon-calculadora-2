@@ -211,7 +211,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         </ScrollArea>
                     </TabsContent>
                      <TabsContent value="tiradores" className="pt-4">
-                        <TiradoresCalculator onSave={onSave} />
+                        <TiradoresCalculator onSave={onSave} isEmbedded={true} />
                     </TabsContent>
                  </Tabs>
             </div>

@@ -15,9 +15,10 @@ import { formatCurrency, ColorSwatch, colorHexMap } from './utils';
 
 interface TiradoresCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
+    isEmbedded?: boolean;
 }
 
-export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
+export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave, isEmbedded = false }) => {
     const [selectedTirador, setSelectedTirador] = useState(tarifa2025.Tiradores[0]);
     const [quantity, setQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState(tarifa2025.Tiradores[0].colors[0]);
@@ -48,8 +49,8 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         });
     };
 
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    const CalculatorContent = () => (
+        <>
             <div className="md:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -122,6 +123,67 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                 </Card>
                 <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
             </div>
+        </>
+    );
+
+    const EmbeddedContent = () => (
+         <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <Label>Modelo de Tirador</Label>
+                    <Select
+                        value={selectedTirador.Modulo}
+                        onValueChange={handleTiradorChange}
+                    >
+                        <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            {tarifa2025.Tiradores.map((t, index) => (
+                                <SelectItem key={`${t.Modulo}-${index}`} value={t.Modulo}>{t.Modulo} - {t.Acabado}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div>
+                    <Label>Cantidad</Label>
+                     <div className="flex items-center gap-2">
+                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                        <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                        <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                     </div>
+                </div>
+            </div>
+             <div>
+                <Label className="mb-2 block">Acabado / Color</Label>
+                 <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {selectedTirador.colors.map((color, index) => (
+                        <ColorSwatch
+                            key={`${color}-${index}`}
+                            color={colorHexMap[color] || "#FFFFFF"}
+                            name={color}
+                            isSelected={selectedColor === color}
+                            onClick={() => setSelectedColor(color)}
+                        />
+                    ))}
+                </div>
+             </div>
+             <Card>
+                <CardHeader><CardTitle>Detalles del Tirador</CardTitle></CardHeader>
+                <CardContent className="text-sm grid grid-cols-2 gap-2">
+                    <p><b>Material:</b> {selectedTirador.Material}</p>
+                    <p><b>Acabado Predeterminado:</b> {selectedTirador.Acabado}</p>
+                    <p><b>Largo:</b> {selectedTirador.Largo || 'N/A'} mm</p>
+                    <p><b>Alto:</b> {selectedTirador.Alto || 'N/A'} mm</p>
+                    <p><b>Ancho:</b> {selectedTirador.Ancho || 'N/A'} mm</p>
+                </CardContent>
+            </Card>
+            <Button onClick={handleSaveItem} className="w-full">Añadir Tirador al Presupuesto</Button>
+            <p className="text-xs text-muted-foreground text-center">Esto añadirá los tiradores como un concepto separado en el presupuesto.</p>
+        </div>
+    )
+
+    return (
+        <div className={isEmbedded ? '' : 'grid grid-cols-1 md:grid-cols-3 gap-6'}>
+            {isEmbedded ? <EmbeddedContent /> : <CalculatorContent />}
         </div>
     );
 };
