@@ -7,9 +7,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2, Loader2, Plus, ArrowRight } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
-import type { LineItem, LineItemGroup } from '@/lib/types';
+import type { LineItem, LineItemGroup, ClientProfile } from '@/lib/types';
 import { Input } from './ui/input';
 import { formatCurrency } from '@/lib/utils';
+import { Label } from './ui/label';
 
 interface QuoteFormProps {
     stagedLineItems: LineItem[];
@@ -20,6 +21,8 @@ interface QuoteFormProps {
     onGenerateQuote: () => void;
     isGenerating: boolean;
     onCancel: () => void;
+    clientProfile: ClientProfile;
+    setClientProfile: React.Dispatch<React.SetStateAction<ClientProfile>>;
 }
 
 export function QuoteForm({ 
@@ -30,7 +33,9 @@ export function QuoteForm({
     removeLineItemGroup,
     onGenerateQuote,
     isGenerating,
-    onCancel 
+    onCancel,
+    clientProfile,
+    setClientProfile
 }: QuoteFormProps) {
   const [groupReference, setGroupReference] = useState('');
   
@@ -52,6 +57,10 @@ export function QuoteForm({
   const finalSubtotal = lineItemGroups.reduce((acc, group) => acc + group.total, 0);
   const finalTax = finalSubtotal * 0.21;
   const finalTotal = finalSubtotal + finalTax;
+
+  const handleClientProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setClientProfile(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -126,6 +135,42 @@ export function QuoteForm({
                 <Button onClick={handleAddGroup} disabled={stagedLineItems.length === 0 || groupReference.trim() === ''} className="w-full sm:w-auto mt-4 sm:mt-8">
                     <Plus className="mr-2 h-4 w-4" /> Añadir Grupo al Presupuesto
                 </Button>
+            </CardContent>
+        </Card>
+
+        {/* Client Details */}
+        <Card>
+            <CardHeader>
+                <CardTitle>Datos del Cliente</CardTitle>
+                <CardDescription>Introduce la información del cliente para el presupuesto.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="contactName">Nombre Completo</Label>
+                        <Input id="contactName" name="contactName" value={clientProfile.contactName} onChange={handleClientProfileChange} placeholder="Nombre del cliente" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactCompanyName">Empresa</Label>
+                        <Input id="contactCompanyName" name="contactCompanyName" value={clientProfile.contactCompanyName} onChange={handleClientProfileChange} placeholder="Nombre de la empresa (opcional)" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactCif">CIF/NIF</Label>
+                        <Input id="contactCif" name="contactCif" value={clientProfile.contactCif} onChange={handleClientProfileChange} placeholder="CIF/NIF (opcional)" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactEmail">Email</Label>
+                        <Input id="contactEmail" name="contactEmail" type="email" value={clientProfile.contactEmail} onChange={handleClientProfileChange} placeholder="email@cliente.com" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactPhone">Teléfono</Label>
+                        <Input id="contactPhone" name="contactPhone" value={clientProfile.contactPhone} onChange={handleClientProfileChange} placeholder="Teléfono (opcional)" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="contactAddress">Dirección</Label>
+                        <Input id="contactAddress" name="contactAddress" value={clientProfile.contactAddress} onChange={handleClientProfileChange} placeholder="Dirección (opcional)" />
+                    </div>
+                </div>
             </CardContent>
         </Card>
         

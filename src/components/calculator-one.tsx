@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 import { QuoteForm } from '@/components/quote-form';
 import { useToast } from '@/hooks/use-toast';
 import { QuotePDFPreview } from '@/components/quote-pdf-preview';
-import type { CompanyProfile, Quote, LineItem, LineItemGroup } from '@/lib/types';
+import type { CompanyProfile, Quote, LineItem, LineItemGroup, ClientProfile } from '@/lib/types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
@@ -39,6 +39,15 @@ export function CalculatorOne({
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
 
+    const [clientProfile, setClientProfile] = useState<ClientProfile>({
+        contactName: '',
+        contactCompanyName: '',
+        contactCif: '',
+        contactEmail: '',
+        contactPhone: '',
+        contactAddress: '',
+    });
+
     const companyProfile: CompanyProfile = {
         name: "Sidon",
         address: "C/ Pico Almanzor, 24-26\nArganda del Rey, Madrid",
@@ -59,6 +68,16 @@ export function CalculatorOne({
             return;
         }
 
+        if (!clientProfile.contactName || !clientProfile.contactEmail) {
+             toast({
+                variant: "destructive",
+                title: "Faltan datos del cliente",
+                description: "El nombre y el email del cliente son obligatorios.",
+            });
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const quoteNumber = `P-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
             
@@ -71,8 +90,7 @@ export function CalculatorOne({
                 quoteNumber: quoteNumber,
                 status: 'draft',
                 createdAt: new Date(),
-                contactName: 'Cliente', // Placeholder
-                contactEmail: 'email@cliente.com', // Placeholder
+                ...clientProfile,
                 lineItemGroups,
                 subtotal,
                 tax,
@@ -172,6 +190,8 @@ export function CalculatorOne({
                 onGenerateQuote={handleGenerateQuote}
                 isGenerating={isSaving}
                 removeLineItemGroup={removeLineItemGroup}
+                clientProfile={clientProfile}
+                setClientProfile={setClientProfile}
             />
 
             {currentQuote && (

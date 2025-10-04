@@ -14,6 +14,7 @@ export interface Quote {
   contactCompanyName?: string;
   contactCif?: string;
   contactEmail: string;
+  contactPhone?: string;
   contactAddress?: string;
   lineItemGroups: LineItemGroup[];
   subtotal: number;
@@ -41,4 +42,13 @@ export interface CompanyProfile {
     phone?: string;
     email?: string;
     logoUrl?: string;
+}
+
+export interface ClientProfile {
+    contactName: string;
+    contactCompanyName?: string;
+    contactCif?: string;
+    contactEmail: string;
+    contactPhone?: string;
+    contactAddress?: string;
 }

@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { CompanyProfile, Quote, LineItem } from '@/lib/types';
+import type { CompanyProfile, Quote } from '@/lib/types';
 import { PdfLogo } from './pdf-logo';
 import { formatCurrency } from '@/lib/utils';
 
@@ -22,11 +22,12 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
 
     return (
         <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
-            <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4">
+            <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4 items-start">
                 <div>
                     <PdfLogo />
                     {company && (
                         <div className='mt-4'>
+                            <p className="text-sm font-semibold text-gray-800">{company.name}</p>
                             <p className="text-sm text-muted-foreground whitespace-pre-line">{company.address}</p>
                             <p className="text-sm text-muted-foreground">{company.email}</p>
                             <p className="text-sm text-muted-foreground">{company.phone}</p>
@@ -39,6 +40,19 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     <p className="mt-2 text-sm"><span className="font-semibold">Fecha:</span> {creationDate}</p>
                 </div>
             </CardHeader>
+            
+            <div>
+                <h4 className="font-semibold text-gray-800">Cliente:</h4>
+                <div className="text-sm text-muted-foreground">
+                    <p className="font-bold">{quote.contactName}</p>
+                    {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
+                    {quote.contactCif && <p>{quote.contactCif}</p>}
+                    {quote.contactAddress && <p>{quote.contactAddress}</p>}
+                    {quote.contactEmail && <p>{quote.contactEmail}</p>}
+                    {quote.contactPhone && <p>{quote.contactPhone}</p>}
+                </div>
+            </div>
+
 
             <Separator className="my-6" />
 
@@ -53,7 +67,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {quote.lineItemGroups.map((group, groupIndex) => (
+                            {quote.lineItemGroups.map((group) => (
                                 <React.Fragment key={group.id}>
                                     <TableRow className="bg-muted/30">
                                         <TableCell className="font-bold">1</TableCell>
@@ -65,8 +79,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                                             <TableCell></TableCell>
                                             <TableCell colSpan={2}>
                                                 <p className="text-muted-foreground break-words whitespace-normal">
-                                                    {item.name}
-                                                    {item.quantity > 1 && ` (x${item.quantity})`}: {item.details}
+                                                    {item.quantity > 1 && `${item.quantity}x `}{item.name}: {item.details}
                                                 </p>
                                             </TableCell>
                                         </TableRow>
