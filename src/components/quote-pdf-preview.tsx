@@ -19,6 +19,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
 
     const creationDate = quote.createdAt ? (quote.createdAt as Date).toLocaleDateString('es-ES') : 'Pendiente';
     const displayQuoteNumber = quote.quoteNumber || quote.id.slice(0, 6).toUpperCase();
+    const subtotalAfterDiscount = quote.subtotal - (quote.discountAmount || 0);
 
     return (
         <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
@@ -96,6 +97,16 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Subtotal</span>
                         <span>{formatCurrency(quote.subtotal)}</span>
+                    </div>
+                    {quote.discountAmount && quote.discountAmount > 0 && (
+                         <div className="flex justify-between">
+                            <span className="text-muted-foreground">Dto. Adicional ({quote.discountPercentage}%)</span>
+                            <span className='text-destructive'>-{formatCurrency(quote.discountAmount)}</span>
+                        </div>
+                    )}
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Base Imponible</span>
+                        <span>{formatCurrency(subtotalAfterDiscount)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">IVA (21%)</span>

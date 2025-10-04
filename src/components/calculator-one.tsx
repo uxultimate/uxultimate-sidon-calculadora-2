@@ -38,6 +38,7 @@ export function CalculatorOne({
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
+    const [discountPercentage, setDiscountPercentage] = useState(0);
 
     const [clientProfile, setClientProfile] = useState<ClientProfile>({
         contactName: '',
@@ -82,8 +83,10 @@ export function CalculatorOne({
             const quoteNumber = `P-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
             
             const subtotal = lineItemGroups.reduce((acc, group) => acc + group.total, 0);
-            const tax = subtotal * 0.21;
-            const total = subtotal + tax;
+            const discountAmount = subtotal * (discountPercentage / 100);
+            const subtotalAfterDiscount = subtotal - discountAmount;
+            const tax = subtotalAfterDiscount * 0.21;
+            const total = subtotalAfterDiscount + tax;
 
             const finalQuote: Quote = {
                 id: Math.random().toString(36).substring(2, 9),
@@ -93,6 +96,8 @@ export function CalculatorOne({
                 ...clientProfile,
                 lineItemGroups,
                 subtotal,
+                discountPercentage,
+                discountAmount,
                 tax,
                 total,
             };
@@ -192,6 +197,8 @@ export function CalculatorOne({
                 removeLineItemGroup={removeLineItemGroup}
                 clientProfile={clientProfile}
                 setClientProfile={setClientProfile}
+                discountPercentage={discountPercentage}
+                setDiscountPercentage={setDiscountPercentage}
             />
 
             {currentQuote && (

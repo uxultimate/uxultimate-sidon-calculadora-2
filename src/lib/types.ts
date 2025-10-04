@@ -18,6 +18,8 @@ export interface Quote {
   contactAddress?: string;
   lineItemGroups: LineItemGroup[];
   subtotal: number;
+  discountPercentage?: number;
+  discountAmount?: number;
   tax: number;
   total: number;
   status: 'draft' | 'sent' | 'accepted' | 'rejected';

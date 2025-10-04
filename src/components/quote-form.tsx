@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Loader2, Plus, ArrowRight } from "lucide-react";
+import { Trash2, Loader2, Plus, ArrowRight, Percent } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import type { LineItem, LineItemGroup, ClientProfile } from '@/lib/types';
 import { Input } from './ui/input';
@@ -23,6 +23,8 @@ interface QuoteFormProps {
     onCancel: () => void;
     clientProfile: ClientProfile;
     setClientProfile: React.Dispatch<React.SetStateAction<ClientProfile>>;
+    discountPercentage: number;
+    setDiscountPercentage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function QuoteForm({ 
@@ -35,7 +37,9 @@ export function QuoteForm({
     isGenerating,
     onCancel,
     clientProfile,
-    setClientProfile
+    setClientProfile,
+    discountPercentage,
+    setDiscountPercentage
 }: QuoteFormProps) {
   const [groupReference, setGroupReference] = useState('');
   
@@ -55,8 +59,10 @@ export function QuoteForm({
   };
   
   const finalSubtotal = lineItemGroups.reduce((acc, group) => acc + group.total, 0);
-  const finalTax = finalSubtotal * 0.21;
-  const finalTotal = finalSubtotal + finalTax;
+  const discountAmount = finalSubtotal * (discountPercentage / 100);
+  const subtotalAfterDiscount = finalSubtotal - discountAmount;
+  const finalTax = subtotalAfterDiscount * 0.21;
+  const finalTotal = subtotalAfterDiscount + finalTax;
 
   const handleClientProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setClientProfile(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -220,6 +226,27 @@ export function QuoteForm({
                             <span className="text-muted-foreground">Subtotal</span>
                             <span>{formatCurrency(finalSubtotal)}</span>
                         </div>
+                         <div className="flex justify-between items-center">
+                            <Label htmlFor="discount" className="text-muted-foreground flex items-center">Dto. Adicional (%)</Label>
+                            <div className="relative w-24">
+                                <Input
+                                    id="discount"
+                                    type="number"
+                                    value={discountPercentage}
+                                    onChange={(e) => setDiscountPercentage(parseFloat(e.target.value) || 0)}
+                                    className="pr-6 text-right"
+                                    min="0"
+                                    max="100"
+                                />
+                                <Percent className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            </div>
+                        </div>
+                        {discountAmount > 0 && (
+                            <div className="flex justify-between text-destructive">
+                                <span className="text-destructive">Importe Descontado</span>
+                                <span>-{formatCurrency(discountAmount)}</span>
+                            </div>
+                        )}
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">IVA (21%)</span>
                             <span>{formatCurrency(finalTax)}</span>
