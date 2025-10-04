@@ -144,42 +144,6 @@ export function QuoteForm({
             </CardContent>
         </Card>
 
-        {/* Client Details */}
-        <Card>
-            <CardHeader>
-                <CardTitle>Datos del Cliente</CardTitle>
-                <CardDescription>Introduce la información del cliente para el presupuesto.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="contactName">Nombre Completo</Label>
-                        <Input id="contactName" name="contactName" value={clientProfile.contactName} onChange={handleClientProfileChange} placeholder="Nombre del cliente" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="contactCompanyName">Empresa</Label>
-                        <Input id="contactCompanyName" name="contactCompanyName" value={clientProfile.contactCompanyName} onChange={handleClientProfileChange} placeholder="Nombre de la empresa (opcional)" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="contactCif">CIF/NIF</Label>
-                        <Input id="contactCif" name="contactCif" value={clientProfile.contactCif} onChange={handleClientProfileChange} placeholder="CIF/NIF (opcional)" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="contactEmail">Email</Label>
-                        <Input id="contactEmail" name="contactEmail" type="email" value={clientProfile.contactEmail} onChange={handleClientProfileChange} placeholder="email@cliente.com" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="contactPhone">Teléfono</Label>
-                        <Input id="contactPhone" name="contactPhone" value={clientProfile.contactPhone} onChange={handleClientProfileChange} placeholder="Teléfono (opcional)" />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="contactAddress">Dirección</Label>
-                        <Input id="contactAddress" name="contactAddress" value={clientProfile.contactAddress} onChange={handleClientProfileChange} placeholder="Dirección (opcional)" />
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-        
         {/* Final Quote Summary */}
         <Separator className='my-4' />
 
@@ -258,6 +222,42 @@ export function QuoteForm({
                     </div>
                 </CardFooter>
             )}
+        </Card>
+
+        {/* Client Details */}
+        <Card>
+            <CardHeader>
+                <CardTitle>Datos del Cliente</CardTitle>
+                <CardDescription>Introduce la información del cliente para el presupuesto.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="contactName">Nombre Completo</Label>
+                        <Input id="contactName" name="contactName" value={clientProfile.contactName} onChange={handleClientProfileChange} placeholder="Nombre del cliente" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactCompanyName">Empresa</Label>
+                        <Input id="contactCompanyName" name="contactCompanyName" value={clientProfile.contactCompanyName} onChange={handleClientProfileChange} placeholder="Nombre de la empresa (opcional)" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactCif">CIF/NIF</Label>
+                        <Input id="contactCif" name="contactCif" value={clientProfile.contactCif} onChange={handleClientProfileChange} placeholder="CIF/NIF (opcional)" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactEmail">Email</Label>
+                        <Input id="contactEmail" name="contactEmail" type="email" value={clientProfile.contactEmail} onChange={handleClientProfileChange} placeholder="email@cliente.com" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="contactPhone">Teléfono</Label>
+                        <Input id="contactPhone" name="contactPhone" value={clientProfile.contactPhone} onChange={handleClientProfileChange} placeholder="Teléfono (opcional)" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="contactAddress">Dirección</Label>
+                        <Input id="contactAddress" name="contactAddress" value={clientProfile.contactAddress} onChange={handleClientProfileChange} placeholder="Dirección (opcional)" />
+                    </div>
+                </div>
+            </CardContent>
         </Card>
       
        <div className="flex flex-wrap justify-end gap-2">
