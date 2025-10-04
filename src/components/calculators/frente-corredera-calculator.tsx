@@ -13,7 +13,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { formatCurrency, ColorSwatch } from './utils';
+import { ColorSwatch } from './utils';
+import { formatCurrency } from '@/lib/utils';
 
 interface FrenteCorrederaCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;

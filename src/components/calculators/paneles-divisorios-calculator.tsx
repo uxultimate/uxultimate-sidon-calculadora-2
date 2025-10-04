@@ -14,7 +14,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { formatCurrency, ColorSwatch } from './utils';
+import { ColorSwatch } from './utils';
+import { formatCurrency } from '@/lib/utils';
 
 interface PanelesDivisoriosCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;

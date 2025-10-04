@@ -7,15 +7,13 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { CompanyProfile, Quote, LineItem } from '@/lib/types';
 import { PdfLogo } from './pdf-logo';
+import { formatCurrency } from '@/lib/utils';
 
 interface QuotePDFPreviewProps {
     quote: Quote;
     company: CompanyProfile;
 }
 
-const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(price);
-};
 
 export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company }) => {
 
@@ -60,7 +58,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                                     <TableRow className="bg-muted/30">
                                         <TableCell className="font-bold">1</TableCell>
                                         <TableCell className="font-bold">{group.reference}</TableCell>
-                                        <TableCell className="text-right font-bold">{formatPrice(group.total)}</TableCell>
+                                        <TableCell className="text-right font-bold">{formatCurrency(group.total)}</TableCell>
                                     </TableRow>
                                     {group.lineItems.map((item, itemIndex) => (
                                         <TableRow key={`${group.id}-${itemIndex}`} className="text-sm">
@@ -84,16 +82,16 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                 <div className="w-full max-w-xs space-y-2">
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Subtotal</span>
-                        <span>{formatPrice(quote.subtotal)}</span>
+                        <span>{formatCurrency(quote.subtotal)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">IVA (21%)</span>
-                        <span>{formatPrice(quote.tax)}</span>
+                        <span>{formatCurrency(quote.tax)}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>{formatPrice(quote.total)}</span>
+                        <span>{formatCurrency(quote.total)}</span>
                     </div>
                 </div>
             </CardFooter>

@@ -4,8 +4,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Check as CheckIcon } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 
-export const formatCurrency = (value: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
 
 export const ColorSwatch: React.FC<{ color: string, name: string, isSelected: boolean, onClick: () => void }> = ({ color, name, isSelected, onClick }) => (
     <button type="button" onClick={onClick} className="flex flex-col items-center gap-1.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md p-1">

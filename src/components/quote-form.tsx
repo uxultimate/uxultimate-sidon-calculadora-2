@@ -9,6 +9,7 @@ import { Trash2, Loader2, Plus, ArrowRight } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import type { LineItem, LineItemGroup } from '@/lib/types';
 import { Input } from './ui/input';
+import { formatCurrency } from '@/lib/utils';
 
 interface QuoteFormProps {
     stagedLineItems: LineItem[];
@@ -38,7 +39,6 @@ export function QuoteForm({
   };
   
   const stagedSubtotal = calculateStagedTotal();
-  const formatCurrency = (value: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value);
 
   const handleAddGroup = () => {
     if (groupReference.trim() === '') {
