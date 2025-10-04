@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Minus, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
@@ -18,10 +18,58 @@ interface AxiaEssenzaLedCalculatorProps {
     category: 'Accesorios Axia' | 'Accesorios Essenza';
 }
 
+type Product = typeof tarifa2025['Accesorios Axia']['Productos'][0] | typeof tarifa2025['Accesorios Essenza']['Productos'][0];
+
+const groupKeywords: Record<string, string[]> = {
+    'Pantaloneros': ['pantalonero'],
+    'Zapateros': ['zapatero'],
+    'Soportes y Elevadores': ['elevador'],
+    'Espejos': ['espejo'],
+    'Cestos y Tolvas': ['cesto', 'tolva'],
+    'Barras y Percheros': ['barra', 'corbatero'],
+    'Tablas de Planchar': ['planchar'],
+    'Kits y Bandejas': ['kit', 'bandeja'],
+};
+
+
 export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> = ({ onSave, category }) => {
     const products = tarifa2025[category].Productos;
     const [selectedProduct, setSelectedProduct] = useState(products[0]);
     const [quantity, setQuantity] = useState(1);
+
+    const groupedProducts = useMemo(() => {
+        const groups: Record<string, Product[]> = {};
+        const others: Product[] = [];
+
+        products.forEach(product => {
+            let assigned = false;
+            for (const groupName in groupKeywords) {
+                if (groupKeywords[groupName].some(keyword => product.Producto.toLowerCase().includes(keyword))) {
+                    if (!groups[groupName]) {
+                        groups[groupName] = [];
+                    }
+                    groups[groupName].push(product);
+                    assigned = true;
+                    break;
+                }
+            }
+            if (!assigned) {
+                others.push(product);
+            }
+        });
+        
+        if (others.length > 0) {
+            groups['Otros'] = others;
+        }
+
+        return groups;
+    }, [products]);
+    
+
+    const handleProductChange = (productIdentifier: string) => {
+        const product = products.find(p => `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}` === productIdentifier);
+        if (product) setSelectedProduct(product);
+    }
 
     const total = selectedProduct.Precio * quantity;
 
@@ -42,6 +90,8 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
             total,
         });
     };
+    
+    const selectedProductIdentifier = `${selectedProduct.Producto}-${(selectedProduct as any).Ancho || (selectedProduct as any).Rango_Ancho}`;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -50,16 +100,23 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                     <div>
                         <Label>Producto</Label>
                         <Select
-                            value={selectedProduct.Producto}
-                            onValueChange={(productName) => {
-                                const product = products.find(p => p.Producto === productName);
-                                if (product) setSelectedProduct(product);
-                            }}
+                            value={selectedProductIdentifier}
+                            onValueChange={handleProductChange}
                         >
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {products.map((p, index) => (
-                                    <SelectItem key={`${p.Producto}-${index}`} value={p.Producto}>{p.Producto}</SelectItem>
+                                {Object.entries(groupedProducts).map(([groupName, productsInGroup]) => (
+                                    <SelectGroup key={groupName}>
+                                        <SelectLabel>{groupName}</SelectLabel>
+                                        {productsInGroup.map((p, index) => {
+                                            const identifier = `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}`;
+                                            return (
+                                                <SelectItem key={`${identifier}-${index}`} value={identifier}>
+                                                    {p.Producto} {((p as any).Ancho || (p as any).Rango_Ancho) ? `(${(p as any).Ancho || (p as any).Rango_Ancho}mm)` : ''}
+                                                </SelectItem>
+                                            )
+                                        })}
+                                    </SelectGroup>
                                 ))}
                             </SelectContent>
                         </Select>
