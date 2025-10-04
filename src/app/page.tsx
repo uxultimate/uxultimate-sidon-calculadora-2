@@ -10,27 +10,33 @@ import { useQuote } from '@/context/quote-context';
 
 export default function HomePage() {
     const { 
-        lineItems, 
+        stagedLineItems, 
         currentQuote,
-        addLineItem,
-        removeLineItem,
+        addStagedLineItem,
+        removeStagedLineItem,
         setCurrentQuote,
         handleCancel,
+        lineItemGroups,
+        addGroupToQuote,
+        removeLineItemGroup,
     } = useQuote();
 
 
     return (
         <div className="flex flex-col gap-8 py-4">
-            <AddLineItemForm onAddItem={addLineItem} />
+            <AddLineItemForm onAddItem={addStagedLineItem} />
             
             <Separator className="my-4" />
 
             <CalculatorOne 
-                lineItems={lineItems} 
-                removeLineItem={removeLineItem} 
+                stagedLineItems={stagedLineItems} 
+                removeStagedLineItem={removeStagedLineItem} 
                 currentQuote={currentQuote}
                 setCurrentQuote={setCurrentQuote}
                 onCancel={handleCancel}
+                lineItemGroups={lineItemGroups}
+                addGroupToQuote={addGroupToQuote}
+                removeLineItemGroup={removeLineItemGroup}
             />
 
         </div>

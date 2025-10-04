@@ -2,38 +2,78 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import type { LineItem, Quote } from '@/lib/types';
+import type { LineItem, Quote, LineItemGroup } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
 interface QuoteContextType {
-    lineItems: LineItem[];
-    setLineItems: React.Dispatch<React.SetStateAction<LineItem[]>>;
+    stagedLineItems: LineItem[];
+    setStagedLineItems: React.Dispatch<React.SetStateAction<LineItem[]>>;
     currentQuote: Quote | null;
     setCurrentQuote: React.Dispatch<React.SetStateAction<Quote | null>>;
-    addLineItem: (newItem: Omit<LineItem, 'id'>) => void;
-    removeLineItem: (id: number) => void;
+    lineItemGroups: LineItemGroup[];
+    setLineItemGroups: React.Dispatch<React.SetStateAction<LineItemGroup[]>>;
+    addStagedLineItem: (newItem: Omit<LineItem, 'id'>) => void;
+    removeStagedLineItem: (id: number) => void;
     handleCancel: () => void;
+    addGroupToQuote: (reference: string) => void;
+    removeLineItemGroup: (id: string) => void;
 }
 
 const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
 
 export const QuoteProvider = ({ children }: { children: ReactNode }) => {
-    const [lineItems, setLineItems] = useState<LineItem[]>([]);
+    const [stagedLineItems, setStagedLineItems] = useState<LineItem[]>([]);
+    const [lineItemGroups, setLineItemGroups] = useState<LineItemGroup[]>([]);
     const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
     const { toast } = useToast();
 
-    const addLineItem = (newItem: Omit<LineItem, 'id'>) => {
-        setLineItems(prev => [...prev, { ...newItem, id: Date.now() }]);
+    const addStagedLineItem = (newItem: Omit<LineItem, 'id'>) => {
+        setStagedLineItems(prev => [...prev, { ...newItem, id: Date.now() }]);
         setCurrentQuote(null); // Invalidate preview when items change
     };
     
-    const removeLineItem = (id: number) => {
-        setLineItems(prev => prev.filter(item => item.id !== id));
+    const removeStagedLineItem = (id: number) => {
+        setStagedLineItems(prev => prev.filter(item => item.id !== id));
         setCurrentQuote(null); // Invalidate preview when items change
     };
 
+    const addGroupToQuote = (reference: string) => {
+        if (stagedLineItems.length === 0) {
+            toast({
+                variant: 'destructive',
+                title: 'Grupo Vacío',
+                description: 'Añade al menos un concepto al grupo actual antes de guardarlo.',
+            });
+            return;
+        }
+
+        const groupTotal = stagedLineItems.reduce((acc, item) => acc + item.total, 0);
+
+        const newGroup: LineItemGroup = {
+            id: `group-${Date.now()}`,
+            reference,
+            lineItems: stagedLineItems.map(({id, ...rest}) => rest),
+            total: groupTotal,
+        };
+
+        setLineItemGroups(prev => [...prev, newGroup]);
+        setStagedLineItems([]);
+        setCurrentQuote(null);
+        toast({
+            title: 'Grupo Añadido',
+            description: `El grupo "${reference}" se ha añadido al presupuesto.`,
+        });
+    };
+    
+    const removeLineItemGroup = (id: string) => {
+        setLineItemGroups(prev => prev.filter(group => group.id !== id));
+        setCurrentQuote(null);
+    };
+
+
     const handleCancel = () => {
-        setLineItems([]);
+        setStagedLineItems([]);
+        setLineItemGroups([]);
         setCurrentQuote(null);
         toast({
             title: "Presupuesto borrado",
@@ -43,13 +83,17 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <QuoteContext.Provider value={{ 
-            lineItems, 
-            setLineItems, 
+            stagedLineItems,
+            setStagedLineItems,
             currentQuote, 
             setCurrentQuote,
-            addLineItem,
-            removeLineItem,
-            handleCancel
+            addStagedLineItem,
+            removeStagedLineItem,
+            handleCancel,
+            lineItemGroups,
+            setLineItemGroups,
+            addGroupToQuote,
+            removeLineItemGroup,
         }}>
             {children}
         </QuoteContext.Provider>

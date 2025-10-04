@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react';
 import { QuoteForm } from '@/components/quote-form';
 import { useToast } from '@/hooks/use-toast';
 import { QuotePDFPreview } from '@/components/quote-pdf-preview';
-import type { CompanyProfile, Quote, LineItem } from '@/lib/types';
+import type { CompanyProfile, Quote, LineItem, LineItemGroup } from '@/lib/types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
@@ -13,14 +13,26 @@ import { Download, Loader2 } from 'lucide-react';
 
 
 interface CalculatorOneProps {
-    lineItems: LineItem[];
-    removeLineItem: (id: number) => void;
+    stagedLineItems: LineItem[];
+    removeStagedLineItem: (id: number) => void;
     currentQuote: Quote | null;
     setCurrentQuote: (quote: Quote | null) => void;
     onCancel: () => void;
+    lineItemGroups: LineItemGroup[];
+    addGroupToQuote: (reference: string) => void;
+    removeLineItemGroup: (id: string) => void;
 }
 
-export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurrentQuote, onCancel }: CalculatorOneProps) {
+export function CalculatorOne({ 
+    stagedLineItems, 
+    removeStagedLineItem, 
+    currentQuote, 
+    setCurrentQuote, 
+    onCancel,
+    lineItemGroups,
+    addGroupToQuote,
+    removeLineItemGroup
+}: CalculatorOneProps) {
     const { toast } = useToast();
     const [isSaving, setIsSaving] = useState(false);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
@@ -35,18 +47,37 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
         logoUrl: "/images/sidon-logo-n.svg"
     };
 
-    const handleSave = async (quoteData: any) => {
+    const handleGenerateQuote = async () => {
         setIsSaving(true);
+        if (lineItemGroups.length === 0) {
+            toast({
+                variant: "destructive",
+                title: "Presupuesto Vacío",
+                description: "Añade al menos un grupo de conceptos al presupuesto.",
+            });
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const quoteNumber = `P-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
             
-            const finalQuote = {
-                ...quoteData,
+            const subtotal = lineItemGroups.reduce((acc, group) => acc + group.total, 0);
+            const tax = subtotal * 0.21;
+            const total = subtotal + tax;
+
+            const finalQuote: Quote = {
                 id: Math.random().toString(36).substring(2, 9),
                 quoteNumber: quoteNumber,
                 status: 'draft',
                 createdAt: new Date(),
-            } as Quote;
+                contactName: 'Cliente', // Placeholder
+                contactEmail: 'email@cliente.com', // Placeholder
+                lineItemGroups,
+                subtotal,
+                tax,
+                total,
+            };
 
             setCurrentQuote(finalQuote);
 
@@ -132,7 +163,16 @@ export function CalculatorOne({ lineItems, removeLineItem, currentQuote, setCurr
     
     return (
         <div className="flex flex-col gap-8">
-            <QuoteForm onSave={handleSave} isSaving={isSaving} lineItems={lineItems} removeLineItem={removeLineItem} onCancel={onCancel} />
+            <QuoteForm 
+                stagedLineItems={stagedLineItems} 
+                removeStagedLineItem={removeStagedLineItem}
+                onCancel={onCancel}
+                lineItemGroups={lineItemGroups}
+                addGroupToQuote={addGroupToQuote}
+                onGenerateQuote={handleGenerateQuote}
+                isGenerating={isSaving}
+                removeLineItemGroup={removeLineItemGroup}
+            />
 
             {currentQuote && (
                 <div className='mt-8' ref={previewRef}>

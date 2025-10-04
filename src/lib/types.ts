@@ -1,4 +1,12 @@
 
+
+export interface LineItemGroup {
+  id: string;
+  reference: string;
+  lineItems: Omit<LineItem, 'id'>[];
+  total: number;
+}
+
 export interface Quote {
   id: string;
   quoteNumber?: string;
@@ -7,7 +15,7 @@ export interface Quote {
   contactCif?: string;
   contactEmail: string;
   contactAddress?: string;
-  lineItems: Omit<LineItem, 'id'>[];
+  lineItemGroups: LineItemGroup[];
   subtotal: number;
   tax: number;
   total: number;

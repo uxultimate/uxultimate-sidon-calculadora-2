@@ -5,8 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { CompanyProfile, Quote } from '@/lib/types';
-import Image from 'next/image';
+import type { CompanyProfile, Quote, LineItem } from '@/lib/types';
 import { PdfLogo } from './pdf-logo';
 
 interface QuotePDFPreviewProps {
@@ -50,23 +49,31 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Ud</TableHead>
                                 <TableHead>Descripción</TableHead>
-                                <TableHead className="text-center w-[100px]">Cantidad</TableHead>
-                                <TableHead className="text-right w-[120px]">Precio Unit.</TableHead>
                                 <TableHead className="text-right w-[120px]">Total</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {quote.lineItems.map((item: any, index: number) => (
-                                <TableRow key={index}>
-                                    <TableCell className="font-medium">
-                                    <p className="font-bold">{item.name}</p>
-                                    <p className="text-sm text-muted-foreground break-words whitespace-normal">{item.details}</p>
-                                    </TableCell>
-                                    <TableCell className="text-center">{item.quantity}</TableCell>
-                                    <TableCell className="text-right">{formatPrice(item.price)}</TableCell>
-                                    <TableCell className="text-right font-medium">{formatPrice(item.total)}</TableCell>
-                                </TableRow>
+                            {quote.lineItemGroups.map((group, groupIndex) => (
+                                <React.Fragment key={group.id}>
+                                    <TableRow className="bg-muted/30">
+                                        <TableCell className="font-bold">1</TableCell>
+                                        <TableCell className="font-bold">{group.reference}</TableCell>
+                                        <TableCell className="text-right font-bold">{formatPrice(group.total)}</TableCell>
+                                    </TableRow>
+                                    {group.lineItems.map((item, itemIndex) => (
+                                        <TableRow key={`${group.id}-${itemIndex}`} className="text-sm">
+                                            <TableCell></TableCell>
+                                            <TableCell colSpan={2}>
+                                                <p className="text-muted-foreground break-words whitespace-normal">
+                                                    {item.name}
+                                                    {item.quantity > 1 && ` (x${item.quantity})`}: {item.details}
+                                                </p>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </React.Fragment>
                             ))}
                         </TableBody>
                     </Table>
