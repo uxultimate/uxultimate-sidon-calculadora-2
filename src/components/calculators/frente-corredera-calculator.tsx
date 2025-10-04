@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -107,6 +107,14 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
             total,
         });
     };
+    
+    const materialGroups = {
+        'Melaminas': ['Melamina_blanco_liso', 'Melamina_color'],
+        'Espejos y Cristales': ['Espejo_plata', 'Cristal_color'],
+        'Lacas': ['Laca_blanca_lisa', 'Laca_blanca_pico', 'Laca_blanca_fresada_o_plafon', 'Laca_blanca_aspa_o_vidriera'],
+        'Maderas': ['Madera_roble_barniz_mate_natura', 'Madera_nogal_barniz_mate_natura'],
+        'Colecciones': ['Coleccion_Mallorca', 'Coleccion_Vitrina']
+    };
 
     return (
        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -141,8 +149,17 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                 <Select value={material} onValueChange={setMaterial}>
                                     <SelectTrigger className="truncate"><SelectValue placeholder="Selecciona un material" /></SelectTrigger>
                                     <SelectContent>
-                                        {Object.entries(materials).map(([key, value]) => (
-                                            <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value as number)}/ml)</SelectItem>
+                                        {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
+                                            <SelectGroup key={groupName}>
+                                                <SelectLabel>{groupName}</SelectLabel>
+                                                {groupMaterials.map((key) => {
+                                                    const value = materials[key as keyof typeof materials];
+                                                    if (!value) return null;
+                                                    return (
+                                                        <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value as number)}/ml)</SelectItem>
+                                                    )
+                                                })}
+                                            </SelectGroup>
                                         ))}
                                     </SelectContent>
                                 </Select>

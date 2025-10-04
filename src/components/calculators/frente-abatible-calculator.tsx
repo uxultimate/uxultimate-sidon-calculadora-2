@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -125,6 +125,13 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             total,
         });
     };
+    
+    const materialGroups = {
+        'Melaminas': ['Melamina_blanco_liso', 'Melamina_colores'],
+        'Cristales': ['Cristal_o_espejo'],
+        'Lacas': ['Laca_blanca_lisa', 'Laca_blanca_pantografos_o_uneros', 'Laca_blanca_fresada_o_plafon', 'Laca_blanca_vidriera'],
+        'Maderas': ['Madera_roble_barniz_mate_natura', 'Madera_nogal_barniz_mate_natura', 'Madera_roble_barniz_mate_natura_UNERO', 'Madera_roble_barniz_mate_natura_UÑERO_otro'],
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -157,8 +164,17 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                             <Select value={material} onValueChange={setMaterial}>
                                 <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                                 <SelectContent>
-                                    {Object.entries(materials).map(([key, value]) => (
-                                        <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value)}/ml)</SelectItem>
+                                    {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
+                                        <SelectGroup key={groupName}>
+                                            <SelectLabel>{groupName}</SelectLabel>
+                                            {groupMaterials.map((key) => {
+                                                const value = materials[key as keyof typeof materials];
+                                                if (!value) return null;
+                                                return (
+                                                    <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value)}/ml)</SelectItem>
+                                                )
+                                            })}
+                                        </SelectGroup>
                                     ))}
                                 </SelectContent>
                             </Select>
