@@ -23,37 +23,40 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
 
     return (
         <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
-            <CardHeader className="p-0 mb-8 grid grid-cols-2 gap-4 items-start">
-                <div>
+            <CardHeader className="p-0 mb-8 grid grid-cols-3 gap-8 items-start">
+                {/* Company Info */}
+                <div className="col-span-1">
                     <PdfLogo />
                     {company && (
-                        <div className='mt-4'>
-                            <p className="text-sm font-semibold text-gray-800">{company.name}</p>
-                            <p className="text-sm text-muted-foreground whitespace-pre-line">{company.address}</p>
-                            <p className="text-sm text-muted-foreground">{company.email}</p>
-                            <p className="text-sm text-muted-foreground">{company.phone}</p>
+                        <div className='mt-4 text-xs space-y-0.5'>
+                            <p className="font-semibold text-gray-800">{company.name}</p>
+                            <p className="text-muted-foreground whitespace-pre-line">{company.address}</p>
+                            <p className="text-muted-foreground">{company.email}</p>
+                            <p className="text-muted-foreground">{company.phone}</p>
                         </div>
                     )}
                 </div>
-                <div className="text-right">
-                    <h3 className="text-lg font-semibold">PRESUPUESTO</h3>
-                    <p className="text-sm text-muted-foreground">{displayQuoteNumber}</p>
-                    <p className="mt-2 text-sm"><span className="font-semibold">Fecha:</span> {creationDate}</p>
+
+                {/* Quote Details */}
+                <div className="col-span-1 text-center">
+                    <h3 className="text-base font-semibold">PRESUPUESTO</h3>
+                    <p className="text-xs text-muted-foreground">{displayQuoteNumber}</p>
+                    <p className="mt-1 text-xs"><span className="font-semibold">Fecha:</span> {creationDate}</p>
+                </div>
+
+                {/* Client Info */}
+                <div className="col-span-1 text-right">
+                    <h4 className="font-semibold text-gray-800 text-sm">Cliente:</h4>
+                    <div className="text-xs text-muted-foreground space-y-0.5">
+                        {quote.contactName && <p className="font-bold">{quote.contactName}</p>}
+                        {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
+                        {quote.contactCif && <p>{quote.contactCif}</p>}
+                        {quote.contactAddress && <p>{quote.contactAddress}</p>}
+                        {quote.contactEmail && <p>{quote.contactEmail}</p>}
+                        {quote.contactPhone && <p>{quote.contactPhone}</p>}
+                    </div>
                 </div>
             </CardHeader>
-            
-            <div>
-                <h4 className="font-semibold text-gray-800">Cliente:</h4>
-                <div className="text-sm text-muted-foreground">
-                    <p className="font-bold">{quote.contactName}</p>
-                    {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
-                    {quote.contactCif && <p>{quote.contactCif}</p>}
-                    {quote.contactAddress && <p>{quote.contactAddress}</p>}
-                    {quote.contactEmail && <p>{quote.contactEmail}</p>}
-                    {quote.contactPhone && <p>{quote.contactPhone}</p>}
-                </div>
-            </div>
-
 
             <Separator className="my-6" />
 
