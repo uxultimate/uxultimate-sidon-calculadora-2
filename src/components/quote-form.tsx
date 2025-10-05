@@ -11,6 +11,17 @@ import type { LineItem, LineItemGroup, ClientProfile } from '@/lib/types';
 import { Input } from './ui/input';
 import { formatCurrency } from '@/lib/utils';
 import { Label } from './ui/label';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface QuoteFormProps {
     stagedLineItems: LineItem[];
@@ -163,17 +174,33 @@ export function QuoteForm({
                              <div key={group.id} className="rounded-lg border">
                                  <div className="flex justify-between items-center bg-muted/50 px-4 py-3 rounded-t-lg">
                                      <h3 className="font-semibold">{group.reference}</h3>
-                                     <div className='flex items-center gap-2'>
-                                        <span className='font-semibold'>{formatCurrency(group.total)}</span>
+                                     <div className='flex items-center gap-1'>
+                                        <span className='font-semibold mr-2'>{formatCurrency(group.total)}</span>
                                         <Button variant="ghost" size="icon" onClick={() => moveLineItemGroupUp(group.id)} disabled={index === 0}>
                                             <ArrowUp className="h-4 w-4" />
                                         </Button>
                                         <Button variant="ghost" size="icon" onClick={() => moveLineItemGroupDown(group.id)} disabled={index === lineItemGroups.length - 1}>
                                             <ArrowDown className="h-4 w-4" />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => removeLineItemGroup(group.id)}>
-                                            <Trash2 className="h-4 w-4 text-destructive" />
-                                        </Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="icon">
+                                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>¿Estás seguro de que quieres borrar este grupo?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Esta acción es irreversible. Se eliminará el grupo "{group.reference}" y todos sus conceptos del presupuesto.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => removeLineItemGroup(group.id)}>Confirmar y Borrar</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                      </div>
                                  </div>
                                 <div className="p-4 text-sm text-muted-foreground">
@@ -280,3 +307,5 @@ export function QuoteForm({
     </div>
   );
 }
+
+    
