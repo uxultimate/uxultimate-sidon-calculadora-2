@@ -1,9 +1,11 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import type { LineItem, Quote, LineItemGroup } from '@/lib/types';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import type { LineItem, Quote, LineItemGroup, ClientProfile } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+
+const STORAGE_KEY = 'quoteFormData';
 
 interface QuoteContextType {
     stagedLineItems: LineItem[];
@@ -12,11 +14,16 @@ interface QuoteContextType {
     setCurrentQuote: React.Dispatch<React.SetStateAction<Quote | null>>;
     lineItemGroups: LineItemGroup[];
     setLineItemGroups: React.Dispatch<React.SetStateAction<LineItemGroup[]>>;
+    clientProfile: ClientProfile;
+    setClientProfile: React.Dispatch<React.SetStateAction<ClientProfile>>;
+    discountPercentage: number;
+    setDiscountPercentage: React.Dispatch<React.SetStateAction<number>>;
     addStagedLineItem: (newItem: Omit<LineItem, 'id'>) => void;
     removeStagedLineItem: (id: number) => void;
     handleCancel: () => void;
     addGroupToQuote: (reference: string) => void;
     removeLineItemGroup: (id: string) => void;
+    isLoaded: boolean;
 }
 
 const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
@@ -25,7 +32,45 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
     const [stagedLineItems, setStagedLineItems] = useState<LineItem[]>([]);
     const [lineItemGroups, setLineItemGroups] = useState<LineItemGroup[]>([]);
     const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
+    const [clientProfile, setClientProfile] = useState<ClientProfile>({
+        contactName: '',
+        contactCompanyName: '',
+        contactCif: '',
+        contactEmail: '',
+        contactPhone: '',
+        contactAddress: '',
+    });
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
     const { toast } = useToast();
+
+    useEffect(() => {
+        try {
+            const savedData = sessionStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                const { stagedLineItems, lineItemGroups, clientProfile, discountPercentage } = JSON.parse(savedData);
+                if (stagedLineItems) setStagedLineItems(stagedLineItems);
+                if (lineItemGroups) setLineItemGroups(lineItemGroups);
+                if (clientProfile) setClientProfile(clientProfile);
+                if (discountPercentage) setDiscountPercentage(discountPercentage);
+            }
+        } catch (error) {
+            console.error("Failed to load state from session storage", error);
+        } finally {
+            setIsLoaded(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isLoaded) {
+            try {
+                const dataToSave = JSON.stringify({ stagedLineItems, lineItemGroups, clientProfile, discountPercentage });
+                sessionStorage.setItem(STORAGE_KEY, dataToSave);
+            } catch (error) {
+                console.error("Failed to save state to session storage", error);
+            }
+        }
+    }, [stagedLineItems, lineItemGroups, clientProfile, discountPercentage, isLoaded]);
 
     const addStagedLineItem = (newItem: Omit<LineItem, 'id'>) => {
         setStagedLineItems(prev => [...prev, { ...newItem, id: Date.now() }]);
@@ -75,6 +120,16 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
         setStagedLineItems([]);
         setLineItemGroups([]);
         setCurrentQuote(null);
+        setClientProfile({
+            contactName: '',
+            contactCompanyName: '',
+            contactCif: '',
+            contactEmail: '',
+            contactPhone: '',
+            contactAddress: '',
+        });
+        setDiscountPercentage(0);
+        sessionStorage.removeItem(STORAGE_KEY);
         toast({
             title: "Presupuesto borrado",
             description: "Puedes empezar a crear uno nuevo.",
@@ -94,6 +149,11 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
             setLineItemGroups,
             addGroupToQuote,
             removeLineItemGroup,
+            clientProfile,
+            setClientProfile,
+            discountPercentage,
+            setDiscountPercentage,
+            isLoaded,
         }}>
             {children}
         </QuoteContext.Provider>

@@ -10,6 +10,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
+import { useQuote } from '@/context/quote-context';
 
 
 interface CalculatorOneProps {
@@ -34,20 +35,11 @@ export function CalculatorOne({
     removeLineItemGroup
 }: CalculatorOneProps) {
     const { toast } = useToast();
+    const { clientProfile, setClientProfile, discountPercentage, setDiscountPercentage } = useQuote();
     const [isSaving, setIsSaving] = useState(false);
     const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
-    const [discountPercentage, setDiscountPercentage] = useState(0);
-
-    const [clientProfile, setClientProfile] = useState<ClientProfile>({
-        contactName: '',
-        contactCompanyName: '',
-        contactCif: '',
-        contactEmail: '',
-        contactPhone: '',
-        contactAddress: '',
-    });
 
     const companyProfile: CompanyProfile = {
         name: "Sidon",
