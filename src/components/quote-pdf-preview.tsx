@@ -45,7 +45,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
 
                 {/* Client Info */}
                 <div className="col-span-1 text-right">
-                    <h4 className="font-semibold text-gray-800 text-sm">Cliente:</h4>
+                    <h4 className="font-semibold text-gray-800 text-sm">CLIENTE</h4>
                     <div className="text-xs text-muted-foreground space-y-0.5">
                         {quote.contactName && <p className="font-bold">{quote.contactName}</p>}
                         {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
