@@ -14,6 +14,7 @@ import { InteriorVestidorCalculator } from './calculators/interior-vestidor-calc
 import { CajonesCalculator } from './calculators/cajones-calculator';
 import { TiradoresCalculator } from './calculators/tiradores-calculator';
 import { AxiaEssenzaLedCalculator } from './calculators/axia-essenza-led-calculator';
+import { ConceptoLibreCalculator } from './calculators/concepto-libre-calculator';
 
 
 interface AddLineItemFormProps {
@@ -39,10 +40,11 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="paneles" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 h-auto mb-4 bg-primary text-primary-foreground">
+                    <TabsList className="grid w-full grid-cols-4 h-auto mb-4 bg-primary text-primary-foreground">
                         <TabsTrigger value="paneles">Paneles</TabsTrigger>
                         <TabsTrigger value="armarios">Armarios</TabsTrigger>
                         <TabsTrigger value="interiores">Interiores</TabsTrigger>
+                        <TabsTrigger value="otros">Otros</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="paneles" className="mt-4">
@@ -93,6 +95,10 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
                                 <AxiaEssenzaLedCalculator onSave={handleSave} category="Accesorios Essenza"/>
                             </TabsContent>
                         </Tabs>
+                    </TabsContent>
+
+                     <TabsContent value="otros" className="mt-4">
+                        <ConceptoLibreCalculator onSave={handleSave} />
                     </TabsContent>
                 </Tabs>
             </CardContent>
