@@ -119,6 +119,12 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     </div>
                 </div>
             </CardFooter>
+
+            <Separator className="my-6" />
+
+            <div className="text-center text-xs text-muted-foreground">
+                <p>BCT, S.L. B87985818 C/ Pico Almanzor 24-26 28500 Arganda del Rey. Madrid</p>
+            </div>
         </Card>
     );
 }
