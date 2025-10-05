@@ -22,6 +22,8 @@ interface CalculatorOneProps {
     lineItemGroups: LineItemGroup[];
     addGroupToQuote: (reference: string) => void;
     removeLineItemGroup: (id: string) => void;
+    moveLineItemGroupUp: (id: string) => void;
+    moveLineItemGroupDown: (id: string) => void;
 }
 
 export function CalculatorOne({ 
@@ -32,7 +34,9 @@ export function CalculatorOne({
     onCancel,
     lineItemGroups,
     addGroupToQuote,
-    removeLineItemGroup
+    removeLineItemGroup,
+    moveLineItemGroupUp,
+    moveLineItemGroupDown,
 }: CalculatorOneProps) {
     const { toast } = useToast();
     const { clientProfile, setClientProfile, discountPercentage, setDiscountPercentage } = useQuote();
@@ -187,6 +191,8 @@ export function CalculatorOne({
                 onGenerateQuote={handleGenerateQuote}
                 isGenerating={isSaving}
                 removeLineItemGroup={removeLineItemGroup}
+                moveLineItemGroupUp={moveLineItemGroupUp}
+                moveLineItemGroupDown={moveLineItemGroupDown}
                 clientProfile={clientProfile}
                 setClientProfile={setClientProfile}
                 discountPercentage={discountPercentage}

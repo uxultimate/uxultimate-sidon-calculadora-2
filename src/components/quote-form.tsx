@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Loader2, Plus, ArrowRight, Percent } from "lucide-react";
+import { Trash2, Loader2, Plus, ArrowRight, Percent, ArrowUp, ArrowDown } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import type { LineItem, LineItemGroup, ClientProfile } from '@/lib/types';
 import { Input } from './ui/input';
@@ -18,6 +18,8 @@ interface QuoteFormProps {
     lineItemGroups: LineItemGroup[];
     addGroupToQuote: (reference: string) => void;
     removeLineItemGroup: (id: string) => void;
+    moveLineItemGroupUp: (id: string) => void;
+    moveLineItemGroupDown: (id: string) => void;
     onGenerateQuote: () => void;
     isGenerating: boolean;
     onCancel: () => void;
@@ -33,6 +35,8 @@ export function QuoteForm({
     lineItemGroups,
     addGroupToQuote,
     removeLineItemGroup,
+    moveLineItemGroupUp,
+    moveLineItemGroupDown,
     onGenerateQuote,
     isGenerating,
     onCancel,
@@ -155,21 +159,27 @@ export function QuoteForm({
             <CardContent>
                  {lineItemGroups.length > 0 ? (
                     <div className="space-y-6">
-                        {lineItemGroups.map(group => (
+                        {lineItemGroups.map((group, index) => (
                              <div key={group.id} className="rounded-lg border">
                                  <div className="flex justify-between items-center bg-muted/50 px-4 py-3 rounded-t-lg">
                                      <h3 className="font-semibold">{group.reference}</h3>
-                                     <div className='flex items-center gap-4'>
+                                     <div className='flex items-center gap-2'>
                                         <span className='font-semibold'>{formatCurrency(group.total)}</span>
+                                        <Button variant="ghost" size="icon" onClick={() => moveLineItemGroupUp(group.id)} disabled={index === 0}>
+                                            <ArrowUp className="h-4 w-4" />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => moveLineItemGroupDown(group.id)} disabled={index === lineItemGroups.length - 1}>
+                                            <ArrowDown className="h-4 w-4" />
+                                        </Button>
                                         <Button variant="ghost" size="icon" onClick={() => removeLineItemGroup(group.id)}>
                                             <Trash2 className="h-4 w-4 text-destructive" />
                                         </Button>
                                      </div>
                                  </div>
                                 <div className="p-4 text-sm text-muted-foreground">
-                                    {group.lineItems.map((item, index) => (
-                                        <p key={index} className='truncate'>
-                                            {item.quantity > 1 ? `${item.quantity}x` : ''} {item.name} - {item.details}
+                                    {group.lineItems.map((item, itemIndex) => (
+                                        <p key={itemIndex} className='truncate'>
+                                            {item.quantity > 1 ? `${item.quantity}x ` : ''}{item.name} - {item.details}
                                         </p>
                                     ))}
                                 </div>

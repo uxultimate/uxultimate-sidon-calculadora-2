@@ -23,6 +23,8 @@ interface QuoteContextType {
     handleCancel: () => void;
     addGroupToQuote: (reference: string) => void;
     removeLineItemGroup: (id: string) => void;
+    moveLineItemGroupUp: (id: string) => void;
+    moveLineItemGroupDown: (id: string) => void;
     isLoaded: boolean;
 }
 
@@ -115,6 +117,25 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
         setCurrentQuote(null);
     };
 
+    const moveLineItemGroup = (id: string, direction: 'up' | 'down') => {
+        setLineItemGroups(prev => {
+            const index = prev.findIndex(group => group.id === id);
+            if (index === -1) return prev;
+
+            const newIndex = direction === 'up' ? index - 1 : index + 1;
+            if (newIndex < 0 || newIndex >= prev.length) return prev;
+
+            const newGroups = [...prev];
+            const [movedGroup] = newGroups.splice(index, 1);
+            newGroups.splice(newIndex, 0, movedGroup);
+            return newGroups;
+        });
+        setCurrentQuote(null);
+    };
+
+    const moveLineItemGroupUp = (id: string) => moveLineItemGroup(id, 'up');
+    const moveLineItemGroupDown = (id: string) => moveLineItemGroup(id, 'down');
+
 
     const handleCancel = () => {
         setStagedLineItems([]);
@@ -149,6 +170,8 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
             setLineItemGroups,
             addGroupToQuote,
             removeLineItemGroup,
+            moveLineItemGroupUp,
+            moveLineItemGroupDown,
             clientProfile,
             setClientProfile,
             discountPercentage,

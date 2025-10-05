@@ -20,6 +20,8 @@ export default function HomePage() {
         lineItemGroups,
         addGroupToQuote,
         removeLineItemGroup,
+        moveLineItemGroupUp,
+        moveLineItemGroupDown,
         isLoaded,
     } = useQuote();
 
@@ -46,6 +48,8 @@ export default function HomePage() {
                 lineItemGroups={lineItemGroups}
                 addGroupToQuote={addGroupToQuote}
                 removeLineItemGroup={removeLineItemGroup}
+                moveLineItemGroupUp={moveLineItemGroupUp}
+                moveLineItemGroupDown={moveLineItemGroupDown}
             />
 
         </div>
