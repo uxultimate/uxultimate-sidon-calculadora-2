@@ -153,8 +153,8 @@ export function QuoteForm({
                         onKeyDown={(e) => e.key === 'Enter' && handleAddGroup()}
                     />
                 </div>
-                <Button onClick={handleAddGroup} disabled={stagedLineItems.length === 0 || groupReference.trim() === ''} className="w-full sm:w-auto mt-4 sm:mt-8">
-                    <Plus className="mr-2 h-4 w-4" /> Añadir Grupo al Presupuesto
+                <Button onClick={handleAddGroup} disabled={stagedLineItems.length === 0 || groupReference.trim() === ''} className="w-full sm:w-auto sm:self-end">
+                    <Plus className="mr-2 h-4 w-4" /> Añadir Grupo
                 </Button>
             </CardContent>
         </Card>
@@ -172,7 +172,7 @@ export function QuoteForm({
                     <div className="space-y-6">
                         {lineItemGroups.map((group, index) => (
                              <div key={group.id} className="rounded-lg border">
-                                 <div className="flex justify-between items-center bg-muted/50 px-4 py-3 rounded-t-lg">
+                                 <div className="flex justify-between items-center bg-muted/50 px-4 py-3 rounded-t-lg flex-wrap gap-2">
                                      <h3 className="font-semibold">{group.reference}</h3>
                                      <div className='flex items-center gap-1'>
                                         <span className='font-semibold mr-2'>{formatCurrency(group.total)}</span>
@@ -268,7 +268,7 @@ export function QuoteForm({
                 <CardDescription>Introduce la información del cliente para el presupuesto.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="contactName">Nombre Completo</Label>
                         <Input id="contactName" name="contactName" value={clientProfile.contactName} onChange={handleClientProfileChange} placeholder="Nombre del cliente" />

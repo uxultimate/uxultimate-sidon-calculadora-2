@@ -28,7 +28,7 @@ export default function RootLayout({
         <QuoteProvider>
           <div className="flex min-h-screen w-full flex-col max-w-[1440px] mx-auto">
             <Header />
-            <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
+            <main className="flex-1 p-4 md:p-6 overflow-y-auto">
               {children}
             </main>
           </div>
