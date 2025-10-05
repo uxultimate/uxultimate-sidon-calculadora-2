@@ -29,7 +29,6 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     <PdfLogo />
                     {company && (
                         <div className='mt-4 text-xs space-y-0.5'>
-                            <p className="font-semibold text-gray-800">{company.name}</p>
                             <p className="text-muted-foreground whitespace-pre-line">{company.address}</p>
                             <p className="text-muted-foreground">{company.email}</p>
                             <p className="text-muted-foreground">{company.phone}</p>
