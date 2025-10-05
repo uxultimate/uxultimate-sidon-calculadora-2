@@ -93,11 +93,14 @@ export function CalculatorOne({
                 ...clientProfile,
                 lineItemGroups,
                 subtotal,
-                discountPercentage,
-                discountAmount,
                 tax,
                 total,
             };
+
+            if (discountPercentage > 0) {
+                finalQuote.discountPercentage = discountPercentage;
+                finalQuote.discountAmount = discountAmount;
+            }
 
             setCurrentQuote(finalQuote);
 
