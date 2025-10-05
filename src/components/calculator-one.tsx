@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2 } from 'lucide-react';
 import { useQuote } from '@/context/quote-context';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 
 
 interface CalculatorOneProps {
@@ -200,19 +201,24 @@ export function CalculatorOne({
             />
 
             {currentQuote && (
-                <div className='mt-8' ref={previewRef}>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-bold tracking-tight font-headline">Presupuesto Generado</h2>
-                        <Button onClick={handleDownloadPdf} disabled={isProcessingPdf}>
-                            {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                            Descargar PDF
-                        </Button>
-                    </div>
-                     <div className="w-full">
-                        <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">
-                            <QuotePDFPreview quote={currentQuote} company={companyProfile} />
-                        </div>
-                    </div>
+                <div ref={previewRef}>
+                    <Card>
+                        <CardHeader>
+                            <div className="flex justify-between items-center">
+                                <CardTitle className="font-headline">Presupuesto Generado</CardTitle>
+                                <Button onClick={handleDownloadPdf} disabled={isProcessingPdf}>
+                                    {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+                                    Descargar PDF
+                                </Button>
+                            </div>
+                            <CardDescription>Esta es una vista previa del presupuesto final. Puedes descargarlo como PDF.</CardDescription>
+                        </CardHeader>
+                        <CardContent className='p-0'>
+                            <div className="border-t">
+                                <QuotePDFPreview quote={currentQuote} company={companyProfile} />
+                            </div>
+                        </CardContent>
+                    </Card>
                     {/* Hidden element for PDF generation */}
                     <div className="fixed -left-[9999px] top-0 bg-white" style={{ width: '210mm' }}>
                          <div ref={pdfRenderRef}>
