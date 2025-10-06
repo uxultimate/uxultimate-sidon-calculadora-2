@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Minus, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
@@ -25,11 +25,18 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
     
     const itemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[itemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
     const materialData = itemData[material as keyof typeof itemData];
-    
+
+    const materialGroups = {
+        'Melaminas': ['Melamina_blanco_o_lino_cancun_textil', 'Melamina_colores'],
+        'Laca': ['Laca'],
+        'Madera': ['Madera'],
+        'Celdillas': ['Celdillas_Melamina', 'Celdillas_Laca', 'Celdillas_Madera'],
+    };
+
     const handleItemTypeChange = (newItemType: string) => {
         setItemType(newItemType);
         const newItemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[newItemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
-        if (!newItemData[material as keyof typeof newItemData]) {
+        if (!Object.keys(newItemData).includes(material)) {
             setMaterial(Object.keys(newItemData)[0]);
         }
     };
@@ -82,9 +89,19 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                         <Select value={material} onValueChange={setMaterial}>
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                                {Object.keys(itemData).map((mat, index) => (
-                                    <SelectItem key={`${mat}-${index}`} value={mat}>{mat.replace(/_/g, ' ')}</SelectItem>
-                                ))}
+                                {Object.entries(materialGroups).map(([groupName, materials]) => {
+                                    const availableMaterials = materials.filter(mat => Object.keys(itemData).includes(mat));
+                                    if (availableMaterials.length === 0) return null;
+
+                                    return (
+                                        <SelectGroup key={groupName}>
+                                            <SelectLabel>{groupName}</SelectLabel>
+                                            {availableMaterials.map((mat, index) => (
+                                                <SelectItem key={`${mat}-${index}`} value={mat}>{mat.replace(/_/g, ' ')}</SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    );
+                                })}
                             </SelectContent>
                         </Select>
                     </div>
