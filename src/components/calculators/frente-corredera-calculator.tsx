@@ -71,13 +71,15 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
 
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
-            finalTotal += baseTotal * (extraHeightCm * 0.10);
+            const extraCostPercentage = extraHeightCm * 0.10;
+            finalTotal += baseTotal * extraCostPercentage;
+            detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`);
         } else if (heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
-            detailsArray.push('Dto. altura < 800mm');
+            detailsArray.push('Dto. altura < 800mm (-50%)');
         } else if (heightInMm < 1500) {
             finalTotal *= 0.70; // 30% discount
-            detailsArray.push('Dto. altura < 1500mm');
+            detailsArray.push('Dto. altura < 1500mm (-30%)');
         }
         
         Object.entries(supplements).forEach(([concepto, { checked }]) => {
@@ -131,13 +133,13 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
                                 {measurements.height > 2400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
                                 )}
                                 {measurements.height < 1500 && measurements.height >= 800 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -30%</p>
+                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
                                 )}
                                 {measurements.height < 800 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -50%</p>
+                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
                             <div>

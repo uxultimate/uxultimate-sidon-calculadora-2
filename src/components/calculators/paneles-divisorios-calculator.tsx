@@ -75,9 +75,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         const detailsArray = [`${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
-            const discount = total * 0.25;
-            total -= discount;
-            detailsArray.push('Dto. altura < 1500mm');
+            total *= 0.75; // 25% discount
+            detailsArray.push('Dto. altura < 1500mm (-25%)');
         }
 
         Object.entries(panelSupplements).forEach(([concepto, { checked, quantity }]) => {
@@ -137,7 +136,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
                                 )}
                                 {measurements.height < 1500 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -25%</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
                                 )}
                             </div>
                             <div>

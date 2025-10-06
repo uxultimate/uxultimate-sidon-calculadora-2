@@ -93,23 +93,25 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
 
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
-            finalTotal += baseTotal * (extraHeightCm * 0.10);
-            detailsArray.push(`Suplemento altura > 2400mm`);
+            const extraCostPercentage = extraHeightCm * 0.10;
+            finalTotal += baseTotal * extraCostPercentage;
+            detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage*100).toFixed(0)}%)`);
         } else if (heightInMm < 800) {
              finalTotal *= 0.50; // 50% discount
-             detailsArray.push('Dto. altura < 800mm');
+             detailsArray.push('Dto. altura < 800mm (-50%)');
         } else if (heightInMm < 1500) {
              finalTotal *= 0.70; // 30% discount
-             detailsArray.push('Dto. altura < 1500mm');
+             detailsArray.push('Dto. altura < 1500mm (-30%)');
         }
 
         if (depthInMm > 650) {
             const extraDepthCm = Math.ceil((depthInMm - 650) / 100);
-            finalTotal += baseTotal * (extraDepthCm * 0.10);
-            detailsArray.push(`Suplemento fondo > 650mm`);
+            const extraCostPercentage = extraDepthCm * 0.10;
+            finalTotal += baseTotal * extraCostPercentage;
+            detailsArray.push(`Sup. fondo > 650mm (+${(extraCostPercentage*100).toFixed(0)}%)`);
         } else if (depthInMm < 400) {
             finalTotal *= 0.75; // 25% discount
-            detailsArray.push('Dto. fondo < 400mm');
+            detailsArray.push('Dto. fondo < 400mm (-25%)');
         }
 
         Object.entries(supplements).forEach(([concepto, { checked, quantity }]) => {
@@ -162,13 +164,13 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
                                 {measurements.height > 2400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
                                 )}
                                 {measurements.height < 1500 && measurements.height >= 800 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -30%</p>
+                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
                                 )}
                                 {measurements.height < 800 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -50%</p>
+                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
                             <div>
@@ -179,10 +181,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 <Label>Fondo (mm)</Label>
                                 <Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} />
                                 {measurements.depth > 650 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por fondo: +10% cada 10cm</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Sup. fondo &gt; 650mm (+10% cada 10cm)</p>
                                 )}
                                 {measurements.depth < 400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Descuento por fondo: -25%</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Dto. fondo &lt; 400mm (-25%)</p>
                                 )}
                             </div>
                         </div>
