@@ -107,7 +107,7 @@ export function QuoteForm({
                         <TableCell className="font-medium">
                         <p className="font-bold">
                             {item.name}
-                            {item.quantity > 1 && <span className="font-medium"> (x{item.quantity})</span>}
+                            <span className="font-medium"> (x{item.quantity})</span>
                         </p>
                         <p className="text-sm text-muted-foreground break-words whitespace-normal">{item.details}</p>
                         </TableCell>
@@ -206,7 +206,7 @@ export function QuoteForm({
                                 <div className="p-4 text-sm text-muted-foreground">
                                     {group.lineItems.map((item, itemIndex) => (
                                         <p key={itemIndex} className='truncate'>
-                                            {item.quantity > 1 ? `${item.quantity}x ` : ''}{item.name} - {item.details}
+                                            {item.quantity}x {item.name} - {item.details}
                                         </p>
                                     ))}
                                 </div>

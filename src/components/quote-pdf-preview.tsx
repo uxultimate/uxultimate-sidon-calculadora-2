@@ -82,7 +82,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                                             <TableCell></TableCell>
                                             <TableCell colSpan={2}>
                                                 <p className="text-muted-foreground break-words whitespace-normal">
-                                                    {item.quantity > 1 && `${item.quantity}x `}{item.name}: {item.details}
+                                                    {item.quantity}x {item.name}: {item.details}
                                                 </p>
                                             </TableCell>
                                         </TableRow>
