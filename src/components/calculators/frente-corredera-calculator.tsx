@@ -133,6 +133,12 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                 {measurements.height > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
                                 )}
+                                {measurements.height < 1500 && measurements.height >= 800 && (
+                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -30%</p>
+                                )}
+                                {measurements.height < 800 && (
+                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -50%</p>
+                                )}
                             </div>
                             <div>
                                 <Label>Ancho (mm)</Label>

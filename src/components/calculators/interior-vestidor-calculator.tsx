@@ -164,9 +164,27 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 {measurements.height > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Suplemento por altura: +10% cada 10cm</p>
                                 )}
+                                {measurements.height < 1500 && measurements.height >= 800 && (
+                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -30%</p>
+                                )}
+                                {measurements.height < 800 && (
+                                     <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -50%</p>
+                                )}
                             </div>
-                            <div><Label>Ancho (mm)</Label><Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} /></div>
-                            <div><Label>Fondo (mm)</Label><Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} /></div>
+                            <div>
+                                <Label>Ancho (mm)</Label>
+                                <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                            </div>
+                            <div>
+                                <Label>Fondo (mm)</Label>
+                                <Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} />
+                                {measurements.depth > 650 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Suplemento por fondo: +10% cada 10cm</p>
+                                )}
+                                {measurements.depth < 400 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Descuento por fondo: -25%</p>
+                                )}
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>

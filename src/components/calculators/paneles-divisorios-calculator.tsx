@@ -133,6 +133,12 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                {measurements.height > 2700 && (
+                                    <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
+                                )}
+                                {measurements.height < 1500 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Descuento por altura: -25%</p>
+                                )}
                             </div>
                             <div>
                                 <Label>Ancho (mm)</Label>
