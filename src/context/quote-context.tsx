@@ -64,13 +64,15 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     useEffect(() => {
-        if (isLoaded) {
-            try {
-                const dataToSave = JSON.stringify({ stagedLineItems, lineItemGroups, clientProfile, discountPercentage });
-                sessionStorage.setItem(STORAGE_KEY, dataToSave);
-            } catch (error) {
-                console.error("Failed to save state to session storage", error);
-            }
+        // We only save to session storage after the initial load is complete.
+        if (!isLoaded) {
+            return;
+        }
+        try {
+            const dataToSave = JSON.stringify({ stagedLineItems, lineItemGroups, clientProfile, discountPercentage });
+            sessionStorage.setItem(STORAGE_KEY, dataToSave);
+        } catch (error) {
+            console.error("Failed to save state to session storage", error);
         }
     }, [stagedLineItems, lineItemGroups, clientProfile, discountPercentage, isLoaded]);
 
