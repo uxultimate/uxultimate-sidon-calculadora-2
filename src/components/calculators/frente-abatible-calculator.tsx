@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorSwatch } from './utils';
+import { ColorSwatch, lacaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 
 interface FrenteAbatibleCalculatorProps {
@@ -26,25 +26,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
     const [material, setMaterial] = useState('Laca_blanca_lisa');
     const materials = tarifa2025["Frente Abatible y Plegable"].Precios_por_Material_Euro_m_lineal["19mm"];
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
-    const [selectedColor, setSelectedColor] = useState<string>('Blanco');
+    const [selectedColor, setSelectedColor] = useState<string>('Blanco Roto');
     
-    const colorOptions: Record<string, { name: string, hex: string }[]> = {
-        'Melamina_colores': [
-            { name: "Gris Antracita", hex: "#36454F" },
-            { name: "Beige", hex: "#F5F5DC" },
-            { name: "Roble", hex: "#A0522D" },
-            { name: "Nogal", hex: "#664228" }
-        ],
-        'Laca': [
-            { name: "Blanco", hex: "#FFFFFF" },
-            { name: "Gris Claro", hex: "#D3D3D3" },
-            { name: "Gris Oscuro", hex: "#A9A9A9" },
-            { name: "Negro", hex: "#000000" }
-        ]
-    };
-    
-    const showColorSwatches = material === 'Melamina_colores' || material.startsWith('Laca_');
-
+    const showColorSwatches = material.startsWith('Laca_');
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -69,19 +53,23 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [`(x${doorCount})`, `${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
-        if (showColorSwatches) {
-            detailsArray.push(selectedColor);
-        }
-
         let finalTotal = baseTotal;
 
+        if (showColorSwatches) {
+            detailsArray.push(selectedColor);
+            if (selectedColor !== 'Blanco Roto') {
+                finalTotal *= 1.20;
+                detailsArray.push('Sup. Laca color (+20%)');
+            }
+        }
+        
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
             const extraCostPercentage = extraHeightCm * 0.10;
-            const extraCost = baseTotal * extraCostPercentage;
-            finalTotal += extraCost;
+            const heightSupplement = baseTotal * extraCostPercentage;
+            finalTotal += heightSupplement;
             detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`);
         } else if (heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
@@ -90,6 +78,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             finalTotal *= 0.70; // 30% discount
             detailsArray.push('Dto. altura < 1500mm (-30%)');
         }
+
 
         Object.entries(supplements).forEach(([concepto, { checked, quantity }]) => {
             if (checked) {
@@ -175,7 +164,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                 <SelectContent>
                                     {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
                                         <SelectGroup key={groupName}>
-                                            <SelectLabel>{groupName}</SelectLabel>
+                                            <SelectLabel>{groupName === 'Lacas' ? 'Laca Colores' : groupName}</SelectLabel>
                                             {groupMaterials.map((key) => {
                                                 const value = materials[key as keyof typeof materials];
                                                 if (!value) return null;
@@ -191,17 +180,26 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         {showColorSwatches && (
                             <div>
                                 <Label className="mb-2 block">Color</Label>
-                                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                                    {(material.startsWith('Laca_') ? colorOptions['Laca'] : colorOptions['Melamina_colores']).map((color, index) => (
-                                        <ColorSwatch 
-                                            key={`${color.name}-${index}`}
-                                            color={color.hex}
-                                            name={color.name}
-                                            isSelected={selectedColor === color.name}
-                                            onClick={() => setSelectedColor(color.name)}
-                                        />
-                                    ))}
-                                </div>
+                                <ScrollArea className="w-full whitespace-nowrap">
+                                    <div className="flex w-max space-x-4 pb-4">
+                                        {lacaColorOptions.map((color, index) => (
+                                            <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2">
+                                                <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                    <Image 
+                                                        src={color.imageUrl}
+                                                        alt={color.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={`h-16 w-16 rounded-md object-cover border-2 transition-all ${selectedColor === color.name ? 'border-primary' : 'border-transparent'}`}
+                                                    />
+                                                </button>
+                                                <p className={`text-xs text-center ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                    {color.name}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
                             </div>
                         )}
                     </TabsContent>
@@ -260,3 +258,5 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         </div>
     );
 };
+
+    
