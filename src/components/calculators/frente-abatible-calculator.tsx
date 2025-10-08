@@ -53,14 +53,15 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`(x${doorCount})`, `${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         let finalTotal = baseTotal;
 
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
             if (selectedColor !== 'Blanco Roto') {
-                finalTotal *= 1.20;
+                const colorSupplement = baseTotal * 0.20;
+                finalTotal += colorSupplement;
                 detailsArray.push('Sup. Laca color (+20%)');
             }
         }
@@ -105,7 +106,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             }
         });
 
-        return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
+        return { name: `${finalName} (x${doorCount})`, total: finalTotal, details: detailsArray.join(', ') };
     }, [measurements, material, materials, supplements, showColorSwatches, selectedColor, doorCount]);
 
     const handleSaveItem = () => {
@@ -180,26 +181,24 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         {showColorSwatches && (
                             <div>
                                 <Label className="mb-2 block">Color</Label>
-                                <ScrollArea className="w-full whitespace-nowrap">
-                                    <div className="flex w-max space-x-4 pb-4">
-                                        {lacaColorOptions.map((color, index) => (
-                                            <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2">
-                                                <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
-                                                    <Image 
-                                                        src={color.imageUrl}
-                                                        alt={color.name}
-                                                        width={64}
-                                                        height={64}
-                                                        className={`h-16 w-16 rounded-md object-cover border-2 transition-all ${selectedColor === color.name ? 'border-primary' : 'border-transparent'}`}
-                                                    />
-                                                </button>
-                                                <p className={`text-xs text-center ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
-                                                    {color.name}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </ScrollArea>
+                                <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
+                                    {lacaColorOptions.map((color, index) => (
+                                        <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2">
+                                            <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                <Image 
+                                                    src={color.imageUrl}
+                                                    alt={color.name}
+                                                    width={64}
+                                                    height={64}
+                                                    className={`h-16 w-16 rounded-md object-cover border-2 transition-all ${selectedColor === color.name ? 'border-primary' : 'border-transparent'}`}
+                                                />
+                                            </button>
+                                            <p className={`text-xs text-center ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                {color.name}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </TabsContent>
@@ -258,6 +257,8 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         </div>
     );
 };
+
+    
 
     
 
