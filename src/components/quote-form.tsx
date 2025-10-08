@@ -298,7 +298,7 @@ export function QuoteForm({
         </Card>
       
        <div className="flex flex-wrap justify-end gap-2">
-            <Button onClick={onGenerateQuote} disabled={isGenerating || lineItemGroups.length === 0}>
+            <Button onClick={onGenerateQuote} disabled={isGenerating || lineItemGroups.length === 0} className="w-full sm:w-auto">
                 {isGenerating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Generar Vista Previa del Presupuesto <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -307,5 +307,7 @@ export function QuoteForm({
     </div>
   );
 }
+
+    
 
     

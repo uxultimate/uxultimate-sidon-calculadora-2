@@ -63,7 +63,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
             const extraCostPercentage = extraHeightCm * 0.10;
-            const heightSupplement = baseTotal * extraCostPercentage;
+            const heightSupplement = finalTotal * extraCostPercentage;
             finalTotal += heightSupplement;
             heightSupplementText = `Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`;
         } else if (heightInMm < 800) {
@@ -266,3 +266,5 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         </div>
     );
 };
+
+    
