@@ -74,7 +74,7 @@ export const QuoteProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
             console.error("Failed to save state to session storage", error);
         }
-    }, [stagedLineItems, lineItemGroups, clientProfile, discountPercentage, isLoaded]);
+    }, [stagedLineItems, lineItemGroups, clientProfile, discountPercentage]);
 
     const addStagedLineItem = (newItem: Omit<LineItem, 'id'>) => {
         setStagedLineItems(prev => [...prev, { ...newItem, id: Date.now() }]);
