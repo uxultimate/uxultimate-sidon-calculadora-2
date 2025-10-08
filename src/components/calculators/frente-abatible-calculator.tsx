@@ -15,6 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { lacaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -53,32 +54,37 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [`${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         let finalTotal = baseTotal;
+        let heightSupplementText = '';
+        let discountText = '';
 
-        if (showColorSwatches) {
-            detailsArray.push(selectedColor);
-            if (selectedColor !== 'Laca Blanca') {
-                const colorSupplement = baseTotal * 0.20;
-                finalTotal += colorSupplement;
-                detailsArray.push('Sup. Laca color (+20%)');
-            }
-        }
-        
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
             const extraCostPercentage = extraHeightCm * 0.10;
             const heightSupplement = baseTotal * extraCostPercentage;
             finalTotal += heightSupplement;
-            detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`);
+            heightSupplementText = `Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`;
         } else if (heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
-            detailsArray.push(`Dto. altura < 800mm (-50%)`);
+            discountText = `Dto. altura < 800mm (-50%)`;
         } else if (heightInMm < 1500) {
             finalTotal *= 0.70; // 30% discount
-            detailsArray.push(`Dto. altura < 1500mm (-30%)`);
+            discountText = `Dto. altura < 1500mm (-30%)`;
         }
+        
+        if (showColorSwatches) {
+            detailsArray.push(selectedColor);
+            if (selectedColor !== 'Laca Blanca') {
+                const colorSupplement = finalTotal * 0.20;
+                finalTotal += colorSupplement;
+                detailsArray.push('Sup. Laca color (+20%)');
+            }
+        }
+        
+        if(heightSupplementText) detailsArray.push(heightSupplementText);
+        if(discountText) detailsArray.push(discountText);
 
 
         Object.entries(supplements).forEach(([concepto, { checked, quantity }]) => {
@@ -106,14 +112,14 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             }
         });
 
-        return { name: `${finalName} (x${doorCount})`, total: finalTotal, details: detailsArray.join(', ') };
+        return { name: `${finalName}`, total: finalTotal, details: detailsArray.join(', ') };
     }, [measurements, material, materials, supplements, showColorSwatches, selectedColor, doorCount]);
 
     const handleSaveItem = () => {
         onSave({
-            name,
+            name: `${name} (x${doorCount})`,
             details,
-            quantity: 1,
+            quantity: 1, // The group is one unit, doors are in description
             price: total,
             total,
         });
@@ -165,7 +171,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                 <SelectContent>
                                     {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
                                         <SelectGroup key={groupName}>
-                                            <SelectLabel>{groupName === 'Lacas' ? 'Laca Colores' : groupName}</SelectLabel>
+                                            <SelectLabel>{groupName}</SelectLabel>
                                             {groupMaterials.map((key) => {
                                                 const value = materials[key as keyof typeof materials];
                                                 if (!value) return null;
@@ -190,7 +196,10 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                                     alt={color.name}
                                                     width={64}
                                                     height={64}
-                                                    className={`h-16 w-16 rounded-md object-cover border-2 transition-all ${selectedColor === color.name ? 'border-primary' : 'border-transparent'}`}
+                                                    className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
+                                                        selectedColor === color.name ? 'border-primary' : 'border-transparent',
+                                                        (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                    )}
                                                 />
                                             </button>
                                             <p className={`text-xs text-center w-full ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
@@ -248,7 +257,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
                     <CardContent>
                         <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
-                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="font-semibold text-sm break-words">{name} (x{doorCount})</p>
                         <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
@@ -257,9 +266,3 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         </div>
     );
 };
-
-    
-
-    
-
-    
