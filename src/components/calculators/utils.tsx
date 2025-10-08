@@ -21,20 +21,20 @@ export const ColorSwatch: React.FC<{ color: string, name: string, isSelected: bo
 );
 
 export const lacaColorOptions = [
-    { name: "Blanco Roto", imageUrl: "https://picsum.photos/seed/laca-blanca-01/64/64" },
-    { name: "Ayure", imageUrl: "https://picsum.photos/seed/laca-ayure-03/64/64" },
-    { name: "Azul Light", imageUrl: "https://picsum.photos/seed/laca-azul-light-04/64/64" },
-    { name: "Beige Grisaceo", imageUrl: "https://picsum.photos/seed/laca-beige-grisaceo-05/64/64" },
-    { name: "Desierto", imageUrl: "https://picsum.photos/seed/laca-desierto-06/64/64" },
-    { name: "Gris Azulado", imageUrl: "https://picsum.photos/seed/laca-gris-azulado-14/64/64" },
-    { name: "Gris Coco", imageUrl: "https://picsum.photos/seed/laca-gris-coco-07/64/64" },
-    { name: "Gris Medio", imageUrl: "https://picsum.photos/seed/laca-gris-medio-08/64/64" },
-    { name: "Gris Perla", imageUrl: "https://picsum.photos/seed/laca-gris-perla-09/64/64" },
-    { name: "Laca RAL", imageUrl: "https://picsum.photos/seed/laca-ral-02/64/64" },
-    { name: "Verde Alga", imageUrl: "https://picsum.photos/seed/laca-verde-alga-10/64/64" },
-    { name: "Verde Bosque", imageUrl: "https://picsum.photos/seed/laca-verde-bosque-11/64/64" },
-    { name: "Verde Musgo", imageUrl: "https://picsum.photos/seed/laca-verde-musgo-12/64/64" },
-    { name: "Vulcano", imageUrl: "https://picsum.photos/seed/laca-vulcano-13/64/64" },
+    { name: "Blanco Roto", imageUrl: "/images/colores/laca/laca-blanca-01.jpg" },
+    { name: "Laca RAL", imageUrl: "/images/colores/laca/laca-ral-02.jpg" },
+    { name: "Ayure", imageUrl: "/images/colores/laca/laca-ayure-03.jpg" },
+    { name: "Azul Light", imageUrl: "/images/colores/laca/laca-azul-light-04.jpg" },
+    { name: "Beige Grisaceo", imageUrl: "/images/colores/laca/laca-beige-grisaceo-05.jpg" },
+    { name: "Desierto", imageUrl: "/images/colores/laca/laca-desierto-06.jpg" },
+    { name: "Gris Coco", imageUrl: "/images/colores/laca/laca-gris-coco-07.jpg" },
+    { name: "Gris Medio", imageUrl: "/images/colores/laca/laca-gris-medio-08.jpg" },
+    { name: "Gris Perla", imageUrl: "/images/colores/laca/laca-gris-perla-09.jpg" },
+    { name: "Verde Alga", imageUrl: "/images/colores/laca/laca-verde-alga-10.jpg" },
+    { name: "Verde Bosque", imageUrl: "/images/colores/laca/laca-verde-bosque-11.jpg" },
+    { name: "Verde Musgo", imageUrl: "/images/colores/laca/laca-verde-musgo-12.jpg" },
+    { name: "Vulcano", imageUrl: "/images/colores/laca/laca-vulcano-13.jpg" },
+    { name: "Gris Azulado", imageUrl: "/images/colores/laca/laca-gris-azulado-14.jpg" },
 ];
 
 
