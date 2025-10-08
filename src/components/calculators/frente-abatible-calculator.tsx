@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorSwatch, lacaColorOptions } from './utils';
+import { lacaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 
 interface FrenteAbatibleCalculatorProps {
@@ -258,5 +258,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         </div>
     );
 };
+
+    
 
     
