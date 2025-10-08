@@ -21,7 +21,7 @@ export const ColorSwatch: React.FC<{ color: string, name: string, isSelected: bo
 );
 
 export const lacaColorOptions = [
-    { name: "Blanco Roto", imageUrl: "/images/colores/laca/laca-blanca-01.jpg" },
+    { name: "Laca Blanca", imageUrl: "/images/colores/laca/laca-blanca-01.jpg" },
     { name: "Laca RAL", imageUrl: "/images/colores/laca/laca-ral-02.jpg" },
     { name: "Ayure", imageUrl: "/images/colores/laca/laca-ayure-03.jpg" },
     { name: "Azul Light", imageUrl: "/images/colores/laca/laca-azul-light-04.jpg" },

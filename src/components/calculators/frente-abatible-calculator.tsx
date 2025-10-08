@@ -26,7 +26,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
     const [material, setMaterial] = useState('Laca_blanca_lisa');
     const materials = tarifa2025["Frente Abatible y Plegable"].Precios_por_Material_Euro_m_lineal["19mm"];
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
-    const [selectedColor, setSelectedColor] = useState<string>('Blanco Roto');
+    const [selectedColor, setSelectedColor] = useState<string>('Laca Blanca');
     
     const showColorSwatches = material.startsWith('Laca_');
 
@@ -59,7 +59,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         if (showColorSwatches) {
             detailsArray.push(selectedColor);
-            if (selectedColor !== 'Blanco Roto') {
+            if (selectedColor !== 'Laca Blanca') {
                 const colorSupplement = baseTotal * 0.20;
                 finalTotal += colorSupplement;
                 detailsArray.push('Sup. Laca color (+20%)');
@@ -74,10 +74,10 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`);
         } else if (heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
-            detailsArray.push('Dto. altura < 800mm (-50%)');
+            detailsArray.push(`Dto. altura < 800mm (-50%)`);
         } else if (heightInMm < 1500) {
             finalTotal *= 0.70; // 30% discount
-            detailsArray.push('Dto. altura < 1500mm (-30%)');
+            detailsArray.push(`Dto. altura < 1500mm (-30%)`);
         }
 
 
@@ -140,7 +140,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
                                 {measurements.height > 2400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil((measurements.height - 2400) / 100) * 10}%)</p>
                                 )}
                                 {measurements.height < 1500 && measurements.height >= 800 && (
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
@@ -181,9 +181,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         {showColorSwatches && (
                             <div>
                                 <Label className="mb-2 block">Color</Label>
-                                <div className="flex flex-wrap gap-x-4 gap-y-2 pb-4">
+                                <div className="flex flex-wrap gap-2 pb-4">
                                     {lacaColorOptions.map((color, index) => (
-                                        <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2">
+                                        <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
                                             <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
                                                 <Image 
                                                     src={color.imageUrl}
@@ -193,7 +193,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                                     className={`h-16 w-16 rounded-md object-cover border-2 transition-all ${selectedColor === color.name ? 'border-primary' : 'border-transparent'}`}
                                                 />
                                             </button>
-                                            <p className={`text-xs text-center ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                            <p className={`text-xs text-center w-full ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
                                                 {color.name}
                                             </p>
                                         </div>
