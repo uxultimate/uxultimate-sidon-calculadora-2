@@ -12,6 +12,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Minus, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { lacaColorOptions, melaminaColorOptions } from './utils';
+import { cn } from '@/lib/utils';
+
 
 interface CajonesCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -22,9 +25,14 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
     const [width, setWidth] = useState(500);
     const [material, setMaterial] = useState('Melamina_blanco_o_lino_cancun_textil');
     const [quantity, setQuantity] = useState(1);
+    const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
+    const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
     
     const itemData = tarifa2025["Cajones_Zapateros_Bandejas"].Precios_por_Unidad_Ancho[itemType as keyof typeof tarifa2025["Cajones_Zapateros_Bandejas"]["Precios_por_Unidad_Ancho"]];
     const materialData = itemData[material as keyof typeof itemData];
+
+    const showLacaColorSwatches = material === 'Laca';
+    const showMelaminaColorSwatches = material === 'Melamina_colores';
 
     const materialGroups = {
         'Melaminas': ['Melamina_blanco_o_lino_cancun_textil', 'Melamina_colores'],
@@ -55,9 +63,17 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
 
     const {name, details} = useMemo(() => {
         const finalName = `${itemType.replace(/_/g, ' ')}`;
-        const finalDetails = `Ancho: ${width}mm, Material: ${material.replace(/_/g, ' ')}`;
-        return { name: finalName, details: finalDetails };
-    }, [itemType, width, material]);
+        const detailsArray = [`Ancho: ${width}mm`, `Material: ${material.replace(/_/g, ' ')}`];
+
+        if (showLacaColorSwatches) {
+            detailsArray.push(selectedLacaColor);
+        }
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
+        }
+        
+        return { name: finalName, details: detailsArray.join(', ') };
+    }, [itemType, width, material, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor]);
 
     const handleSaveItem = () => {
         onSave({
@@ -120,6 +136,62 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                          </div>
                     </div>
                 </div>
+
+                {showLacaColorSwatches && (
+                    <div>
+                        <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
+                        <div className="flex flex-wrap gap-2 pb-4">
+                            {lacaColorOptions.map((color, index) => (
+                                <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
+                                    <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                        <Image 
+                                            src={color.imageUrl}
+                                            alt={color.name}
+                                            width={64}
+                                            height={64}
+                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
+                                                selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                            )}
+                                        />
+                                    </button>
+                                    <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                        {color.name}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                {showMelaminaColorSwatches && (
+                     <div>
+                        <Label className="mb-2 block">Color Melamina</Label>
+                        <div className="flex flex-wrap gap-4">
+                            {melaminaColorOptions.map((color) => (
+                                <div key={color.name}>
+                                    <div className="flex flex-col items-center gap-2 w-20">
+                                        <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                            <Image
+                                                src={color.imageUrl}
+                                                alt={color.name}
+                                                width={64}
+                                                height={64}
+                                                className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                    selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                    color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                )}
+                                            />
+                                        </button>
+                                        <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                            {color.name}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 <div className="text-sm text-muted-foreground pt-4">
                     <p>Calculadora para cajones, zapateros y otros accesorios. Selecciona el tipo, material, ancho del hueco y la cantidad.</p>
                 </div>
@@ -148,4 +220,6 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
             </div>
         </div>
     );
-};
+}
+
+    
