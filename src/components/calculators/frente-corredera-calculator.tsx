@@ -172,7 +172,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                         {showMelaminaColorSwatches && (
                              <div>
                                 <Label className="mb-2 block">Color Melamina</Label>
-                                <div className="flex flex-wrap gap-4 p-2 border rounded-md">
+                                <div className="flex flex-wrap gap-4">
                                     {melaminaColorOptions.map((color) => (
                                         <div key={color.name}>
                                             <div className="flex flex-col items-center gap-2 w-20">
@@ -184,7 +184,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
                                                             selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
+                                                            color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
                                                         )}
                                                     />
                                                 </button>
@@ -243,5 +243,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
         </div>
     );
 };
+
+    
 
     
