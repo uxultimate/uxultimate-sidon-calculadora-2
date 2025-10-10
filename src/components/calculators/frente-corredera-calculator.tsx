@@ -253,5 +253,4 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         </div>
     );
 }
-
     
