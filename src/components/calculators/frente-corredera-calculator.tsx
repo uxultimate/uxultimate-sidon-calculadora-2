@@ -13,8 +13,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorSwatch } from './utils';
+import { melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface FrenteCorrederaCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -25,17 +26,9 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
     const [doorCount, setDoorCount] = useState(2);
     const [material, setMaterial] = useState('Melamina_blanco_liso');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
-    const [selectedColor, setSelectedColor] = useState<string>('Gris Antracita');
-
-    const colorOptions = [
-        { name: "Gris Antracita", hex: "#36454F" },
-        { name: "Beige", hex: "#F5F5DC" },
-        { name: "Roble", hex: "#A0522D" },
-        { name: "Nogal", hex: "#664228" },
-        { name: "Lino", hex: "#FAF0E6" },
-    ];
+    const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
     
-    const showColorSwatches = material === 'Melamina_color';
+    const showMelaminaColorSwatches = material === 'Melamina_color';
     
     const doorCountKey = doorCount >= 3 ? '3_o_mas_puertas' : '2_puertas';
     const materials = tarifa2025["Frente Corredera"].Precios_por_Material_Euro_m_lineal[doorCountKey];
@@ -64,9 +57,11 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
 
         const finalName = `Frente Corredera`;
         const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
-        if (showColorSwatches) {
-            detailsArray.push(selectedColor);
+        
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
         }
+
         let finalTotal = baseTotal;
 
         if (heightInMm > 2400) {
@@ -99,7 +94,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
         });
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, doorCount, supplements, showColorSwatches, selectedColor]);
+    }, [measurements, material, materials, doorCount, supplements, showMelaminaColorSwatches, selectedMelaminaColor]);
 
     const handleSaveItem = () => {
         onSave({
@@ -174,20 +169,34 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                                 </Select>
                             </div>
                         </div>
-                        {showColorSwatches && (
-                            <div>
-                                <Label className="mb-2 block">Color</Label>
-                                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                                    {colorOptions.map((color, index) => (
-                                        <ColorSwatch 
-                                            key={`${color.name}-${index}`}
-                                            color={color.hex}
-                                            name={color.name}
-                                            isSelected={selectedColor === color.name}
-                                            onClick={() => setSelectedColor(color.name)}
-                                        />
-                                    ))}
-                                </div>
+                        {showMelaminaColorSwatches && (
+                             <div>
+                                <Label className="mb-2 block">Color Melamina</Label>
+                                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                                    <div className="flex w-max space-x-4 p-4">
+                                        {melaminaColorOptions.map((color) => (
+                                            <div key={color.name} className="flex-shrink-0">
+                                                <div className="flex flex-col items-center gap-2 w-20">
+                                                    <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                        <Image
+                                                            src={color.imageUrl}
+                                                            alt={color.name}
+                                                            width={64}
+                                                            height={64}
+                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                                (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
+                                                            )}
+                                                        />
+                                                    </button>
+                                                    <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                        {color.name}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
                             </div>
                         )}
                     </TabsContent>
@@ -236,3 +245,5 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
         </div>
     );
 };
+
+    

@@ -13,8 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorSwatch } from './utils';
+import { melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface InteriorVestidorCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -25,17 +26,9 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
     const [thickness, setThickness] = useState<'19mm' | '30mm'>('19mm');
     const [materialKey, setMaterialKey] = useState<string>('Melamina_blanco_o_lino_cancun_textil');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
-    const [selectedColor, setSelectedColor] = useState<string>('Gris Antracita');
+    const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
 
-    const colorOptions = [
-        { name: "Gris Antracita", hex: "#36454F" },
-        { name: "Beige", hex: "#F5F5DC" },
-        { name: "Roble", hex: "#A0522D" },
-        { name: "Nogal", hex: "#664228" },
-        { name: "Lino", hex: "#FAF0E6" },
-    ];
-    
-    const showColorSwatches = materialKey === 'Melamina_colores';
+    const showMelaminaColorSwatches = materialKey === 'Melamina_colores';
     
     const materialsForThickness = tarifa2025["Interior y Vestidor"].Precios_por_metro_lineal_unidad[thickness];
 
@@ -85,8 +78,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         const materialName = materialKey.replace(/_/g, ' ');
         const detailsArray = [`${thickness} ${materialName}`, `${measurements.height}x${measurements.width}x${measurements.depth}mm`];
         
-        if (showColorSwatches) {
-            detailsArray.push(selectedColor);
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
+        } else if (materialKey === 'Melamina_blanco_o_lino_cancun_textil') {
+            detailsArray.push('Blanco o Lino Cancun Textil');
         }
 
         let finalTotal = baseTotal;
@@ -138,7 +133,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
 
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, thickness, materialKey, materialsForThickness, supplements, showColorSwatches, selectedColor]);
+    }, [measurements, thickness, materialKey, materialsForThickness, supplements, showMelaminaColorSwatches, selectedMelaminaColor]);
 
     const handleSaveItem = () => {
         onSave({
@@ -213,20 +208,34 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 </Select>
                             </div>
                         </div>
-                        {showColorSwatches && (
-                            <div>
-                                <Label className="mb-2 block">Color</Label>
-                                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                                    {colorOptions.map((color, index) => (
-                                        <ColorSwatch 
-                                            key={`${color.name}-${index}`}
-                                            color={color.hex}
-                                            name={color.name}
-                                            isSelected={selectedColor === color.name}
-                                            onClick={() => setSelectedColor(color.name)}
-                                        />
-                                    ))}
-                                </div>
+                        {showMelaminaColorSwatches && (
+                             <div>
+                                <Label className="mb-2 block">Color Melamina</Label>
+                                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                                    <div className="flex w-max space-x-4 p-4">
+                                        {melaminaColorOptions.map((color) => (
+                                            <div key={color.name} className="flex-shrink-0">
+                                                <div className="flex flex-col items-center gap-2 w-20">
+                                                    <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                        <Image
+                                                            src={color.imageUrl}
+                                                            alt={color.name}
+                                                            width={64}
+                                                            height={64}
+                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                                (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
+                                                            )}
+                                                        />
+                                                    </button>
+                                                    <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                        {color.name}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
                             </div>
                         )}
                     </TabsContent>
@@ -285,3 +294,5 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
+
+    

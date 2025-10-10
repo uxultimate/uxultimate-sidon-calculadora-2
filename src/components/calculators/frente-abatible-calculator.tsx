@@ -10,12 +10,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { lacaColorOptions } from './utils';
+import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '../ui/scroll-area';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -27,9 +27,11 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
     const [material, setMaterial] = useState('Laca_blanca_lisa');
     const materials = tarifa2025["Frente Abatible y Plegable"].Precios_por_Material_Euro_m_lineal["19mm"];
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
-    const [selectedColor, setSelectedColor] = useState<string>('Laca Blanca');
+    const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
+    const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
     
-    const showColorSwatches = material.startsWith('Laca_');
+    const showLacaColorSwatches = material.startsWith('Laca_');
+    const showMelaminaColorSwatches = material === 'Melamina_colores';
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -63,7 +65,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         if (heightInMm > 2400) {
             const extraHeightCm = Math.ceil((heightInMm - 2400) / 100);
             const extraCostPercentage = extraHeightCm * 0.10;
-            const heightSupplement = finalTotal * extraCostPercentage;
+            const heightSupplement = baseTotal * extraCostPercentage;
             finalTotal += heightSupplement;
             heightSupplementText = `Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`;
         } else if (heightInMm < 800) {
@@ -74,13 +76,17 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             discountText = `Dto. altura < 1500mm (-30%)`;
         }
         
-        if (showColorSwatches) {
-            detailsArray.push(selectedColor);
-            if (selectedColor !== 'Laca Blanca') {
+        if (showLacaColorSwatches) {
+            detailsArray.push(selectedLacaColor);
+            if (selectedLacaColor !== 'Laca Blanca') {
                 const colorSupplement = finalTotal * 0.20;
                 finalTotal += colorSupplement;
                 detailsArray.push('Sup. Laca color (+20%)');
             }
+        }
+
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
         }
         
         if(heightSupplementText) detailsArray.push(heightSupplementText);
@@ -113,7 +119,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
         });
 
         return { name: `${finalName}`, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, supplements, showColorSwatches, selectedColor, doorCount]);
+    }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount]);
 
     const handleSaveItem = () => {
         onSave({
@@ -184,30 +190,60 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                 </SelectContent>
                             </Select>
                         </div>
-                        {showColorSwatches && (
+                        {showLacaColorSwatches && (
                             <div>
-                                <Label className="mb-2 block">Color</Label>
+                                <Label className="mb-2 block">Color Laca</Label>
                                 <div className="flex flex-wrap gap-2 pb-4">
                                     {lacaColorOptions.map((color, index) => (
                                         <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
-                                            <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                            <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
                                                 <Image 
                                                     src={color.imageUrl}
                                                     alt={color.name}
                                                     width={64}
                                                     height={64}
                                                     className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
-                                                        selectedColor === color.name ? 'border-primary' : 'border-transparent',
+                                                        selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
                                                         (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
                                                     )}
                                                 />
                                             </button>
-                                            <p className={`text-xs text-center w-full ${selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                            <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
                                                 {color.name}
                                             </p>
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        )}
+                        {showMelaminaColorSwatches && (
+                             <div>
+                                <Label className="mb-2 block">Color Melamina</Label>
+                                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+                                    <div className="flex w-max space-x-4 p-4">
+                                        {melaminaColorOptions.map((color) => (
+                                            <div key={color.name} className="flex-shrink-0">
+                                                <div className="flex flex-col items-center gap-2 w-20">
+                                                    <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                        <Image
+                                                            src={color.imageUrl}
+                                                            alt={color.name}
+                                                            width={64}
+                                                            height={64}
+                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                                (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
+                                                            )}
+                                                        />
+                                                    </button>
+                                                    <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                        {color.name}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
                             </div>
                         )}
                     </TabsContent>
