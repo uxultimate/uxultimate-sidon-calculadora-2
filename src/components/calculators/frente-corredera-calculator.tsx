@@ -191,8 +191,8 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/40">
-                                                                <Check className="h-6 w-6 text-white" />
+                                                            <div className="absolute inset-0 flex items-center justify-center rounded-md">
+                                                                <Check className={cn("h-6 w-6", color.name === 'Blanco' ? 'text-gray-800' : 'text-white')} />
                                                             </div>
                                                         )}
                                                     </div>
@@ -252,4 +252,3 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         </div>
     );
 }
-    
