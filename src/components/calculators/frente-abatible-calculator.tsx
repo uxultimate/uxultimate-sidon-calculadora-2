@@ -219,31 +219,29 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                         {showMelaminaColorSwatches && (
                              <div>
                                 <Label className="mb-2 block">Color Melamina</Label>
-                                <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-                                    <div className="flex w-max space-x-4 p-4">
-                                        {melaminaColorOptions.map((color) => (
-                                            <div key={color.name} className="flex-shrink-0">
-                                                <div className="flex flex-col items-center gap-2 w-20">
-                                                    <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
-                                                        <Image
-                                                            src={color.imageUrl}
-                                                            alt={color.name}
-                                                            width={64}
-                                                            height={64}
-                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
-                                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
-                                                            )}
-                                                        />
-                                                    </button>
-                                                    <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
-                                                        {color.name}
-                                                    </p>
-                                                </div>
+                                <div className="flex flex-wrap gap-4 p-2 border rounded-md">
+                                    {melaminaColorOptions.map((color) => (
+                                        <div key={color.name}>
+                                            <div className="flex flex-col items-center gap-2 w-20">
+                                                <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                    <Image
+                                                        src={color.imageUrl}
+                                                        alt={color.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                            selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                            (color.name === 'Blanco' || color.name.toLowerCase().includes('lino')) && 'shadow-[1px_1px_2px_#aaa]'
+                                                        )}
+                                                    />
+                                                </button>
+                                                <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                    {color.name}
+                                                </p>
                                             </div>
-                                        ))}
-                                    </div>
-                                </ScrollArea>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </TabsContent>
