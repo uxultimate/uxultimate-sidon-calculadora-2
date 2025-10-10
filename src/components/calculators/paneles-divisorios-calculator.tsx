@@ -72,7 +72,9 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         let basePrice = (priceListForType[selectedKey as keyof typeof priceListForType] || 0) * widthInMeters;
 
         let total = basePrice;
-        const detailsArray = [`${measurements.height}x${measurements.width}mm`];
+        
+        const doorString = doorCount > 1 ? `${doorCount} Puertas` : '1 Puerta';
+        const detailsArray = [doorString, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
             total *= 0.75; // 25% discount
@@ -107,8 +109,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             }
         });
         
-        const doorString = doorCount > 1 ? `${doorCount} Puertas` : '1 Puerta';
-        const finalName = `Panel Divisorio ${openingType} ${doorString} ${selectedKey}`;
+        const finalName = `Panel Divisorio ${openingType} ${selectedKey}`;
 
         return { total, details: detailsArray.join(', '), name: finalName };
     }, [measurements, openingType, doorCount, panelCollection, panelCristal, panelSupplements, pricingModel, constructedPanelType]);
@@ -247,7 +248,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     </CardHeader>
                     <CardContent>
                         <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
-                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="font-semibold text-sm break-words">{name} (x1)</p>
                         <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
