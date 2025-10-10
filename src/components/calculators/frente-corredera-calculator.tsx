@@ -56,7 +56,9 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
         let baseTotal = basePricePerMeter * widthInMeters;
 
         const finalName = `Frente Corredera`;
-        const detailsArray = [`${doorCount} puertas`, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        
+        const doorString = `${doorCount} ${doorCount > 1 ? 'puertas' : 'puerta'}`;
+        const detailsArray = [doorString, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         if (showMelaminaColorSwatches) {
             detailsArray.push(selectedMelaminaColor);
@@ -234,7 +236,7 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
                     <CardContent>
                         <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
-                        <p className="font-semibold text-sm break-words">{name}</p>
+                        <p className="font-semibold text-sm break-words">{name} (x1)</p>
                         <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
@@ -242,8 +244,4 @@ export const FrenteCorrederaCalculator: React.FC<FrenteCorrederaCalculatorProps>
             </div>
         </div>
     );
-};
-
-    
-
-    
+}

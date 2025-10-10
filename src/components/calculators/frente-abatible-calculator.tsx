@@ -56,7 +56,9 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
 
         const isPlegable = supplements['Herraje plegable']?.checked;
         const finalName = isPlegable ? "Frente Plegable" : "Frente Abatible";
-        const detailsArray = [`${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
+        
+        const doorString = `${doorCount} ${doorCount > 1 ? 'puertas' : 'puerta'}`;
+        const detailsArray = [doorString, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
         let finalTotal = baseTotal;
         let heightSupplementText = '';
@@ -118,12 +120,12 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             }
         });
 
-        return { name: `${finalName}`, total: finalTotal, details: detailsArray.join(', ') };
+        return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
     }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount]);
 
     const handleSaveItem = () => {
         onSave({
-            name: `${name} (x${doorCount})`,
+            name,
             details,
             quantity: 1, // The group is one unit, doors are in description
             price: total,
@@ -231,7 +233,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
                                                             selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                             color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
                                                         )}
                                                     />
                                                 </button>
@@ -291,7 +293,7 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
                     <CardHeader><CardTitle>Total del Concepto</CardTitle></CardHeader>
                     <CardContent>
                         <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
-                        <p className="font-semibold text-sm break-words">{name} (x{doorCount})</p>
+                        <p className="font-semibold text-sm break-words">{name} (x1)</p>
                         <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
@@ -299,8 +301,4 @@ export const FrenteAbatibleCalculator: React.FC<FrenteAbatibleCalculatorProps> =
             </div>
         </div>
     );
-};
-
-    
-
-    
+}
