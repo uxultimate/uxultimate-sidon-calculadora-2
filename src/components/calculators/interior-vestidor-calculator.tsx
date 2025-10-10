@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -16,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
 
 interface InteriorVestidorCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -216,16 +216,23 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                         <div key={color.name}>
                                             <div className="flex flex-col items-center gap-2 w-20">
                                                 <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
-                                                    <Image
-                                                        src={color.imageUrl}
-                                                        alt={color.name}
-                                                        width={64}
-                                                        height={64}
-                                                        className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
-                                                            selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                    <div className="relative">
+                                                        <Image
+                                                            src={color.imageUrl}
+                                                            alt={color.name}
+                                                            width={64}
+                                                            height={64}
+                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                                color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                            )}
+                                                        />
+                                                        {selectedMelaminaColor === color.name && (
+                                                            <div className="absolute inset-0 flex items-center justify-center rounded-md bg-black/40">
+                                                                <Check className="h-6 w-6 text-white" />
+                                                            </div>
                                                         )}
-                                                    />
+                                                    </div>
                                                 </button>
                                                 <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
                                                     {color.name}
@@ -292,7 +299,5 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
-
-    
 
     
