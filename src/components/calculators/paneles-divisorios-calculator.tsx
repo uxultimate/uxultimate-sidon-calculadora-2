@@ -21,6 +21,13 @@ interface PanelesDivisoriosCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
 }
 
+const collectionImages: Record<string, string> = {
+    'Meridian': '/images/paneles/sidon-armarios-panel-meridian-600x400.png',
+    'Paralel': '/images/paneles/sidon-armarios-panel-paralel-600x400.png',
+    'Desi': '/images/paneles/sidon-armarios-panel-desi-600x400.png',
+};
+
+
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [pricingModel, setPricingModel] = useState<'coleccion' | 'cristal'>('coleccion');
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
@@ -73,7 +80,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
         let total = basePrice;
         
-        const doorString = doorCount > 1 ? `${doorCount} Puertas` : '1 Puerta';
+        const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
         const detailsArray = [doorString, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
@@ -111,13 +118,20 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         
         const finalName = `Panel Divisorio ${openingType} ${selectedKey}`;
 
-        return { total, details: detailsArray.join(', '), name: finalName };
+        return { total, details: detailsArray.join(', '), name: `Panel Divisorio ${openingType}` };
     }, [measurements, openingType, doorCount, panelCollection, panelCristal, panelSupplements, pricingModel, constructedPanelType]);
 
     const handleSaveItem = () => {
         const lineItem = { name, details, quantity: 1, price: total, total };
         onSave(lineItem);
     };
+
+    const currentImage = useMemo(() => {
+        if (pricingModel === 'coleccion' && collectionImages[panelCollection]) {
+            return collectionImages[panelCollection];
+        }
+        return 'https://placehold.co/600x400.png';
+    }, [pricingModel, panelCollection]);
     
 
     return (
@@ -235,12 +249,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
-                    alt="Paneles Divisorios"
+                    src={currentImage}
+                    alt={pricingModel === 'coleccion' ? panelCollection : 'Panel Divisorio'}
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
                     data-ai-hint="divider"
+                    priority
                 />
                 <Card>
                     <CardHeader>
