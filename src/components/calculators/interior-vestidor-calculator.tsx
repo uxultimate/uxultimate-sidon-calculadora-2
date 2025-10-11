@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,6 +34,13 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
     const showLacaColorSwatches = materialKey === 'Laca_blanca';
     
     const materialsForThickness = tarifa2025["Interior y Vestidor"].Precios_por_metro_lineal_unidad[thickness];
+
+    const materialGroups = {
+        'Melaminas': ['Melamina_blanco_o_lino_cancun_textil', 'Melamina_colores'],
+        'Lacas': ['Laca_blanca'],
+        'Maderas': ['Madera_roble'],
+        'Colecciones (30mm)': ['30mm_Coleccion_Aire_o_Columna'],
+    };
 
     const handleThicknessChange = (newThickness: '19mm' | '30mm') => {
         setThickness(newThickness);
@@ -211,11 +218,20 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 <Select value={materialKey} onValueChange={setMaterialKey}>
                                     <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
                                     <SelectContent>
-                                        {Object.keys(materialsForThickness).map((key) => (
-                                            (typeof materialsForThickness[key as keyof typeof materialsForThickness] !== 'object' || 
-                                            'hasta_1000' in (materialsForThickness[key as keyof typeof materialsForThickness] as object)) &&
-                                            <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
-                                        ))}
+                                        {Object.entries(materialGroups).map(([groupName, materials]) => {
+                                            const availableMaterials = materials.filter(mat => Object.keys(materialsForThickness).includes(mat));
+                                            if (availableMaterials.length === 0) return null;
+                                            return (
+                                                <SelectGroup key={groupName}>
+                                                    <SelectLabel>{groupName}</SelectLabel>
+                                                    {availableMaterials.map((key) => (
+                                                        <SelectItem key={key} value={key}>
+                                                            {key.replace(/_/g, ' ').replace('30mm ', '')}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            )
+                                        })}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -344,8 +360,3 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
-
-    
-    
-
-    
