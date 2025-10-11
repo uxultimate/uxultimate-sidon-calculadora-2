@@ -185,7 +185,7 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                         </div>
                         
                         {showLacaColorSwatches && (
-                            <div>
+                            <div className="border-t pt-4">
                                 <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
                                 <div className="flex flex-wrap gap-2 pb-4">
                                     {lacaColorOptions.map((color, index) => (
@@ -219,7 +219,7 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                         )}
 
                         {showMelaminaColorSwatches && (
-                            <div>
+                             <div className="border-t pt-4">
                                 <Label className="mb-2 block">Color Melamina</Label>
                                 <div className="flex flex-wrap gap-4">
                                     {melaminaColorOptions.map((color) => (
@@ -258,7 +258,7 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Frente Corredera"].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('ud')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('ud') || supp.Concepto === "Laca RAL o según muestra") return null;
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
                                             <div className="flex items-center gap-2">
@@ -299,6 +299,4 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         </div>
     );
 }
-    
-
     

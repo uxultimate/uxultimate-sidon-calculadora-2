@@ -227,7 +227,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                             </div>
                         )}
                         {showMelaminaColorSwatches && (
-                             <div>
+                            <div className="border-t pt-4">
                                 <Label className="mb-2 block">Color Melamina</Label>
                                 <div className="flex flex-wrap gap-4">
                                     {melaminaColorOptions.map((color) => (
@@ -266,7 +266,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Concepto === "Laca RAL o según muestra") return null;
                                     const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
@@ -317,4 +317,5 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
+
     

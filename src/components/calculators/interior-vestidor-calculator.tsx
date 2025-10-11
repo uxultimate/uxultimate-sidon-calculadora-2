@@ -237,7 +237,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                             </div>
                         </div>
                         {showLacaColorSwatches && (
-                            <div>
+                            <div className="border-t pt-4">
                                 <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
                                 <div className="flex flex-wrap gap-2 pb-4">
                                     {lacaColorOptions.map((color, index) => (
@@ -309,7 +309,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                         <ScrollArea className="h-72 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025["Interior y Vestidor"].Suplementos_y_Anadidos.map((supp, index) => {
-                                    if (supp.Concepto.startsWith('Alturas') || supp.Concepto.startsWith('Fondos') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('metro lineal')) return null;
+                                    if (supp.Concepto.startsWith('Alturas') || supp.Concepto.startsWith('Fondos') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Valor.includes('metro lineal') || supp.Concepto === "Laca RAL o según muestra") return null;
                                     const needsQuantity = supp.Valor.includes('ud');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
@@ -360,3 +360,5 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
+
+    
