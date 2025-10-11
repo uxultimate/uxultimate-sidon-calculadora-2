@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { melaminaColorOptions } from './utils';
+import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
@@ -28,7 +28,9 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
     const [material, setMaterial] = useState('Melamina_blanco_liso');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
-    
+    const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
+
+    const showLacaColorSwatches = material.startsWith('Laca_');
     const showMelaminaColorSwatches = material === 'Melamina_color';
     
     const doorCountKey = doorCount >= 3 ? '3_o_mas_puertas' : '2_puertas';
@@ -61,10 +63,6 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         const doorString = `${doorCount} ${doorCount > 1 ? 'puertas' : 'puerta'}`;
         const detailsArray = [doorString, `${material.replace(/_/g, ' ')}`, `${measurements.height}x${measurements.width}mm`];
         
-        if (showMelaminaColorSwatches) {
-            detailsArray.push(selectedMelaminaColor);
-        }
-
         let finalTotal = baseTotal;
 
         if (heightInMm > 2400) {
@@ -80,6 +78,19 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
             detailsArray.push('Dto. altura < 1500mm (-30%)');
         }
         
+        if (showLacaColorSwatches) {
+            detailsArray.push(selectedLacaColor);
+            if (selectedLacaColor !== 'Laca Blanca') {
+                const colorSupplement = finalTotal * 0.20;
+                finalTotal += colorSupplement;
+                detailsArray.push('Sup. Laca color (+20%)');
+            }
+        }
+        
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
+        }
+
         Object.entries(supplements).forEach(([concepto, { checked }]) => {
             if (checked) {
                 const supplementInfo = tarifa2025["Frente Corredera"].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
@@ -97,7 +108,7 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         });
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, doorCount, supplements, showMelaminaColorSwatches, selectedMelaminaColor]);
+    }, [measurements, material, materials, doorCount, supplements, showMelaminaColorSwatches, selectedMelaminaColor, showLacaColorSwatches, selectedLacaColor]);
 
     const handleSaveItem = () => {
         onSave({
@@ -172,8 +183,43 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                                 </Select>
                             </div>
                         </div>
+                        
+                        {showLacaColorSwatches && (
+                            <div>
+                                <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
+                                <div className="flex flex-wrap gap-2 pb-4">
+                                    {lacaColorOptions.map((color, index) => (
+                                        <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
+                                            <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                <div className="relative">
+                                                    <Image 
+                                                        src={color.imageUrl}
+                                                        alt={color.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
+                                                            selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                        )}
+                                                    />
+                                                     {selectedLacaColor === color.name && (
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-md">
+                                                            <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </button>
+                                            <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                {color.name}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {showMelaminaColorSwatches && (
-                             <div>
+                            <div>
                                 <Label className="mb-2 block">Color Melamina</Label>
                                 <div className="flex flex-wrap gap-4">
                                     {melaminaColorOptions.map((color) => (
@@ -253,4 +299,6 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
         </div>
     );
 }
+    
+
     
