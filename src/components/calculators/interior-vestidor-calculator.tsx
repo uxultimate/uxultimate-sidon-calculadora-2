@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { melaminaColorOptions } from './utils';
+import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
@@ -28,8 +28,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
     const [materialKey, setMaterialKey] = useState<string>('Melamina_blanco_o_lino_cancun_textil');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
+    const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
 
     const showMelaminaColorSwatches = materialKey === 'Melamina_colores';
+    const showLacaColorSwatches = materialKey === 'Laca_blanca';
     
     const materialsForThickness = tarifa2025["Interior y Vestidor"].Precios_por_metro_lineal_unidad[thickness];
 
@@ -79,12 +81,6 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         const materialName = materialKey.replace(/_/g, ' ');
         const detailsArray = [`${thickness} ${materialName}`, `${measurements.height}x${measurements.width}x${measurements.depth}mm`];
         
-        if (showMelaminaColorSwatches) {
-            detailsArray.push(selectedMelaminaColor);
-        } else if (materialKey === 'Melamina_blanco_o_lino_cancun_textil') {
-            detailsArray.push('Blanco o Lino Cancun Textil');
-        }
-
         let finalTotal = baseTotal;
 
         if (heightInMm > 2400) {
@@ -108,6 +104,21 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         } else if (depthInMm < 400) {
             finalTotal *= 0.75; // 25% discount
             detailsArray.push('Dto. fondo < 400mm (-25%)');
+        }
+
+        if (showLacaColorSwatches) {
+            detailsArray.push(selectedLacaColor);
+            if (selectedLacaColor !== 'Laca Blanca') {
+                const colorSupplement = finalTotal * 0.20;
+                finalTotal += colorSupplement;
+                detailsArray.push('Sup. Laca color (+20%)');
+            }
+        }
+        
+        if (showMelaminaColorSwatches) {
+            detailsArray.push(selectedMelaminaColor);
+        } else if (materialKey === 'Melamina_blanco_o_lino_cancun_textil') {
+            detailsArray.push('Blanco o Lino Cancun Textil');
         }
 
         Object.entries(supplements).forEach(([concepto, { checked, quantity }]) => {
@@ -134,7 +145,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
 
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, thickness, materialKey, materialsForThickness, supplements, showMelaminaColorSwatches, selectedMelaminaColor]);
+    }, [measurements, thickness, materialKey, materialsForThickness, supplements, showMelaminaColorSwatches, selectedMelaminaColor, showLacaColorSwatches, selectedLacaColor]);
 
     const handleSaveItem = () => {
         onSave({
@@ -209,8 +220,41 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                 </Select>
                             </div>
                         </div>
+                        {showLacaColorSwatches && (
+                            <div>
+                                <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
+                                <div className="flex flex-wrap gap-2 pb-4">
+                                    {lacaColorOptions.map((color, index) => (
+                                        <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
+                                            <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                <div className="relative">
+                                                    <Image 
+                                                        src={color.imageUrl}
+                                                        alt={color.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
+                                                            selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                        )}
+                                                    />
+                                                     {selectedLacaColor === color.name && (
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-md">
+                                                            <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </button>
+                                            <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                                {color.name}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {showMelaminaColorSwatches && (
-                             <div>
+                             <div className='border-t pt-4'>
                                 <Label className="mb-2 block">Color Melamina</Label>
                                 <div className="flex flex-wrap gap-4">
                                     {melaminaColorOptions.map((color) => (
@@ -302,4 +346,6 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
 };
 
     
+    
+
     
