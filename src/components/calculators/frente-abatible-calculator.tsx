@@ -297,7 +297,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
             </div>
             <div className="md:col-span-1 space-y-4">
                 <Image
-                    src="https://placehold.co/600x400.png"
+                    src="/images/armarios/sidon-armario-abatible-mura-600x400.png"
                     alt="Frente Abatible"
                     width={600}
                     height={400}
@@ -317,5 +317,3 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
-
-    
