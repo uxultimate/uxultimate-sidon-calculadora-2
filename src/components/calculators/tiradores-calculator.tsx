@@ -54,6 +54,12 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         if (selectedTirador.Modulo === 'TIR10') {
             return '/images/tiradores/tir10-laton.png';
         }
+        if (selectedTirador.Modulo === 'TIR11') {
+            return '/images/tiradores/tir11-negro.png';
+        }
+        if (selectedTirador.Modulo === 'TIR20') {
+            return '/images/tiradores/tir20-roble.png';
+        }
         return 'https://placehold.co/600x400.png';
     }, [selectedTirador]);
 
