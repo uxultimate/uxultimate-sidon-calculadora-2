@@ -9,12 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColorSwatch } from './utils';
 import { formatCurrency } from '@/lib/utils';
 
 interface PanelesDivisoriosCalculatorProps {
@@ -33,17 +31,21 @@ const cristalImages: Record<string, string> = {
     'Cristal Fluted (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
 };
 
+const colecciones = Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal.Corredera);
+const cristales = Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal.Corredera);
 
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
-    const [pricingModel, setPricingModel] = useState<'coleccion' | 'cristal'>('coleccion');
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Corredera');
     const [doorCount, setDoorCount] = useState(1);
-    const [panelCollection, setPanelCollection] = useState('Meridian');
-    const [panelCristal, setPanelCristal] = useState('Cristal Transparente');
+    const [selectedPanel, setSelectedPanel] = useState('Meridian');
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     
     const openingOptions = ['Corredera', 'Fijo', 'Abatible', 'Plegable'];
+
+    const pricingModel = useMemo(() => {
+        return colecciones.includes(selectedPanel) ? 'coleccion' : 'cristal';
+    }, [selectedPanel]);
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
@@ -81,15 +83,14 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         
         const priceListForType = priceData[constructedPanelType as keyof typeof priceData] || {};
         
-        const selectedKey = pricingModel === 'coleccion' ? panelCollection : panelCristal;
-        let basePrice = (priceListForType[selectedKey as keyof typeof priceListForType] || 0) * widthInMeters;
+        let basePrice = (priceListForType[selectedPanel as keyof typeof priceListForType] || 0) * widthInMeters;
 
         let total = basePrice;
         
         const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
         
-        const finalName = `Panel Divisorio ${openingType} ${selectedKey}`;
-        const detailsArray = [doorString, `${measurements.height}x${measurements.width}mm`];
+        const finalName = `Panel Divisorio ${openingType}`;
+        const detailsArray = [doorString, selectedPanel, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
             total *= 0.75; // 25% discount
@@ -125,7 +126,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         });
 
         return { total, details: detailsArray.join(', '), name: finalName };
-    }, [measurements, openingType, doorCount, panelCollection, panelCristal, panelSupplements, pricingModel, constructedPanelType]);
+    }, [measurements, openingType, doorCount, selectedPanel, panelSupplements, pricingModel, constructedPanelType]);
 
     const handleSaveItem = () => {
         const lineItem = { name, details, quantity: 1, price: total, total };
@@ -134,13 +135,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
     const currentImage = useMemo(() => {
         if (pricingModel === 'coleccion') {
-            return collectionImages[panelCollection] || 'https://placehold.co/600x400.png';
+            return collectionImages[selectedPanel] || 'https://placehold.co/600x400.png';
         }
         if (pricingModel === 'cristal') {
-            return cristalImages[panelCristal] || 'https://placehold.co/600x400.png';
+            return cristalImages[selectedPanel] || 'https://placehold.co/600x400.png';
         }
         return 'https://placehold.co/600x400.png';
-    }, [pricingModel, panelCollection, panelCristal]);
+    }, [pricingModel, selectedPanel]);
     
 
     return (
@@ -193,31 +194,34 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         </div>
                         
                         <div>
-                            <Label>Modelo de Precio</Label>
-                            <RadioGroup defaultValue="coleccion" value={pricingModel} onValueChange={(val) => setPricingModel(val as any)} className="flex items-center space-x-4 pt-2">
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="coleccion" id="coleccion" />
-                                    <Label htmlFor="coleccion">Por Colección</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="cristal" id="cristal" />
-                                    <Label htmlFor="cristal">Por Cristal</Label>
-                                </div>
-                            </RadioGroup>
-                        </div>
-
-                        <div>
-                            <Label>{pricingModel === 'coleccion' ? 'Colección' : 'Tipo de Cristal'}</Label>
+                            <Label>Colección / Cristal</Label>
                             <Select 
-                                value={pricingModel === 'coleccion' ? panelCollection : panelCristal} 
-                                onValueChange={pricingModel === 'coleccion' ? setPanelCollection : setPanelCristal}
+                                value={selectedPanel} 
+                                onValueChange={setSelectedPanel}
                                 disabled={!panelPriceData}
                             >
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
-                                    {panelPriceData && Object.keys(panelPriceData).map((option) => (
-                                        <SelectItem key={option} value={option}>{option}</SelectItem>
-                                    ))}
+                                    <SelectGroup>
+                                        <SelectLabel>Por Colección</SelectLabel>
+                                        {colecciones.map((option) => (
+                                            <SelectItem key={option} value={option}>{option}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                    <SelectGroup>
+                                        <SelectLabel>Por Cristal</SelectLabel>
+                                        {cristales.map((option) => (
+                                            <SelectItem key={option} value={option}>
+                                                {
+                                                    {
+                                                        'Cristal Transparente': 'Livorno (Transparente)',
+                                                        'Cristal Ahumado': 'Joros (Ahumado)',
+                                                        'Cristal Fluted (Acanalado)': 'Flutes (Acanalado)'
+                                                    }[option] || option
+                                                }
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
                                 </SelectContent>
                             </Select>
                             {!panelPriceData && <p className="text-xs text-destructive mt-1">La combinación de apertura y nº de puertas no es válida.</p>}
@@ -259,7 +263,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             <div className="md:col-span-1 space-y-4">
                  <Image
                     src={currentImage}
-                    alt={pricingModel === 'coleccion' ? panelCollection : panelCristal}
+                    alt={selectedPanel}
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
@@ -281,5 +285,3 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
-
-    
