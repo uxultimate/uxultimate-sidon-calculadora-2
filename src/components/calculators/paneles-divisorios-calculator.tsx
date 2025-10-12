@@ -89,7 +89,10 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         
         const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
         
-        const finalName = `Panel Divisorio ${selectedPanel}`;
+        const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
+        const displayName = selectedOption?.displayName || selectedPanel;
+        const finalName = `Panel Divisorio ${displayName}`;
+
         const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
