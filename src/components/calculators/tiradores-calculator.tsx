@@ -19,9 +19,10 @@ interface TiradoresCalculatorProps {
 }
 
 export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
-    const [selectedTirador, setSelectedTirador] = useState(tarifa2025.Tiradores[0]);
+    const tiradorDefault = tarifa2025.Tiradores.find(t => t.Modulo === 'TIR10') || tarifa2025.Tiradores[0];
+    const [selectedTirador, setSelectedTirador] = useState(tiradorDefault);
     const [quantity, setQuantity] = useState(1);
-    const [selectedColor, setSelectedColor] = useState(tarifa2025.Tiradores[0].colors[0]);
+    const [selectedColor, setSelectedColor] = useState('Latón');
 
     const handleTiradorChange = (modulo: string) => {
         const tirador = tarifa2025.Tiradores.find(t => t.Modulo === modulo);
@@ -48,6 +49,13 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
             total,
         });
     };
+    
+    const currentImage = useMemo(() => {
+        if (selectedTirador.Modulo === 'TIR10') {
+            return '/images/tiradores/tir10-laton.png';
+        }
+        return 'https://placehold.co/600x400.png';
+    }, [selectedTirador]);
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
@@ -103,8 +111,8 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
-                    alt="Tiradores"
+                    src={currentImage}
+                    alt={selectedTirador.Modulo}
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
