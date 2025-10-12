@@ -15,6 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
 
 interface PanelesDivisoriosCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -217,13 +218,18 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onClick={() => setSelectedPanel(option.name)}
                                         disabled={isOptionDisabled(option)}
                                         className={cn(
-                                            "rounded-md border p-3 text-center text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+                                            "rounded-md border p-3 text-center text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed relative",
                                             selectedPanel === option.name 
                                                 ? "bg-primary/10 border-primary text-primary font-semibold" 
                                                 : "bg-background hover:bg-accent hover:text-accent-foreground"
                                         )}
                                     >
                                         {option.displayName || option.name}
+                                        {selectedPanel === option.name && (
+                                            <div className="absolute top-1 right-1 bg-primary text-primary-foreground rounded-full h-4 w-4 flex items-center justify-center">
+                                                <Check className="h-3 w-3" />
+                                            </div>
+                                        )}
                                     </button>
                                 ))}
                             </div>
@@ -287,3 +293,4 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
+
