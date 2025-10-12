@@ -27,6 +27,12 @@ const collectionImages: Record<string, string> = {
     'Desi': '/images/paneles/sidon-armarios-panel-desi-600x400.png',
 };
 
+const cristalImages: Record<string, string> = {
+    'Cristal Transparente': '/images/paneles/cristal/sidon-armarios-panel-livorno-corredera-closed-600x400.png',
+    'Cristal Ahumado': '/images/paneles/cristal/sidon-armarios-panel-joros-paralel-600x400.png',
+    'Cristal Fluted (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
+};
+
 
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [pricingModel, setPricingModel] = useState<'coleccion' | 'cristal'>('coleccion');
@@ -81,6 +87,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         let total = basePrice;
         
         const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
+        
+        const finalName = `Panel Divisorio ${openingType} ${selectedKey}`;
         const detailsArray = [doorString, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
@@ -115,10 +123,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                 }
             }
         });
-        
-        const finalName = `Panel Divisorio ${openingType} ${selectedKey}`;
 
-        return { total, details: detailsArray.join(', '), name: `Panel Divisorio ${openingType}` };
+        return { total, details: detailsArray.join(', '), name: finalName };
     }, [measurements, openingType, doorCount, panelCollection, panelCristal, panelSupplements, pricingModel, constructedPanelType]);
 
     const handleSaveItem = () => {
@@ -127,11 +133,14 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     };
 
     const currentImage = useMemo(() => {
-        if (pricingModel === 'coleccion' && collectionImages[panelCollection]) {
-            return collectionImages[panelCollection];
+        if (pricingModel === 'coleccion') {
+            return collectionImages[panelCollection] || 'https://placehold.co/600x400.png';
+        }
+        if (pricingModel === 'cristal') {
+            return cristalImages[panelCristal] || 'https://placehold.co/600x400.png';
         }
         return 'https://placehold.co/600x400.png';
-    }, [pricingModel, panelCollection]);
+    }, [pricingModel, panelCollection, panelCristal]);
     
 
     return (
@@ -250,7 +259,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             <div className="md:col-span-1 space-y-4">
                  <Image
                     src={currentImage}
-                    alt={pricingModel === 'coleccion' ? panelCollection : 'Panel Divisorio'}
+                    alt={pricingModel === 'coleccion' ? panelCollection : panelCristal}
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
@@ -272,3 +281,5 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
+
+    
