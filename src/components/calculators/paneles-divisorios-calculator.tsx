@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface PanelesDivisoriosCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -31,8 +32,16 @@ const cristalImages: Record<string, string> = {
     'Cristal Fluted (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
 };
 
+const panelOptions = [
+    { name: 'Meridian', type: 'coleccion' as const },
+    { name: 'Paralel', type: 'coleccion' as const },
+    { name: 'Desi', type: 'coleccion' as const },
+    { name: 'Cristal Transparente', displayName: 'Livorno (Transparente)', type: 'cristal' as const },
+    { name: 'Cristal Ahumado', displayName: 'Joros (Ahumado)', type: 'cristal' as const },
+    { name: 'Cristal Fluted (Acanalado)', displayName: 'Flutes (Acanalado)', type: 'cristal' as const },
+];
+
 const colecciones = Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal.Corredera);
-const cristales = Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal.Corredera);
 
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
@@ -89,8 +98,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         
         const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
         
-        const finalName = `Panel Divisorio ${openingType}`;
-        const detailsArray = [doorString, selectedPanel, `${measurements.height}x${measurements.width}mm`];
+        const finalName = `Panel Divisorio ${selectedPanel}`;
+        const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`];
         
         if (measurements.height < 1500) {
             total *= 0.75; // 25% discount
@@ -195,36 +204,25 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         
                         <div>
                             <Label>Colección / Cristal</Label>
-                            <Select 
-                                value={selectedPanel} 
-                                onValueChange={setSelectedPanel}
-                                disabled={!panelPriceData}
-                            >
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Por Colección</SelectLabel>
-                                        {colecciones.map((option) => (
-                                            <SelectItem key={option} value={option}>{option}</SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                    <SelectGroup>
-                                        <SelectLabel>Por Cristal</SelectLabel>
-                                        {cristales.map((option) => (
-                                            <SelectItem key={option} value={option}>
-                                                {
-                                                    {
-                                                        'Cristal Transparente': 'Livorno (Transparente)',
-                                                        'Cristal Ahumado': 'Joros (Ahumado)',
-                                                        'Cristal Fluted (Acanalado)': 'Flutes (Acanalado)'
-                                                    }[option] || option
-                                                }
-                                            </SelectItem>
-                                        ))}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                            {!panelPriceData && <p className="text-xs text-destructive mt-1">La combinación de apertura y nº de puertas no es válida.</p>}
+                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                                {panelOptions.map((option) => (
+                                    <button
+                                        key={option.name}
+                                        type="button"
+                                        onClick={() => setSelectedPanel(option.name)}
+                                        disabled={!panelPriceData || !panelPriceData[option.name as keyof typeof panelPriceData]}
+                                        className={cn(
+                                            "rounded-md border p-3 text-center text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+                                            selectedPanel === option.name 
+                                                ? "bg-primary/10 border-primary text-primary font-semibold" 
+                                                : "bg-background hover:bg-accent hover:text-accent-foreground"
+                                        )}
+                                    >
+                                        {option.displayName || option.name}
+                                    </button>
+                                ))}
+                            </div>
+                            {!panelPriceData && <p className="text-xs text-destructive mt-2">La combinación de apertura y nº de puertas no es válida para algunas opciones.</p>}
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
@@ -285,3 +283,4 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
+
