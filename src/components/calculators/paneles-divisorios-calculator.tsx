@@ -74,15 +74,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         return openingType;
     }, [openingType, doorCount]);
 
-    const panelPriceData = useMemo(() => {
-        const source = pricingModel === 'coleccion' 
-            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
-            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
-
-        return source[constructedPanelType as keyof typeof source];
-    }, [pricingModel, constructedPanelType]);
-
-    
     const { total, details, name } = useMemo(() => {
         const widthInMeters = measurements.width / 1000;
         
@@ -143,14 +134,25 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     };
 
     const currentImage = useMemo(() => {
-        if (pricingModel === 'coleccion') {
+        const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
+        if (selectedOption?.type === 'coleccion') {
             return collectionImages[selectedPanel] || 'https://placehold.co/600x400.png';
         }
-        if (pricingModel === 'cristal') {
+        if (selectedOption?.type === 'cristal') {
             return cristalImages[selectedPanel] || 'https://placehold.co/600x400.png';
         }
         return 'https://placehold.co/600x400.png';
-    }, [pricingModel, selectedPanel]);
+    }, [selectedPanel]);
+
+    const isOptionDisabled = (option: typeof panelOptions[0]) => {
+        const priceData = option.type === 'coleccion' 
+            ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
+            : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
+
+        const priceListForType = priceData[constructedPanelType as keyof typeof priceData];
+
+        return !priceListForType || !priceListForType[option.name as keyof typeof priceListForType];
+    };
     
 
     return (
@@ -210,7 +212,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         key={option.name}
                                         type="button"
                                         onClick={() => setSelectedPanel(option.name)}
-                                        disabled={!panelPriceData || !panelPriceData[option.name as keyof typeof panelPriceData]}
+                                        disabled={isOptionDisabled(option)}
                                         className={cn(
                                             "rounded-md border p-3 text-center text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed",
                                             selectedPanel === option.name 
@@ -222,7 +224,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     </button>
                                 ))}
                             </div>
-                            {!panelPriceData && <p className="text-xs text-destructive mt-2">La combinación de apertura y nº de puertas no es válida para algunas opciones.</p>}
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
@@ -283,4 +284,3 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
-
