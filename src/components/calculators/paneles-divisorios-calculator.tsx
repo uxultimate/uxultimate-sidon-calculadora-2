@@ -33,6 +33,15 @@ const cristalImages: Record<string, string> = {
     'Cristal Fluted (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
 };
 
+const panelSmallImages: Record<string, string> = {
+    'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png',
+    'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png',
+    'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png',
+    'Cristal Transparente': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png',
+    'Cristal Ahumado': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png',
+    'Cristal Fluted (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png',
+}
+
 const panelOptions = [
     { name: 'Meridian', type: 'coleccion' as const },
     { name: 'Paralel', type: 'coleccion' as const },
@@ -153,9 +162,9 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         const priceData = option.type === 'coleccion' 
             ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
             : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
-
+    
         const priceListForType = priceData[constructedPanelType as keyof typeof priceData];
-
+    
         return !priceListForType || !priceListForType[option.name as keyof typeof priceListForType];
     };
     
@@ -211,7 +220,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         
                         <div>
                             <Label>Colección / Cristal</Label>
-                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
                                 {panelOptions.map((option) => (
                                     <button
                                         key={option.name}
@@ -219,16 +228,30 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onClick={() => setSelectedPanel(option.name)}
                                         disabled={isOptionDisabled(option)}
                                         className={cn(
-                                            "rounded-md border p-3 text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2",
+                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
                                             selectedPanel === option.name 
-                                                ? "bg-primary/10 border-primary text-primary font-semibold" 
-                                                : "bg-background hover:bg-accent hover:text-accent-foreground"
+                                                ? "ring-2 ring-primary"
+                                                : "ring-0"
                                         )}
                                     >
-                                        <span>{option.displayName || option.name}</span>
-                                        {selectedPanel === option.name && (
-                                            <Check className="h-4 w-4" />
-                                        )}
+                                        <div className='relative w-full aspect-[3/2]'>
+                                            <Image 
+                                                src={panelSmallImages[option.name] || 'https://placehold.co/150x100.png'}
+                                                alt={option.displayName || option.name}
+                                                fill
+                                                className="rounded-md object-cover"
+                                            />
+                                             {selectedPanel === option.name && (
+                                                <div className="absolute top-1 right-1 bg-primary rounded-full p-0.5">
+                                                    <Check className="h-3 w-3 text-primary-foreground" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <p className={cn("text-xs text-center font-medium w-full",
+                                             selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
+                                        )}>
+                                            {option.displayName || option.name}
+                                        </p>
                                     </button>
                                 ))}
                             </div>
