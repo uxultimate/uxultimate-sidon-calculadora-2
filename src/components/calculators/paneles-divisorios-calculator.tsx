@@ -51,8 +51,6 @@ const panelOptions = [
     { name: 'Cristal Fluted (Acanalado)', displayName: 'Flutes (Acanalado)', type: 'cristal' as const },
 ];
 
-const colecciones = Object.keys(tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal.Corredera);
-
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Corredera');
@@ -228,17 +226,17 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onClick={() => setSelectedPanel(option.name)}
                                         disabled={isOptionDisabled(option)}
                                         className={cn(
-                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
+                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-2 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
                                             selectedPanel === option.name 
                                                 ? "ring-2 ring-primary"
                                                 : "ring-0"
                                         )}
                                     >
                                         <Image 
-                                            src={panelSmallImages[option.name] || 'https://placehold.co/150x100.png'}
+                                            src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
                                             alt={option.displayName || option.name}
-                                            width={150}
-                                            height={100}
+                                            width={120}
+                                            height={80}
                                             className="rounded-md object-cover"
                                         />
                                         <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-2 h-8",
@@ -312,5 +310,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
+
+    
 
     
