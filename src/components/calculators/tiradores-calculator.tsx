@@ -9,10 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Check } from 'lucide-react';
 import { ColorSwatch, colorHexMap } from './utils';
 import { formatCurrency } from '@/lib/utils';
+import { ScrollArea } from '../ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface TiradoresCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -79,44 +80,67 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
     return (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             <div className="md:col-span-2 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                     <div>
                         <Label>Modelo de Tirador</Label>
-                        <Select
-                            value={selectedTirador.Modulo}
-                            onValueChange={handleTiradorChange}
-                        >
-                            <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                                {tarifa2025.Tiradores.map((t, index) => (
-                                    <SelectItem key={`${t.Modulo}-${index}`} value={t.Modulo}>{t.Modulo} - {t.Acabado}</SelectItem>
+                        <ScrollArea className="h-72 w-full rounded-md border mt-2">
+                             <div className="p-2 space-y-1">
+                                {tarifa2025.Tiradores.map((t) => (
+                                    <button
+                                        key={t.Modulo}
+                                        type="button"
+                                        onClick={() => handleTiradorChange(t.Modulo)}
+                                        className={cn(
+                                            "w-full flex items-center gap-4 p-2 rounded-md text-left transition-colors",
+                                            selectedTirador.Modulo === t.Modulo
+                                                ? "bg-accent text-accent-foreground"
+                                                : "hover:bg-accent/50"
+                                        )}
+                                    >
+                                        <Image
+                                            src={tiradorImages[t.Modulo] || 'https://placehold.co/100x100.png'}
+                                            alt={t.Modulo}
+                                            width={40}
+                                            height={40}
+                                            className="rounded-md object-cover bg-white"
+                                        />
+                                        <div>
+                                            <p className="font-semibold text-sm">{t.Modulo}</p>
+                                            <p className="text-xs text-muted-foreground">{t.Acabado}</p>
+                                        </div>
+                                         {selectedTirador.Modulo === t.Modulo && (
+                                            <Check className="ml-auto h-5 w-5 text-primary" />
+                                        )}
+                                    </button>
                                 ))}
-                            </SelectContent>
-                        </Select>
+                            </div>
+                        </ScrollArea>
                     </div>
                      <div>
-                        <Label>Cantidad</Label>
-                         <div className="flex items-center gap-2">
-                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                            <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
-                            <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
-                         </div>
+                         <div>
+                            <Label>Cantidad</Label>
+                            <div className="flex items-center gap-2 mt-2">
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <Label className="mb-2 block">Acabado / Color</Label>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                {selectedTirador.colors.map((color, index) => (
+                                    <ColorSwatch
+                                        key={`${color}-${index}`}
+                                        color={colorHexMap[color] || "#FFFFFF"}
+                                        name={color}
+                                        isSelected={selectedColor === color}
+                                        onClick={() => setSelectedColor(color)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                 <div>
-                    <Label className="mb-2 block">Acabado / Color</Label>
-                     <div className="flex flex-wrap gap-x-4 gap-y-2">
-                        {selectedTirador.colors.map((color, index) => (
-                            <ColorSwatch
-                                key={`${color}-${index}`}
-                                color={colorHexMap[color] || "#FFFFFF"}
-                                name={color}
-                                isSelected={selectedColor === color}
-                                onClick={() => setSelectedColor(color)}
-                            />
-                        ))}
-                    </div>
-                 </div>
                  <Card>
                     <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
                     <CardContent className="text-sm grid grid-cols-2 gap-2">
@@ -124,7 +148,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                         <p><b>Acabado Predeterminado:</b> {selectedTirador.Acabado}</p>
                         <p><b>Largo:</b> {selectedTirador.Largo || 'N/A'} mm</p>
                         <p><b>Alto:</b> {selectedTirador.Alto || 'N/A'} mm</p>
-                        <p><b>Ancho:</b> {selectedTirador.Ancho || 'N/A'} mm</p>
+                        <p><b>Ancho:</b> {selectedTirador.Ancho || 'N_A'} mm</p>
                     </CardContent>
                 </Card>
             </div>
