@@ -31,6 +31,19 @@ const groupKeywords: Record<string, string[]> = {
     'Kits y Bandejas': ['kit', 'bandeja'],
 };
 
+const axiaImageMap: Record<string, string> = {
+    'pantalonero doble': '/images/axia/pantalonero-doble-600x400.png',
+    'pantalonero doble (ancho)': '/images/axia/pantalonero-doble-600x400.png',
+    'zapatero extensible': '/images/axia/zapatero-extensible-600x400.png',
+    'soporte elevador ropa': '/images/axia/soporte-elevador-ropa-600x400.png',
+    'pantalonero doble bandejas': '/images/axia/pantalonero-doble-bandejas-600x400.png',
+    'espejo extraíble': '/images/axia/espejo-extraible-600x400.png',
+    'pantalonero percha cuadrada': '/images/axia/pantalonero-percha-cuadrada-600x400.png',
+    'corbatero': '/images/axia/corbatero-600x400.png',
+    'barra extraíble': '/images/axia/barra-extraible-600x400.png',
+    'tolva': '/images/axia/tolva-600x400.png',
+    'tabla de planchar extraible': '/images/axia/tabla-de-planchar-extraible-600x400.png',
+};
 
 export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> = ({ onSave, category }) => {
     const products = tarifa2025[category].Productos;
@@ -93,6 +106,19 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
     
     const selectedProductIdentifier = `${selectedProduct.Producto}-${(selectedProduct as any).Ancho || (selectedProduct as any).Rango_Ancho}`;
 
+    const currentImage = useMemo(() => {
+        if (category === 'Accesorios Axia') {
+            const productName = selectedProduct.Producto.toLowerCase();
+            for (const key in axiaImageMap) {
+                if (productName.includes(key)) {
+                    return `${axiaImageMap[key]}?v=1.0`;
+                }
+            }
+        }
+        return '/images/placeholder-600x400.png?v=1.0';
+    }, [selectedProduct, category]);
+
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
@@ -144,12 +170,13 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="https://placehold.co/600x400.png"
-                    alt="Accesorios"
+                    src={currentImage}
+                    alt={selectedProduct.Producto}
                     width={600}
                     height={400}
                     className="rounded-md object-cover aspect-[3/2]"
                     data-ai-hint="accessory"
+                    key={currentImage} 
                 />
                 <Card>
                     <CardHeader>
