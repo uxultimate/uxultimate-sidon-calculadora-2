@@ -220,7 +220,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         
                         <div>
                             <Label>Colección / Cristal</Label>
-                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
+                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
                                 {panelOptions.map((option) => (
                                     <button
                                         key={option.name}
@@ -255,7 +255,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
-                        <ScrollArea className="h-96 border rounded-md p-4">
+                        <ScrollArea className="h-[28.5rem] border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
@@ -313,3 +313,4 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     );
 }
 
+    
