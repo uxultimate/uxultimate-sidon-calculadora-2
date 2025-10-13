@@ -60,14 +60,36 @@ const axiaSmallImageMap: Record<string, string> = {
     'tabla de planchar extraible': '/images/axia/small/tabla-de-planchar-extraible-150x100.png',
 };
 
+const essenzaImageMap: Record<string, string> = {
+    'cesto profundo': '/images/essenza/cesto-profundo-600x400.png',
+    'cesto': '/images/essenza/cesto-600x400.png',
+    'pantalonero': '/images/essenza/pantaloreno-600x400.png',
+    'zapatero': '/images/essenza/zapatero-600x400.png',
+    'kit porta-relojes': '/images/essenza/kit-porta-relojes-600x400.png',
+    'kit porta-pendientes': '/images/essenza/porta-pendientes-600x400.png',
+    'kit modular': '/images/essenza/kit-modular-2-4-6-espacios-600x400.png',
+};
+
+const essenzaSmallImageMap: Record<string, string> = {
+    'cesto profundo': '/images/essenza/small/cesto-profundo-150x100.png',
+    'cesto': '/images/essenza/small/cesto-150x100.png',
+    'pantalonero': '/images/essenza/small/pantaloreno-150x100.png',
+    'zapatero': '/images/essenza/small/zapatero-150x100.png',
+    'kit porta-relojes': '/images/essenza/small/kit-porta-relojes-150x100.png',
+    'kit porta-pendientes': '/images/essenza/small/porta-pendientes-150x100.png',
+    'kit modular': '/images/essenza/small/kit-modular-2-4-6-espacios-150x100.png',
+};
+
 
 const getProductIdentifier = (p: Product) => `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}`;
 
-const getSmallImage = (productName: string) => {
+const getSmallImage = (productName: string, category: 'Accesorios Axia' | 'Accesorios Essenza') => {
     const lowerProductName = productName.toLowerCase();
-    for (const key in axiaSmallImageMap) {
+    const imageMap = category === 'Accesorios Axia' ? axiaSmallImageMap : essenzaSmallImageMap;
+
+    for (const key in imageMap) {
         if (lowerProductName.includes(key)) {
-            return `${axiaSmallImageMap[key]}?v=1.0`;
+            return `${imageMap[key]}?v=1.0`;
         }
     }
     return 'https://placehold.co/150x100.png?v=1.0';
@@ -143,12 +165,12 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
     const selectedProductIdentifier = getProductIdentifier(selectedProduct);
 
     const currentImage = useMemo(() => {
-        if (category === 'Accesorios Axia') {
-            const productName = selectedProduct.Producto.toLowerCase();
-            for (const key in axiaImageMap) {
-                if (productName.includes(key)) {
-                    return `${axiaImageMap[key]}?v=1.0`;
-                }
+        const productName = selectedProduct.Producto.toLowerCase();
+        const imageMap = category === 'Accesorios Axia' ? axiaImageMap : essenzaImageMap;
+
+        for (const key in imageMap) {
+            if (productName.includes(key)) {
+                return `${imageMap[key]}?v=1.0`;
             }
         }
         return '/images/placeholder-600x400.png?v=1.0';
@@ -182,7 +204,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                                                     )}
                                                 >
                                                     <Image
-                                                        src={getSmallImage(p.Producto)}
+                                                        src={getSmallImage(p.Producto, category)}
                                                         alt={p.Producto}
                                                         width={80}
                                                         height={53}
@@ -252,5 +274,3 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         </div>
     );
 };
-
-  
