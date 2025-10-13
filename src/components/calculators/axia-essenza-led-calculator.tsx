@@ -9,9 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Minus, Plus } from 'lucide-react';
+import { Minus, Plus, Check } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { ScrollArea } from '../ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface AxiaEssenzaLedCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -45,6 +46,34 @@ const axiaImageMap: Record<string, string> = {
     'tabla de planchar extraible': '/images/axia/tabla-de-planchar-extraible-600x400.png',
 };
 
+const axiaSmallImageMap: Record<string, string> = {
+    'pantalonero doble': '/images/axia/small/pantalonero-doble-150x100.png',
+    'pantalonero doble (ancho)': '/images/axia/small/pantalonero-doble-150x100.png',
+    'zapatero extensible': '/images/axia/small/zapatero-extensible-150x100.png',
+    'soporte elevador ropa': '/images/axia/small/soporte-elevador-ropa-150x100.png',
+    'pantalonero doble bandejas': '/images/axia/small/pantalonero-doble-bandejas-150x100.png',
+    'espejo extraíble': '/images/axia/small/espejo-extraible-150x100.png',
+    'pantalonero percha cuadrada': '/images/axia/small/pantalonero-percha-cuadrada-150x100.png',
+    'corbatero': '/images/axia/small/corbatero-150x100.png',
+    'barra extraíble': '/images/axia/small/barra-extraible-150x100.png',
+    'tolva': '/images/axia/small/tolva-150x100.png',
+    'tabla de planchar extraible': '/images/axia/small/tabla-de-planchar-extraible-150x100.png',
+};
+
+
+const getProductIdentifier = (p: Product) => `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}`;
+
+const getSmallImage = (productName: string) => {
+    const lowerProductName = productName.toLowerCase();
+    for (const key in axiaSmallImageMap) {
+        if (lowerProductName.includes(key)) {
+            return `${axiaSmallImageMap[key]}?v=1.0`;
+        }
+    }
+    return 'https://placehold.co/150x100.png?v=1.0';
+};
+
+
 export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> = ({ onSave, category }) => {
     const products = tarifa2025[category].Productos;
     const [selectedProduct, setSelectedProduct] = useState(products[0]);
@@ -55,6 +84,12 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         const others: Product[] = [];
 
         products.forEach(product => {
+            if (category !== 'Accesorios Axia') {
+                 if (!groups['Otros']) groups['Otros'] = [];
+                 groups['Otros'].push(product);
+                 return;
+            }
+
             let assigned = false;
             for (const groupName in groupKeywords) {
                 if (groupKeywords[groupName].some(keyword => product.Producto.toLowerCase().includes(keyword))) {
@@ -67,6 +102,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                 }
             }
             if (!assigned) {
+                if (!groups['Otros']) groups['Otros'] = [];
                 others.push(product);
             }
         });
@@ -76,11 +112,11 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         }
 
         return groups;
-    }, [products]);
+    }, [products, category]);
     
 
     const handleProductChange = (productIdentifier: string) => {
-        const product = products.find(p => `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}` === productIdentifier);
+        const product = products.find(p => getProductIdentifier(p) === productIdentifier);
         if (product) setSelectedProduct(product);
     }
 
@@ -104,7 +140,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         });
     };
     
-    const selectedProductIdentifier = `${selectedProduct.Producto}-${(selectedProduct as any).Ancho || (selectedProduct as any).Rango_Ancho}`;
+    const selectedProductIdentifier = getProductIdentifier(selectedProduct);
 
     const currentImage = useMemo(() => {
         if (category === 'Accesorios Axia') {
@@ -123,50 +159,72 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                     <div>
                         <Label>Producto</Label>
-                        <Select
-                            value={selectedProductIdentifier}
-                            onValueChange={handleProductChange}
-                        >
-                            <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
-                            <SelectContent>
+                        <ScrollArea className="h-96 w-full rounded-md border mt-2">
+                             <div className="p-2 pr-3 space-y-1">
                                 {Object.entries(groupedProducts).map(([groupName, productsInGroup]) => (
-                                    <SelectGroup key={groupName}>
-                                        <SelectLabel>{groupName}</SelectLabel>
+                                    <div key={groupName}>
+                                        <p className="py-1.5 px-2 text-sm font-semibold text-muted-foreground">{groupName}</p>
                                         {productsInGroup.map((p, index) => {
-                                            const identifier = `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}`;
+                                            const identifier = getProductIdentifier(p);
+                                            const isSelected = selectedProductIdentifier === identifier;
                                             return (
-                                                <SelectItem key={`${identifier}-${index}`} value={identifier}>
-                                                    {p.Producto} {((p as any).Ancho || (p as any).Rango_Ancho) ? `(${(p as any).Ancho || (p as any).Rango_Ancho}mm)` : ''}
-                                                </SelectItem>
+                                                 <button
+                                                    key={`${identifier}-${index}`}
+                                                    type="button"
+                                                    onClick={() => handleProductChange(identifier)}
+                                                    className={cn(
+                                                        "w-full flex items-center gap-2 p-2 rounded-md text-left transition-colors",
+                                                        isSelected
+                                                            ? "bg-accent text-accent-foreground"
+                                                            : "hover:bg-accent/50"
+                                                    )}
+                                                >
+                                                    <Image
+                                                        src={getSmallImage(p.Producto)}
+                                                        alt={p.Producto}
+                                                        width={80}
+                                                        height={53}
+                                                        className="rounded-md object-cover bg-white w-20 h-14"
+                                                    />
+                                                    <div className="flex-grow">
+                                                        <p className="font-semibold text-sm leading-tight">{p.Producto}</p>
+                                                        {((p as any).Ancho || (p as any).Rango_Ancho) && (
+                                                            <p className="text-xs text-muted-foreground">{((p as any).Ancho || (p as any).Rango_Ancho)}mm</p>
+                                                        )}
+                                                    </div>
+                                                     {isSelected && (
+                                                        <Check className="h-5 w-5 text-primary ml-auto flex-shrink-0" />
+                                                    )}
+                                                </button>
                                             )
                                         })}
-                                    </SelectGroup>
+                                    </div>
                                 ))}
-                            </SelectContent>
-                        </Select>
+                            </div>
+                        </ScrollArea>
                     </div>
                     <div>
                         <Label>Cantidad</Label>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 mt-2">
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                             <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
                             <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                         </div>
+                         <Card className='mt-4'>
+                            <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
+                            <CardContent className="text-sm grid grid-cols-2 gap-2">
+                                <p><b>Categoría:</b> {category}</p>
+                                <p><b>Acabado:</b> {selectedProduct.Acabado}</p>
+                                {(selectedProduct as any).Ancho && <p><b>Ancho:</b> {(selectedProduct as any).Ancho}</p>}
+                                 {(selectedProduct as any).Rango_Ancho && <p><b>Rango Ancho:</b> {(selectedProduct as any).Rango_Ancho}</p>}
+                                {(selectedProduct as any).Fondo && <p><b>Fondo:</b> {(selectedProduct as any).Fondo}</p>}
+                                {(selectedProduct as any).Alto && <p><b>Alto:</b> {(selectedProduct as any).Alto}</p>}
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
-                <Card>
-                    <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
-                    <CardContent className="text-sm grid grid-cols-2 gap-2">
-                        <p><b>Categoría:</b> {category}</p>
-                        <p><b>Acabado:</b> {selectedProduct.Acabado}</p>
-                        {(selectedProduct as any).Ancho && <p><b>Ancho:</b> {(selectedProduct as any).Ancho}</p>}
-                         {(selectedProduct as any).Rango_Ancho && <p><b>Rango Ancho:</b> {(selectedProduct as any).Rango_Ancho}</p>}
-                        {(selectedProduct as any).Fondo && <p><b>Fondo:</b> {(selectedProduct as any).Fondo}</p>}
-                        {(selectedProduct as any).Alto && <p><b>Alto:</b> {(selectedProduct as any).Alto}</p>}
-                    </CardContent>
-                </Card>
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
@@ -194,3 +252,5 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         </div>
     );
 };
+
+  
