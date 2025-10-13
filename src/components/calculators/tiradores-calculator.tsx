@@ -40,6 +40,27 @@ const tiradorImages: Record<string, string> = {
     'TIR60': '/images/tiradores/tir60-blanco.png'
 };
 
+const tiradorSmallImages: Record<string, string> = {
+    'TIR10': '/images/tiradores/tiradores-small/tir10-laton-small.png',
+    'TIR11': '/images/tiradores/tiradores-small/tir11-negro-small.png',
+    'TIR12': '/images/tiradores/tiradores-small/tir12-laton-antiguo-small.png',
+    'TIR13': '/images/tiradores/tiradores-small/tir13-inox-small.png',
+    'TIR20': '/images/tiradores/tiradores-small/tir20-roble-small.png',
+    'TIR21': '/images/tiradores/tiradores-small/tir21-roble-small.png',
+    'TIR22': '/images/tiradores/tiradores-small/tir22-negro-small.png',
+    'TIR23': '/images/tiradores/tiradores-small/tir23-negro-roble-small.png',
+    'TIR30': '/images/tiradores/tiradores-small/tir30-negro-small.png',
+    'TIR40': '/images/tiradores/tiradores-small/tir40-inox-small.png',
+    'TIR41': '/images/tiradores/tiradores-small/tir41-bronce-small.png',
+    'TIR42': '/images/tiradores/tiradores-small/tir42-negro-small.png',
+    'TIR50': '/images/tiradores/tiradores-small/tir50-laton-small.png',
+    'TIR51': '/images/tiradores/tiradores-small/tir51-negro-small.png',
+    'TIR52': '/images/tiradores/tiradores-small/tir52-negro-small.png',
+    'TIR53': '/images/tiradores/tiradores-small/tir53-marmol-verde-small.png',
+    'TIR54': '/images/tiradores/tiradores-small/tir54-tenido-negro-small.png',
+    'TIR60': '/images/tiradores/tiradores-small/tir60-blanco-small.png'
+};
+
 
 export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
     const tiradorDefault = tarifa2025.Tiradores.find(t => t.Modulo === 'TIR10') || tarifa2025.Tiradores[0];
@@ -98,7 +119,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                                         )}
                                     >
                                         <Image
-                                            src={tiradorImages[t.Modulo] || 'https://placehold.co/100x100.png'}
+                                            src={tiradorSmallImages[t.Modulo] || 'https://placehold.co/100x100.png'}
                                             alt={t.Modulo}
                                             width={64}
                                             height={64}
@@ -179,3 +200,4 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         </div>
     );
 };
+
