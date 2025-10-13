@@ -340,7 +340,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
             </div>
             <div className="md:col-span-1 space-y-4">
                 <Image
-                    src="/images/interior/sidon-armarios-vestidor-modular-19-600x400.png"
+                    src="/images/interior/sidon-armarios-vestidor-modular-19-600x400.png?v=1.0"
                     alt="Interior y Vestidor"
                     width={600}
                     height={400}
@@ -360,7 +360,5 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
-
-    
 
     

@@ -34,12 +34,12 @@ const cristalImages: Record<string, string> = {
 };
 
 const panelSmallImages: Record<string, string> = {
-    'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png',
-    'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png',
-    'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png',
-    'Cristal Transparente': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png',
-    'Cristal Ahumado': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png',
-    'Cristal Fluted (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png',
+    'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png?v=1.0',
+    'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png?v=1.0',
+    'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png?v=1.0',
+    'Cristal Transparente': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png?v=1.0',
+    'Cristal Ahumado': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png?v=1.0',
+    'Cristal Fluted (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png?v=1.0',
 }
 
 const panelOptions = [
@@ -148,12 +148,12 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const currentImage = useMemo(() => {
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
         if (selectedOption?.type === 'coleccion') {
-            return collectionImages[selectedPanel] || 'https://placehold.co/600x400.png';
+            return (collectionImages[selectedPanel] || 'https://placehold.co/600x400.png') + '?v=1.0';
         }
         if (selectedOption?.type === 'cristal') {
-            return cristalImages[selectedPanel] || 'https://placehold.co/600x400.png';
+            return (cristalImages[selectedPanel] || 'https://placehold.co/600x400.png') + '?v=1.0';
         }
-        return 'https://placehold.co/600x400.png';
+        return 'https://placehold.co/600x400.png?v=1.0';
     }, [selectedPanel]);
 
     const isOptionDisabled = (option: typeof panelOptions[0]) => {
@@ -252,7 +252,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-[29rem] border rounded-md p-4">
-                             <div className="space-y-2">
+                             <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
                                     const needsQuantity = supp.Valor.includes('€ ud');
@@ -308,8 +308,5 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
-
-    
-
 
     

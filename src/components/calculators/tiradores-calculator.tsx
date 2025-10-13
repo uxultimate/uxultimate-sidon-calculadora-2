@@ -41,24 +41,24 @@ const tiradorImages: Record<string, string> = {
 };
 
 const tiradorSmallImages: Record<string, string> = {
-    'TIR10': '/images/tiradores/tiradores-small/tir10-laton-small.png',
-    'TIR11': '/images/tiradores/tiradores-small/tir11-negro-small.png',
-    'TIR12': '/images/tiradores/tiradores-small/tir12-laton-antiguo-small.png',
-    'TIR13': '/images/tiradores/tiradores-small/tir13-inox-small.png',
-    'TIR20': '/images/tiradores/tiradores-small/tir20-roble-small.png',
-    'TIR21': '/images/tiradores/tiradores-small/tir21-roble-small.png',
-    'TIR22': '/images/tiradores/tiradores-small/tir22-negro-small.png',
-    'TIR23': '/images/tiradores/tiradores-small/tir23-negro-roble-small.png',
-    'TIR30': '/images/tiradores/tiradores-small/tir30-negro-small.png',
-    'TIR40': '/images/tiradores/tiradores-small/tir40-inox-small.png',
-    'TIR41': '/images/tiradores/tiradores-small/tir41-bronce-small.png',
-    'TIR42': '/images/tiradores/tiradores-small/tir42-negro-small.png',
-    'TIR50': '/images/tiradores/tiradores-small/tir50-laton-small.png',
-    'TIR51': '/images/tiradores/tiradores-small/tir51-negro-small.png',
-    'TIR52': '/images/tiradores/tiradores-small/tir52-negro-small.png',
-    'TIR53': '/images/tiradores/tiradores-small/tir53-marmol-verde-small.png',
-    'TIR54': '/images/tiradores/tiradores-small/tir54-tenido-negro-small.png',
-    'TIR60': '/images/tiradores/tiradores-small/tir60-blanco-small.png'
+    'TIR10': '/images/tiradores/tiradores-small/tir10-laton-small.png?v=1.0',
+    'TIR11': '/images/tiradores/tiradores-small/tir11-negro-small.png?v=1.0',
+    'TIR12': '/images/tiradores/tiradores-small/tir12-laton-antiguo-small.png?v=1.0',
+    'TIR13': '/images/tiradores/tiradores-small/tir13-inox-small.png?v=1.0',
+    'TIR20': '/images/tiradores/tiradores-small/tir20-roble-small.png?v=1.0',
+    'TIR21': '/images/tiradores/tiradores-small/tir21-roble-small.png?v=1.0',
+    'TIR22': '/images/tiradores/tiradores-small/tir22-negro-small.png?v=1.0',
+    'TIR23': '/images/tiradores/tiradores-small/tir23-negro-roble-small.png?v=1.0',
+    'TIR30': '/images/tiradores/tiradores-small/tir30-negro-small.png?v=1.0',
+    'TIR40': '/images/tiradores/tiradores-small/tir40-inox-small.png?v=1.0',
+    'TIR41': '/images/tiradores/tiradores-small/tir41-bronce-small.png?v=1.0',
+    'TIR42': '/images/tiradores/tiradores-small/tir42-negro-small.png?v=1.0',
+    'TIR50': '/images/tiradores/tiradores-small/tir50-laton-small.png?v=1.0',
+    'TIR51': '/images/tiradores/tiradores-small/tir51-negro-small.png?v=1.0',
+    'TIR52': '/images/tiradores/tiradores-small/tir52-negro-small.png?v=1.0',
+    'TIR53': '/images/tiradores/tiradores-small/tir53-marmol-verde-small.png?v=1.0',
+    'TIR54': '/images/tiradores/tiradores-small/tir54-tenido-negro-small.png?v=1.0',
+    'TIR60': '/images/tiradores/tiradores-small/tir60-blanco-small.png?v=1.0'
 };
 
 
@@ -95,7 +95,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
     };
     
     const currentImage = useMemo(() => {
-        return tiradorImages[selectedTirador.Modulo] || 'https://placehold.co/600x400.png';
+        return (tiradorImages[selectedTirador.Modulo] || 'https://placehold.co/600x400.png') + '?v=1.0';
     }, [selectedTirador]);
 
     return (
@@ -130,7 +130,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                                             <p className="text-xs text-muted-foreground">{t.Acabado}</p>
                                         </div>
                                          {selectedTirador.Modulo === t.Modulo && (
-                                            <Check className="h-5 w-5 text-primary" />
+                                            <Check className="h-5 w-5 text-primary ml-auto" />
                                         )}
                                     </button>
                                 ))}
@@ -200,3 +200,5 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         </div>
     );
 };
+
+    

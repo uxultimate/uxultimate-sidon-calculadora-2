@@ -212,7 +212,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
             </div>
             <div className="md:col-span-1 space-y-4">
                  <Image
-                    src="/images/cajones/cajones-armarios-sidon-600x400.png"
+                    src="/images/cajones/cajones-armarios-sidon-600x400.png?v=1.0"
                     alt="Cajones y Accesorios"
                     width={600}
                     height={400}
@@ -235,8 +235,5 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
-    
-    
-    
 
     
