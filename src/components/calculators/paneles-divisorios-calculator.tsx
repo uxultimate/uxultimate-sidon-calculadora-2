@@ -54,7 +54,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const openingOptions = ['Corredera', 'Fijo', 'Abatible', 'Plegable'];
 
     const pricingModel = useMemo(() => {
-        return colecciones.includes(selectedPanel) ? 'coleccion' : 'cristal';
+        const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
+        return selectedOption?.type === 'coleccion' ? 'coleccion' : 'cristal';
     }, [selectedPanel]);
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +235,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
-                        <ScrollArea className="h-72 border rounded-md p-4">
+                        <ScrollArea className="h-96 border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;

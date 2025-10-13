@@ -116,14 +116,16 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                 </Card>
             </div>
             <div className="md:col-span-1 space-y-4">
-                 <Image
-                    src={currentImage}
-                    alt={selectedTirador.Modulo}
-                    width={600}
-                    height={400}
-                    className="rounded-md object-cover aspect-[3/2]"
-                    data-ai-hint="handle"
-                />
+                 <div className='rounded-lg border bg-card text-card-foreground shadow-sm p-1.5'>
+                    <Image
+                        src={currentImage}
+                        alt={selectedTirador.Modulo}
+                        width={600}
+                        height={400}
+                        className="rounded-md object-cover aspect-[3/2]"
+                        data-ai-hint="handle"
+                    />
+                </div>
                  <Card>
                     <CardHeader>
                         <CardTitle>Total del Concepto</CardTitle>
