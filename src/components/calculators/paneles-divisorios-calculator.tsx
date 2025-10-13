@@ -234,24 +234,21 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                 : "ring-0"
                                         )}
                                     >
-                                        <div className='relative w-full aspect-[3/2]'>
-                                            <Image 
-                                                src={panelSmallImages[option.name] || 'https://placehold.co/150x100.png'}
-                                                alt={option.displayName || option.name}
-                                                fill
-                                                className="rounded-md object-cover"
-                                            />
-                                             {selectedPanel === option.name && (
-                                                <div className="absolute top-1 right-1 bg-primary rounded-full p-0.5">
-                                                    <Check className="h-3 w-3 text-primary-foreground" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <p className={cn("text-xs text-center font-medium w-full",
+                                        <Image 
+                                            src={panelSmallImages[option.name] || 'https://placehold.co/150x100.png'}
+                                            alt={option.displayName || option.name}
+                                            width={150}
+                                            height={100}
+                                            className="rounded-md object-cover"
+                                        />
+                                        <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-2 h-8",
                                              selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
                                         )}>
-                                            {option.displayName || option.name}
-                                        </p>
+                                            <span>{option.displayName || option.name}</span>
+                                            {selectedPanel === option.name && (
+                                                <Check className="h-4 w-4" />
+                                            )}
+                                        </div>
                                     </button>
                                 ))}
                             </div>
