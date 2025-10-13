@@ -226,7 +226,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onClick={() => setSelectedPanel(option.name)}
                                         disabled={isOptionDisabled(option)}
                                         className={cn(
-                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-2 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
+                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
                                             selectedPanel === option.name 
                                                 ? "ring-2 ring-primary"
                                                 : "ring-0"
@@ -253,7 +253,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
-                        <ScrollArea className="h-[28.5rem] border rounded-md p-4">
+                        <ScrollArea className="h-[29.5rem] border rounded-md p-4">
                             <div className="space-y-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
@@ -310,7 +310,5 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
-
-    
 
     
