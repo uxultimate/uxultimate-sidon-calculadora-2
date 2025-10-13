@@ -100,12 +100,12 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <div className="md:col-span-2 space-y-4">
+            <div className="md:col-span-2 flex flex-col space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                     <div>
                         <Label>Modelo de Tirador</Label>
                         <ScrollArea className="h-72 w-full rounded-md border mt-2">
-                             <div className="p-2 space-y-1">
+                             <div className="p-2 pr-4 space-y-1">
                                 {tarifa2025.Tiradores.map((t) => (
                                     <button
                                         key={t.Modulo}
@@ -125,12 +125,12 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                                             height={64}
                                             className="rounded-md object-cover bg-white w-16 h-16"
                                         />
-                                        <div>
+                                        <div className="flex-grow">
                                             <p className="font-semibold text-sm">{t.Modulo}</p>
                                             <p className="text-xs text-muted-foreground">{t.Acabado}</p>
                                         </div>
                                          {selectedTirador.Modulo === t.Modulo && (
-                                            <Check className="ml-auto h-5 w-5 text-primary" />
+                                            <Check className="h-5 w-5 text-primary" />
                                         )}
                                     </button>
                                 ))}
@@ -162,9 +162,9 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                         </div>
                     </div>
                 </div>
-                 <Card>
+                 <Card className="flex-grow flex flex-col">
                     <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
-                    <CardContent className="text-sm grid grid-cols-2 gap-2">
+                    <CardContent className="text-sm grid grid-cols-2 gap-2 flex-grow">
                         <p><b>Material:</b> {selectedTirador.Material}</p>
                         <p><b>Acabado Predeterminado:</b> {selectedTirador.Acabado}</p>
                         <p><b>Largo:</b> {selectedTirador.Largo || 'N/A'} mm</p>
@@ -200,4 +200,3 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         </div>
     );
 };
-
