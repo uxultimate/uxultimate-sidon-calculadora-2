@@ -21,7 +21,7 @@ interface AxiaEssenzaLedCalculatorProps {
 
 type Product = typeof tarifa2025['Accesorios Axia']['Productos'][0] | typeof tarifa2025['Accesorios Essenza']['Productos'][0];
 
-const groupKeywords: Record<string, string[]> = {
+const axiaGroupKeywords: Record<string, string[]> = {
     'Pantaloneros': ['pantalonero'],
     'Zapateros': ['zapatero'],
     'Soportes y Elevadores': ['elevador'],
@@ -29,8 +29,15 @@ const groupKeywords: Record<string, string[]> = {
     'Cestos y Tolvas': ['cesto', 'tolva'],
     'Barras y Percheros': ['barra', 'corbatero'],
     'Tablas de Planchar': ['planchar'],
-    'Kits y Bandejas': ['kit', 'bandeja'],
 };
+
+const essenzaGroupKeywords: Record<string, string[]> = {
+    'Cestos': ['cesto'],
+    'Pantaloneros': ['pantalonero'],
+    'Zapateros': ['zapatero'],
+    'Kits': ['kit'],
+};
+
 
 const axiaImageMap: Record<string, string> = {
     'pantalonero doble': '/images/axia/pantalonero-doble-600x400.png',
@@ -83,7 +90,7 @@ const essenzaSmallImageMap: Record<string, string> = {
 
 const getProductIdentifier = (p: Product) => `${p.Producto}-${(p as any).Ancho || (p as any).Rango_Ancho}`;
 
-const getSmallImage = (productName: string, category: 'Accesorios Axia' | 'Accesorios Essenza') => {
+const getSmallImage = (productName: string, category: 'Accesorios Axia' | 'Accesorios Essenza'): string => {
     const lowerProductName = productName.toLowerCase();
     const imageMap = category === 'Accesorios Axia' ? axiaSmallImageMap : essenzaSmallImageMap;
 
@@ -104,14 +111,9 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
     const groupedProducts = useMemo(() => {
         const groups: Record<string, Product[]> = {};
         const others: Product[] = [];
+        const groupKeywords = category === 'Accesorios Axia' ? axiaGroupKeywords : essenzaGroupKeywords;
 
         products.forEach(product => {
-            if (category !== 'Accesorios Axia') {
-                 if (!groups['Otros']) groups['Otros'] = [];
-                 groups['Otros'].push(product);
-                 return;
-            }
-
             let assigned = false;
             for (const groupName in groupKeywords) {
                 if (groupKeywords[groupName].some(keyword => product.Producto.toLowerCase().includes(keyword))) {
@@ -130,7 +132,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         });
         
         if (others.length > 0) {
-            groups['Otros'] = others;
+            groups['Otros'] = (groups['Otros'] || []).concat(others);
         }
 
         return groups;
