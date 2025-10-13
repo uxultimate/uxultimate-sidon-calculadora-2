@@ -254,7 +254,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-[29rem] border rounded-md p-4">
-                            <div className="space-y-2">
+                             <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
                                     const needsQuantity = supp.Valor.includes('€ ud');
