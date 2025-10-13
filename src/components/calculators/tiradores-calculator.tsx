@@ -100,9 +100,9 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                                         <Image
                                             src={tiradorImages[t.Modulo] || 'https://placehold.co/100x100.png'}
                                             alt={t.Modulo}
-                                            width={40}
-                                            height={40}
-                                            className="rounded-md object-cover bg-white"
+                                            width={64}
+                                            height={64}
+                                            className="rounded-md object-cover bg-white w-16 h-16"
                                         />
                                         <div>
                                             <p className="font-semibold text-sm">{t.Modulo}</p>
