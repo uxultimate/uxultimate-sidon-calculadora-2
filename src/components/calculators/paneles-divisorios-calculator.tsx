@@ -227,9 +227,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         disabled={isOptionDisabled(option)}
                                         className={cn(
                                             "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
-                                            selectedPanel === option.name 
-                                                ? "ring-2 ring-primary"
-                                                : "ring-0"
+                                            selectedPanel === option.name && "ring-2 ring-primary"
                                         )}
                                     >
                                         <Image 
@@ -239,12 +237,12 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                             height={80}
                                             className="rounded-md object-cover"
                                         />
-                                        <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-2 h-8",
+                                        <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
                                              selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
                                         )}>
-                                            <span>{option.displayName || option.name}</span>
+                                            <span className="truncate">{option.displayName || option.name}</span>
                                             {selectedPanel === option.name && (
-                                                <Check className="h-4 w-4" />
+                                                <Check className="h-4 w-4 flex-shrink-0" />
                                             )}
                                         </div>
                                     </button>
@@ -254,7 +252,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-[29rem] border rounded-md p-4">
-                             <div className="space-y-2 pr-2">
+                             <div className="space-y-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
                                     const needsQuantity = supp.Valor.includes('€ ud');
@@ -310,5 +308,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
+
+    
+
 
     
