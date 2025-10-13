@@ -18,6 +18,28 @@ interface TiradoresCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
 }
 
+const tiradorImages: Record<string, string> = {
+    'TIR10': '/images/tiradores/tir10-laton.png',
+    'TIR11': '/images/tiradores/tir11-negro.png',
+    'TIR12': '/images/tiradores/tir12-laton-antiguo.png',
+    'TIR13': '/images/tiradores/tir13-inox.png',
+    'TIR20': '/images/tiradores/tir20-roble.png',
+    'TIR21': '/images/tiradores/tir21-roble.png',
+    'TIR22': '/images/tiradores/tir22-negro.png',
+    'TIR23': '/images/tiradores/tir23-negro-roble.png',
+    'TIR30': '/images/tiradores/tir30-negro.png',
+    'TIR40': '/images/tiradores/tir40-inox.png',
+    'TIR41': '/images/tiradores/tir41-bronce.png',
+    'TIR42': '/images/tiradores/tir42-negro.png',
+    'TIR50': '/images/tiradores/tir50-laton.png',
+    'TIR51': '/images/tiradores/tir51-negro.png',
+    'TIR52': '/images/tiradores/tir52-negro.png',
+    'TIR53': '/images/tiradores/tir53-marmol-verde.png',
+    'TIR54': '/images/tiradores/tir54-tenido-negro.png',
+    'TIR60': '/images/tiradores/tir60-blanco.png'
+};
+
+
 export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
     const tiradorDefault = tarifa2025.Tiradores.find(t => t.Modulo === 'TIR10') || tarifa2025.Tiradores[0];
     const [selectedTirador, setSelectedTirador] = useState(tiradorDefault);
@@ -51,16 +73,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
     };
     
     const currentImage = useMemo(() => {
-        if (selectedTirador.Modulo === 'TIR10') {
-            return '/images/tiradores/tir10-laton.png';
-        }
-        if (selectedTirador.Modulo === 'TIR11') {
-            return '/images/tiradores/tir11-negro.png';
-        }
-        if (selectedTirador.Modulo === 'TIR20') {
-            return '/images/tiradores/tir20-roble.png';
-        }
-        return 'https://placehold.co/600x400.png';
+        return tiradorImages[selectedTirador.Modulo] || 'https://placehold.co/600x400.png';
     }, [selectedTirador]);
 
     return (
