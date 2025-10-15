@@ -44,6 +44,7 @@ export function CalculatorOne({
     const [isSaving, setIsSaving] = useState(false);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
+    const pdfRenderRef = useRef<HTMLDivElement>(null);
 
     const companyProfile: CompanyProfile = {
         name: "Sidon",
@@ -125,7 +126,7 @@ export function CalculatorOne({
     };
     
     const handleDownloadPdf = async () => {
-        const quoteElement = previewRef.current;
+        const quoteElement = pdfRenderRef.current;
         if (!quoteElement) {
             toast({ variant: 'destructive', title: 'Error', description: 'No se pudo encontrar el contenido del presupuesto para generar el PDF.' });
             return;
@@ -147,25 +148,18 @@ export function CalculatorOne({
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = imgWidth / imgHeight;
-            let newImgWidth = pdfWidth;
-            let newImgHeight = newImgWidth / ratio;
-            
-            if (newImgHeight > pdfHeight) {
-                newImgHeight = pdfHeight;
-                newImgWidth = newImgHeight * ratio;
-            }
-            
-            const totalPages = Math.ceil(imgHeight / (imgWidth * pdfHeight / pdfWidth));
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
 
-            for (let i = 0; i < totalPages; i++) {
-                if (i > 0) {
-                    pdf.addPage();
-                }
-                const y = -(pdfHeight * i);
-                pdf.addImage(imgData, 'PNG', 0, y, pdfWidth, pdfHeight * totalPages, undefined, 'FAST');
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
             }
             
             pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
@@ -200,25 +194,33 @@ export function CalculatorOne({
             />
 
             {currentQuote && (
-                <div ref={previewRef}>
-                    <Card>
-                        <CardHeader>
-                            <div className="flex justify-between items-center">
-                                <CardTitle className="font-headline">Presupuesto Generado</CardTitle>
-                                <Button onClick={handleDownloadPdf} disabled={isProcessingPdf}>
-                                    {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                                    Descargar PDF
-                                </Button>
-                            </div>
-                            <CardDescription>Esta es una vista previa del presupuesto final. Puedes descargarlo como PDF.</CardDescription>
-                        </CardHeader>
-                        <CardContent className='p-0'>
-                            <div className="border-t">
-                                <QuotePDFPreview quote={currentQuote} company={companyProfile} />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                <>
+                    <div ref={previewRef}>
+                        <Card>
+                            <CardHeader>
+                                <div className="flex justify-between items-center">
+                                    <CardTitle className="font-headline">Presupuesto Generado</CardTitle>
+                                    <Button onClick={handleDownloadPdf} disabled={isProcessingPdf}>
+                                        {isProcessingPdf ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+                                        Descargar PDF
+                                    </Button>
+                                </div>
+                                <CardDescription>Esta es una vista previa del presupuesto final. Puedes descargarlo como PDF.</CardDescription>
+                            </CardHeader>
+                            <CardContent className='p-0'>
+                                <div className="border-t">
+                                    <QuotePDFPreview quote={currentQuote} company={companyProfile} />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    {/* This div is used for rendering the PDF. It's visually hidden but available for html2canvas */}
+                    <div className="opacity-0 h-0 overflow-hidden">
+                        <div ref={pdfRenderRef}>
+                             <QuotePDFPreview quote={currentQuote} company={companyProfile} />
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     );
