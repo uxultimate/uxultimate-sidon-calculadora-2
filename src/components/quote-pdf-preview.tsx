@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -23,38 +22,40 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
 
     return (
         <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
-            <CardHeader className="p-0 mb-8 grid grid-cols-3 gap-8 items-start">
-                {/* Company Info */}
-                <div className="col-span-1">
-                    <PdfLogo />
-                    {company && (
-                        <div className='mt-4 text-xs space-y-0.5'>
-                            <p className="text-muted-foreground whitespace-pre-line">{company.address}</p>
-                            <p className="text-muted-foreground">{company.email}</p>
-                            <p className="text-muted-foreground">{company.phone}</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Quote Details */}
-                <div className="col-span-1 text-center">
-                    <h3 className="text-base font-semibold">PRESUPUESTO</h3>
-                    <p className="text-xs text-muted-foreground">{displayQuoteNumber}</p>
-                    <p className="mt-1 text-xs"><span className="font-semibold">Fecha:</span> {creationDate}</p>
-                </div>
-
-                {/* Client Info */}
-                <div className="col-span-1 text-right">
-                    <h4 className="font-semibold text-gray-800 text-sm">CLIENTE</h4>
-                    <div className="text-xs text-muted-foreground space-y-0.5">
-                        {quote.contactName && <p className="font-bold">{quote.contactName}</p>}
-                        {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
-                        {quote.contactCif && <p>{quote.contactCif}</p>}
-                        {quote.contactAddress && <p>{quote.contactAddress}</p>}
-                        {quote.contactEmail && <p>{quote.contactEmail}</p>}
-                        {quote.contactPhone && <p>{quote.contactPhone}</p>}
+            <CardHeader className="p-0 mb-8">
+                 <div className="flex justify-between items-start gap-4">
+                    {/* Company Info */}
+                    <div className="w-1/3">
+                        <PdfLogo />
+                        {company && (
+                            <div className='mt-4 text-xs space-y-0.5'>
+                                <p className="text-muted-foreground whitespace-pre-line">{company.address}</p>
+                                <p className="text-muted-foreground">{company.email}</p>
+                                <p className="text-muted-foreground">{company.phone}</p>
+                            </div>
+                        )}
                     </div>
-                </div>
+
+                    {/* Quote Details */}
+                    <div className="text-center flex-shrink-0">
+                        <h3 className="text-base font-semibold">PRESUPUESTO</h3>
+                        <p className="text-xs text-muted-foreground">{displayQuoteNumber}</p>
+                        <p className="mt-1 text-xs"><span className="font-semibold">Fecha:</span> {creationDate}</p>
+                    </div>
+
+                    {/* Client Info */}
+                    <div className="w-1/3 text-right">
+                        <h4 className="font-semibold text-gray-800 text-sm">CLIENTE</h4>
+                        <div className="text-xs text-muted-foreground space-y-0.5">
+                            {quote.contactName && <p className="font-bold">{quote.contactName}</p>}
+                            {quote.contactCompanyName && <p>{quote.contactCompanyName}</p>}
+                            {quote.contactCif && <p>{quote.contactCif}</p>}
+                            {quote.contactAddress && <p className="whitespace-pre-line">{quote.contactAddress}</p>}
+                            {quote.contactEmail && <p>{quote.contactEmail}</p>}
+                            {quote.contactPhone && <p>{quote.contactPhone}</p>}
+                        </div>
+                    </div>
+                 </div>
             </CardHeader>
 
             <Separator className="my-6" />
