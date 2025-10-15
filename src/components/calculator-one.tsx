@@ -42,7 +42,6 @@ export function CalculatorOne({
     const { toast } = useToast();
     const { clientProfile, setClientProfile, discountPercentage, setDiscountPercentage } = useQuote();
     const [isSaving, setIsSaving] = useState(false);
-    const pdfRenderRef = React.useRef<HTMLDivElement>(null);
     const [isProcessingPdf, setIsProcessingPdf] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
 
@@ -126,7 +125,7 @@ export function CalculatorOne({
     };
     
     const handleDownloadPdf = async () => {
-        const quoteElement = pdfRenderRef.current;
+        const quoteElement = previewRef.current;
         if (!quoteElement) {
             toast({ variant: 'destructive', title: 'Error', description: 'No se pudo encontrar el contenido del presupuesto para generar el PDF.' });
             return;
@@ -146,44 +145,30 @@ export function CalculatorOne({
     
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = imgWidth / imgHeight;
+            let newImgWidth = pdfWidth;
+            let newImgHeight = newImgWidth / ratio;
             
-            const PADDING = 10;
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            
-            const contentWidth = pageWidth - (PADDING * 2);
-    
-            const canvasWidth = canvas.width;
-            const canvasHeight = canvas.height;
-            const ratio = canvasWidth / contentWidth;
-            const contentHeight = canvasHeight / ratio;
-    
-            let heightLeft = contentHeight;
-            let position = 0;
-            
-            const pageContentHeight = pageHeight - (PADDING * 2);
-    
-            pdf.addImage(imgData, 'PNG', PADDING, PADDING, contentWidth, contentHeight);
-            heightLeft -= pageContentHeight;
-    
-            while (heightLeft > 0) {
-                position -= pageContentHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', PADDING, position + PADDING, contentWidth, contentHeight);
-                heightLeft -= pageContentHeight;
+            if (newImgHeight > pdfHeight) {
+                newImgHeight = pdfHeight;
+                newImgWidth = newImgHeight * ratio;
             }
+            
+            const totalPages = Math.ceil(imgHeight / (imgWidth * pdfHeight / pdfWidth));
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-            if (isIOS) {
-                const pdfDataUri = pdf.output('datauristring');
-                const newWindow = window.open(pdfDataUri, '_blank');
-                if (!newWindow) {
-                     toast({ variant: 'destructive', title: 'Bloqueo de Pop-ups', description: 'Por favor, deshabilita el bloqueo de ventanas emergentes para ver el PDF.' });
+            for (let i = 0; i < totalPages; i++) {
+                if (i > 0) {
+                    pdf.addPage();
                 }
-            } else {
-                pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
+                const y = -(pdfHeight * i);
+                pdf.addImage(imgData, 'PNG', 0, y, pdfWidth, pdfHeight * totalPages, undefined, 'FAST');
             }
+            
+            pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
             
             toast({ title: "PDF Descargado", description: "El presupuesto se ha guardado como PDF." });
     
@@ -233,16 +218,8 @@ export function CalculatorOne({
                             </div>
                         </CardContent>
                     </Card>
-                    {/* Hidden element for PDF generation */}
-                    <div className="fixed -left-[9999px] top-0 bg-white" style={{ width: '210mm' }}>
-                         <div ref={pdfRenderRef}>
-                             <QuotePDFPreview quote={currentQuote} company={companyProfile} />
-                        </div>
-                    </div>
                 </div>
             )}
         </div>
     );
 }
-
-    
