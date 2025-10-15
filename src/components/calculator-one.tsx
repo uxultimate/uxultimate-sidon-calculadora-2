@@ -140,8 +140,8 @@ export function CalculatorOne({
                 logging: false,
                 width: quoteElement.offsetWidth,
                 height: quoteElement.offsetHeight,
-                windowWidth: document.documentElement.offsetWidth,
-                windowHeight: document.documentElement.offsetHeight,
+                windowWidth: quoteElement.offsetWidth,
+                windowHeight: quoteElement.offsetHeight,
             });
     
             const imgData = canvas.toDataURL('image/png');
@@ -216,7 +216,7 @@ export function CalculatorOne({
                     </div>
                     {/* This div is used for rendering the PDF. It's visually hidden but available for html2canvas */}
                     <div className="opacity-0 h-0 overflow-hidden">
-                        <div ref={pdfRenderRef}>
+                         <div ref={pdfRenderRef} className="w-[1024px]">
                              <QuotePDFPreview quote={currentQuote} company={companyProfile} />
                         </div>
                     </div>
