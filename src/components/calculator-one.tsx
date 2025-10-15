@@ -172,8 +172,21 @@ export function CalculatorOne({
                 pdf.addImage(imgData, 'PNG', PADDING, position + PADDING, contentWidth, contentHeight);
                 heightLeft -= pageContentHeight;
             }
+
+            const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+            if (isIOS()) {
+                const pdfDataUri = pdf.output('datauristring');
+                const newWindow = window.open();
+                if (newWindow) {
+                    newWindow.location.href = pdfDataUri;
+                } else {
+                     toast({ variant: 'destructive', title: 'Bloqueo de Pop-ups', description: 'Por favor, deshabilita el bloqueo de ventanas emergentes para ver el PDF.' });
+                }
+            } else {
+                pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
+            }
             
-            pdf.save(`presupuesto-${currentQuote?.quoteNumber || 'documento'}.pdf`);
             toast({ title: "PDF Descargado", description: "El presupuesto se ha guardado como PDF." });
     
         } catch (error) {
