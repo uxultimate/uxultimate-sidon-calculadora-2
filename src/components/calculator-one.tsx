@@ -173,14 +173,12 @@ export function CalculatorOne({
                 heightLeft -= pageContentHeight;
             }
 
-            const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-            if (isIOS()) {
+            if (isIOS) {
                 const pdfDataUri = pdf.output('datauristring');
-                const newWindow = window.open();
-                if (newWindow) {
-                    newWindow.location.href = pdfDataUri;
-                } else {
+                const newWindow = window.open(pdfDataUri, '_blank');
+                if (!newWindow) {
                      toast({ variant: 'destructive', title: 'Bloqueo de Pop-ups', description: 'Por favor, deshabilita el bloqueo de ventanas emergentes para ver el PDF.' });
                 }
             } else {
