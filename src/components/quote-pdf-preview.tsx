@@ -21,11 +21,11 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
     const subtotalAfterDiscount = quote.subtotal - (quote.discountAmount || 0);
 
     return (
-        <Card className="p-8 shadow-none border-0 bg-white rounded-none pb-8">
+        <Card className="p-4 sm:p-8 shadow-none border-0 bg-white rounded-none pb-8">
             <CardHeader className="p-0 mb-8">
-                 <div className="flex justify-between items-start gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
                     {/* Company Info */}
-                    <div className="w-1/3">
+                    <div className="col-span-1">
                         <PdfLogo />
                         {company && (
                             <div className='mt-4 text-xs space-y-0.5'>
@@ -37,14 +37,14 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                     </div>
 
                     {/* Quote Details */}
-                    <div className="text-center flex-shrink-0">
+                    <div className="col-span-2 md:col-span-1 text-left md:text-center self-center">
                         <h3 className="text-base font-semibold">PRESUPUESTO</h3>
                         <p className="text-xs text-muted-foreground">{displayQuoteNumber}</p>
                         <p className="mt-1 text-xs"><span className="font-semibold">Fecha:</span> {creationDate}</p>
                     </div>
 
                     {/* Client Info */}
-                    <div className="w-1/3 text-right">
+                    <div className="col-span-2 md:col-span-1 text-left md:text-right">
                         <h4 className="font-semibold text-gray-800 text-sm">CLIENTE</h4>
                         <div className="text-xs text-muted-foreground space-y-0.5">
                             {quote.contactName && <p className="font-bold">{quote.contactName}</p>}
@@ -55,7 +55,7 @@ export const QuotePDFPreview: React.FC<QuotePDFPreviewProps> = ({ quote, company
                             {quote.contactPhone && <p>{quote.contactPhone}</p>}
                         </div>
                     </div>
-                 </div>
+                </div>
             </CardHeader>
 
             <Separator className="my-6" />
