@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import * as React from "react";
 
 export function PdfLogo(props: { className?: string }) {
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src="/images/sidon-logo-2x.png"
       alt="Logo de Sidon"
       width={145}
