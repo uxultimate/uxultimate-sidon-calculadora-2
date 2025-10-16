@@ -130,35 +130,34 @@ export function QuoteForm({
             </div>
             </CardContent>
             {stagedLineItems.length > 0 && (
-                <CardFooter className="flex flex-col items-end gap-4 p-6 pt-0">
+                <CardFooter className="flex flex-col items-stretch gap-4 p-6">
                     <Separator />
-                    <div className="flex justify-between font-bold text-md w-full max-w-sm pt-4">
-                        <span>Total del Grupo</span>
-                        <span>{formatCurrency(stagedSubtotal)}</span>
+                    <div className="flex justify-end font-bold text-md w-full pt-4">
+                        <div className="flex justify-between w-full max-w-sm">
+                            <span>Total del Grupo</span>
+                            <span>{formatCurrency(stagedSubtotal)}</span>
+                        </div>
+                    </div>
+                     <Separator />
+                     <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                        <div className='flex-grow w-full'>
+                            <Label htmlFor="groupReference" className='text-sm font-medium mb-2 block'>Referencia del Grupo</Label>
+                            <Input 
+                                id="groupReference"
+                                placeholder="Ej: DORMITORIO SUITE" 
+                                value={groupReference}
+                                onChange={(e) => setGroupReference(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddGroup()}
+                            />
+                        </div>
+                        <Button onClick={handleAddGroup} disabled={stagedLineItems.length === 0 || groupReference.trim() === ''} className="w-full sm:w-auto sm:self-end">
+                            <Plus className="mr-2 h-4 w-4" /> Añadir Grupo al Presupuesto
+                        </Button>
                     </div>
                 </CardFooter>
             )}
         </Card>
         
-        {/* Action to add staged items as a group */}
-        <Card>
-            <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-4">
-                <div className='flex-grow w-full'>
-                    <label htmlFor="groupReference" className='text-sm font-medium mb-2 block'>Referencia del Grupo</label>
-                    <Input 
-                        id="groupReference"
-                        placeholder="Ej: DORMITORIO SUITE" 
-                        value={groupReference}
-                        onChange={(e) => setGroupReference(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddGroup()}
-                    />
-                </div>
-                <Button onClick={handleAddGroup} disabled={stagedLineItems.length === 0 || groupReference.trim() === ''} className="w-full sm:w-auto sm:self-end">
-                    <Plus className="mr-2 h-4 w-4" /> Añadir Grupo
-                </Button>
-            </CardContent>
-        </Card>
-
         {/* Final Quote Summary */}
         <Separator className='my-4' />
 
@@ -307,7 +306,5 @@ export function QuoteForm({
     </div>
   );
 }
-
-    
 
     
