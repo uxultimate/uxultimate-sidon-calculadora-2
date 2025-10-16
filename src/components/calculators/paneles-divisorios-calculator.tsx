@@ -51,11 +51,28 @@ const panelOptions = [
     { name: 'Cristal Fluted (Acanalado)', displayName: 'Flutes (Acanalado)', type: 'cristal' as const },
 ];
 
+const colorOptions = [
+    { name: 'Lacado negro texturizado', image: '/images/paneles/colores/lacado-negro-texturizado-200x200.jpg' },
+    { name: 'Lacado blanco mate', image: '/images/paneles/colores/lacado-blanco-mate-200x200.png' },
+    { name: 'Madera Roble Barniz mate natura', image: '/images/paneles/colores/madera-roble-barniz-mate-natura-200x200.jpg' },
+    { name: 'Madera Nogal Barniz mate natura', image: '/images/paneles/colores/madera-nogal-barniz-mate-natura-200x200.jpg' },
+    { name: 'Lacado RAL', image: '/images/paneles/colores/lacado-ral-200x200.jpg' },
+];
+
+const glassOptions = [
+    { name: 'Ahumado Gris Humo', image: '/images/paneles/cristales/cristal-ahumado-gris-humo-200x200.jpg' },
+    { name: 'Ahumado Bronce', image: '/images/paneles/cristales/cristal-ahumado-bronce-200x200.jpg' },
+    { name: 'Transparente', image: '/images/paneles/cristales/cristal-transparente-200x201.jpg' },
+    { name: 'Fluted', image: '/images/paneles/cristales/cristal-fluted-200x200.jpg' },
+];
+
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Corredera');
     const [doorCount, setDoorCount] = useState(1);
     const [selectedPanel, setSelectedPanel] = useState('Meridian');
+    const [selectedColor, setSelectedColor] = useState(colorOptions[0].name);
+    const [selectedGlass, setSelectedGlass] = useState(glassOptions[0].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     
     const openingOptions = ['Corredera', 'Fijo', 'Abatible', 'Plegable'];
@@ -102,7 +119,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         const displayName = selectedOption?.displayName || selectedPanel;
         const finalName = `Panel Divisorio ${displayName}`;
 
-        const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`];
+        const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`, `Perfil: ${selectedColor}`, `Cristal: ${selectedGlass}`];
         
         if (measurements.height < 1500) {
             total *= 0.75; // 25% discount
@@ -138,7 +155,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         });
 
         return { total, details: detailsArray.join(', '), name: finalName };
-    }, [measurements, openingType, doorCount, selectedPanel, panelSupplements, pricingModel, constructedPanelType]);
+    }, [measurements, openingType, doorCount, selectedPanel, panelSupplements, pricingModel, constructedPanelType, selectedColor, selectedGlass]);
 
     const handleSaveItem = () => {
         const lineItem = { name, details, quantity: 1, price: total, total };
@@ -176,82 +193,128 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <Label>Alto (mm)</Label>
-                                <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
-                                {measurements.height > 2700 && (
-                                    <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
-                                )}
-                                {measurements.height < 1500 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
-                                )}
-                            </div>
-                            <div>
-                                <Label>Ancho (mm)</Label>
-                                <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <Label>Tipo de Apertura</Label>
-                                <Select value={openingType} onValueChange={setOpeningType}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                        {openingOptions.map((type) => (
-                                            <SelectItem key={type} value={type}>{type}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div>
-                                <Label>Nº de Puertas</Label>
-                                <Input 
-                                    type="number" 
-                                    value={doorCount} 
-                                    onChange={(e) => setDoorCount(Math.max(1, parseInt(e.target.value)))} 
-                                    min="1"
-                                />
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <Label>Colección / Cristal</Label>
-                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-                                {panelOptions.map((option) => (
-                                    <button
-                                        key={option.name}
-                                        type="button"
-                                        onClick={() => setSelectedPanel(option.name)}
-                                        disabled={isOptionDisabled(option)}
-                                        className={cn(
-                                            "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
-                                            selectedPanel === option.name && "ring-2 ring-primary"
+                        <ScrollArea className="h-[40rem] pr-4">
+                            <div className='space-y-4'>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <Label>Alto (mm)</Label>
+                                        <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                        {measurements.height > 2700 && (
+                                            <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
                                         )}
-                                    >
-                                        <Image 
-                                            src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
-                                            alt={option.displayName || option.name}
-                                            width={120}
-                                            height={80}
-                                            className="rounded-md object-cover"
+                                        {measurements.height < 1500 && (
+                                            <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <Label>Ancho (mm)</Label>
+                                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <Label>Tipo de Apertura</Label>
+                                        <Select value={openingType} onValueChange={setOpeningType}>
+                                            <SelectTrigger><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                {openingOptions.map((type) => (
+                                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div>
+                                        <Label>Nº de Puertas</Label>
+                                        <Input 
+                                            type="number" 
+                                            value={doorCount} 
+                                            onChange={(e) => setDoorCount(Math.max(1, parseInt(e.target.value)))} 
+                                            min="1"
                                         />
-                                        <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
-                                             selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
-                                        )}>
-                                            <span className="truncate">{option.displayName || option.name}</span>
-                                            {selectedPanel === option.name && (
-                                                <Check className="h-4 w-4 flex-shrink-0" />
-                                            )}
-                                        </div>
-                                    </button>
-                                ))}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <Label>Colección / Cristal</Label>
+                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                                        {panelOptions.map((option) => (
+                                            <button
+                                                key={option.name}
+                                                type="button"
+                                                onClick={() => setSelectedPanel(option.name)}
+                                                disabled={isOptionDisabled(option)}
+                                                className={cn(
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
+                                                    selectedPanel === option.name && "ring-2 ring-primary"
+                                                )}
+                                            >
+                                                <Image 
+                                                    src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
+                                                    alt={option.displayName || option.name}
+                                                    width={120}
+                                                    height={80}
+                                                    className="rounded-md object-cover"
+                                                />
+                                                <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
+                                                     selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
+                                                )}>
+                                                    <span className="truncate">{option.displayName || option.name}</span>
+                                                    {selectedPanel === option.name && (
+                                                        <Check className="h-4 w-4 flex-shrink-0" />
+                                                    )}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 pt-4">
+                                    <Label>Colores de Perfil</Label>
+                                    <p className="text-sm text-muted-foreground">Con la opción de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {colorOptions.map((color) => (
+                                            <button
+                                                key={color.name}
+                                                type="button"
+                                                onClick={() => setSelectedColor(color.name)}
+                                                className={cn(
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
+                                                    selectedColor === color.name && "ring-2 ring-primary"
+                                                )}
+                                            >
+                                                <Image src={color.image} alt={color.name} width={150} height={150} className="rounded-md object-cover w-full aspect-square" />
+                                                <p className="text-xs font-medium text-center">{color.name}</p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 pt-4">
+                                    <Label>Cristales</Label>
+                                    <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoración.</p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {glassOptions.map((glass) => (
+                                            <button
+                                                key={glass.name}
+                                                type="button"
+                                                onClick={() => setSelectedGlass(glass.name)}
+                                                className={cn(
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
+                                                    selectedGlass === glass.name && "ring-2 ring-primary"
+                                                )}
+                                            >
+                                                <Image src={glass.image} alt={glass.name} width={150} height={150} className="rounded-md object-cover w-full aspect-square" />
+                                                <p className="text-xs font-medium text-center">{glass.name}</p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </ScrollArea>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
-                        <ScrollArea className="h-[29rem] border rounded-md p-4">
+                        <ScrollArea className="h-[40rem] border rounded-md p-4">
                              <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
                                     if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
@@ -308,5 +371,3 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 }
-
-    
