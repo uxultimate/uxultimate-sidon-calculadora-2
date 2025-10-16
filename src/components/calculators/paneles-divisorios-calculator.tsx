@@ -238,34 +238,39 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 <div>
                                     <Label>Colección / Cristal</Label>
                                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-                                        {panelOptions.map((option) => (
-                                            <button
-                                                key={option.name}
-                                                type="button"
-                                                onClick={() => setSelectedPanel(option.name)}
-                                                disabled={isOptionDisabled(option)}
-                                                className={cn(
-                                                    "bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed border-2",
-                                                    selectedPanel === option.name ? "border-primary" : "border-transparent"
-                                                )}
-                                            >
-                                                <Image 
-                                                    src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
-                                                    alt={option.displayName || option.name}
-                                                    width={120}
-                                                    height={80}
-                                                    className="rounded-md object-cover"
-                                                />
-                                                <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
-                                                     selectedPanel === option.name ? "text-primary" : "text-muted-foreground"
-                                                )}>
-                                                    <span className="truncate">{option.displayName || option.name}</span>
-                                                    {selectedPanel === option.name && (
-                                                        <Check className="h-4 w-4 flex-shrink-0" />
+                                        {panelOptions.map((option) => {
+                                            const isSelected = selectedPanel === option.name;
+                                            return (
+                                                <button
+                                                    key={option.name}
+                                                    type="button"
+                                                    onClick={() => setSelectedPanel(option.name)}
+                                                    disabled={isOptionDisabled(option)}
+                                                    className={cn(
+                                                        "bg-card text-card-foreground rounded-md shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
                                                     )}
-                                                </div>
-                                            </button>
-                                        ))}
+                                                >
+                                                    <Image 
+                                                        src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
+                                                        alt={option.displayName || option.name}
+                                                        width={120}
+                                                        height={80}
+                                                        className={cn(
+                                                            "rounded-md object-cover border-2",
+                                                            isSelected ? "border-primary" : "border-transparent"
+                                                        )}
+                                                    />
+                                                    <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
+                                                        isSelected ? "text-primary" : "text-muted-foreground"
+                                                    )}>
+                                                        <span className="truncate">{option.displayName || option.name}</span>
+                                                        {isSelected && (
+                                                            <Check className="h-4 w-4 flex-shrink-0" />
+                                                        )}
+                                                    </div>
+                                                </button>
+                                            )
+                                        })}
                                     </div>
                                 </div>
 
