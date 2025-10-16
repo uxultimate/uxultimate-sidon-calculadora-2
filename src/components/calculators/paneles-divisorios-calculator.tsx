@@ -269,42 +269,42 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     </div>
                                 </div>
 
-                                <div className="space-y-2 pt-4">
+                                <div className="space-y-4 pt-4">
                                     <Label>Colores de Perfil</Label>
                                     <p className="text-sm text-muted-foreground">Con la opción de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
-                                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
                                         {colorOptions.map((color) => (
                                             <button
                                                 key={color.name}
                                                 type="button"
                                                 onClick={() => setSelectedColor(color.name)}
                                                 className={cn(
-                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1.5 p-1.5 hover:bg-accent",
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
                                                     selectedColor === color.name && "ring-2 ring-primary"
                                                 )}
                                             >
-                                                <Image src={color.image} alt={color.name} width={100} height={100} className="rounded-md object-cover w-full aspect-square" />
+                                                <Image src={color.image} alt={color.name} width={80} height={80} className="rounded-md object-cover w-full aspect-square" />
                                                 <p className="text-xs font-medium text-center h-8 flex items-center justify-center">{color.name}</p>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="space-y-2 pt-4">
+                                <div className="space-y-4 pt-4">
                                     <Label>Cristales</Label>
-                                    <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoración.</p>
-                                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                    <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
                                         {glassOptions.map((glass) => (
                                             <button
                                                 key={glass.name}
                                                 type="button"
                                                 onClick={() => setSelectedGlass(glass.name)}
                                                 className={cn(
-                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1.5 p-1.5 hover:bg-accent",
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
                                                     selectedGlass === glass.name && "ring-2 ring-primary"
                                                 )}
                                             >
-                                                <Image src={glass.image} alt={glass.name} width={100} height={100} className="rounded-md object-cover w-full aspect-square" />
+                                                <Image src={glass.image} alt={glass.name} width={80} height={80} className="rounded-md object-cover w-full aspect-square" />
                                                 <p className="text-xs font-medium text-center h-8 flex items-center justify-center">{glass.name}</p>
                                             </button>
                                         ))}
