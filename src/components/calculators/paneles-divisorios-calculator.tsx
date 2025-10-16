@@ -245,8 +245,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                 onClick={() => setSelectedPanel(option.name)}
                                                 disabled={isOptionDisabled(option)}
                                                 className={cn(
-                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed",
-                                                    selectedPanel === option.name && "ring-2 ring-primary"
+                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed border-2",
+                                                    selectedPanel === option.name ? "border-primary" : "border-transparent"
                                                 )}
                                             >
                                                 <Image 
@@ -272,15 +272,15 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 <div className="space-y-4 pt-4">
                                     <Label>Colores de Perfil</Label>
                                     <p className="text-sm text-muted-foreground">Con la opción de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
-                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
                                         {colorOptions.map((color) => (
                                             <button
                                                 key={color.name}
                                                 type="button"
                                                 onClick={() => setSelectedColor(color.name)}
                                                 className={cn(
-                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
-                                                    selectedColor === color.name && "ring-2 ring-primary"
+                                                    "rounded-lg text-card-foreground transition-all flex flex-col items-center gap-2 p-1 border-2",
+                                                    selectedColor === color.name ? "border-primary" : "border-transparent"
                                                 )}
                                             >
                                                 <Image src={color.image} alt={color.name} width={80} height={80} className="rounded-md object-cover w-full aspect-square" />
@@ -293,15 +293,15 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 <div className="space-y-4 pt-4">
                                     <Label>Cristales</Label>
                                     <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
-                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
                                         {glassOptions.map((glass) => (
                                             <button
                                                 key={glass.name}
                                                 type="button"
                                                 onClick={() => setSelectedGlass(glass.name)}
                                                 className={cn(
-                                                    "rounded-lg border bg-card text-card-foreground shadow-sm transition-all flex flex-col items-center gap-2 p-2 hover:bg-accent",
-                                                    selectedGlass === glass.name && "ring-2 ring-primary"
+                                                    "rounded-lg text-card-foreground transition-all flex flex-col items-center gap-2 p-1 border-2",
+                                                    selectedGlass === glass.name ? "border-primary" : "border-transparent"
                                                 )}
                                             >
                                                 <Image src={glass.image} alt={glass.name} width={80} height={80} className="rounded-md object-cover w-full aspect-square" />
