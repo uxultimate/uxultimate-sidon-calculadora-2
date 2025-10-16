@@ -190,20 +190,20 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                                 <div className="flex flex-wrap gap-2 pb-4">
                                     {lacaColorOptions.map((color, index) => (
                                         <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
-                                            <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                            <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
                                                 <div className="relative">
                                                     <Image 
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         width={64}
                                                         height={64}
-                                                        className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all', 
+                                                        className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                             selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
                                                             (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
-                                                        <div className="absolute inset-0 flex items-center justify-center rounded-md">
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full">
                                                             <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
                                                         </div>
                                                     )}
@@ -225,20 +225,20 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                                     {melaminaColorOptions.map((color) => (
                                         <div key={color.name}>
                                             <div className="flex flex-col items-center gap-2 w-20">
-                                                <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                                                <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
                                                     <div className="relative">
                                                         <Image
                                                             src={color.imageUrl}
                                                             alt={color.name}
                                                             width={64}
                                                             height={64}
-                                                            className={cn('h-16 w-16 rounded-md object-cover border-2 transition-all',
+                                                            className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                 selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
                                                                 color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-md">
+                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full">
                                                                 <Check className={cn("h-6 w-6", color.name === 'Blanco' ? 'text-gray-800' : 'text-white')} />
                                                             </div>
                                                         )}
