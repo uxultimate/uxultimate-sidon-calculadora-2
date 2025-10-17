@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -369,7 +370,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                         <p className="text-xs text-muted-foreground break-words">{details}</p>
                     </CardContent>
                 </Card>
-                <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>ax
+                <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
             </div>
         </div>
     );
