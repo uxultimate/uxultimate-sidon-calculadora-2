@@ -9,13 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-react';
+import { Check, Minus, Plus } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+
 
 interface PanelesDivisoriosCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -75,7 +76,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const [selectedGlass, setSelectedGlass] = useState(glassOptions[0].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     
-    const openingOptions = ['Corredera', 'Fijo', 'Abatible', 'Plegable'];
+    const openingOptions = ['Corredera', 'Fijo', 'Abatible'];
 
     const pricingModel = useMemo(() => {
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
@@ -97,7 +98,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     
     const constructedPanelType = useMemo(() => {
         if (openingType === 'Abatible' && doorCount === 2) return 'Abatible Doble';
-        if (openingType === 'Plegable' && doorCount > 1) return `Plegable ${doorCount} Puertas`;
         return openingType;
     }, [openingType, doorCount]);
 
@@ -115,7 +115,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
         let total = basePrice;
         
-        const doorString = `${doorCount} ${doorCount > 1 ? 'Puertas' : 'Puerta'}`;
+        const doorString = `${doorCount} ${doorCount > 1 ? 'Paneles' : 'Panel'}`;
         
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
         const displayName = selectedOption?.displayName || selectedPanel;
@@ -194,93 +194,90 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         <TabsTrigger value="config">Configuración</TabsTrigger>
                         <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="config" className="pt-4 space-y-4">
-                        <ScrollArea className="h-[40rem] pr-4">
-                            <div className='space-y-4'>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <Label>Alto (mm)</Label>
-                                        <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
-                                        {(Number(measurements.height) || 0) > 2700 && (
-                                            <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
-                                        )}
-                                        {(Number(measurements.height) || 0) < 1500 && (
-                                            <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <Label>Ancho (mm)</Label>
-                                        <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <Label>Tipo de Apertura</Label>
-                                        <Select value={openingType} onValueChange={setOpeningType}>
-                                            <SelectTrigger><SelectValue /></SelectTrigger>
-                                            <SelectContent>
-                                                {openingOptions.map((type) => (
-                                                    <SelectItem key={type} value={type}>{type}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div>
-                                        <Label>Nº de Puertas</Label>
-                                        <Input 
-                                            type="number" 
-                                            value={doorCount} 
-                                            onChange={(e) => setDoorCount(Math.max(1, parseInt(e.target.value)))} 
-                                            min="1"
-                                        />
-                                    </div>
-                                </div>
-                                
+                    <TabsContent value="config" className="pt-4">
+                        <div className='space-y-4'>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
-                                    <Label>Colección / Cristal</Label>
-                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-                                        {panelOptions.map((option) => {
-                                            const isSelected = selectedPanel === option.name;
-                                            return (
-                                                <button
-                                                    key={option.name}
-                                                    type="button"
-                                                    onClick={() => setSelectedPanel(option.name)}
-                                                    disabled={isOptionDisabled(option)}
-                                                    className={cn(
-                                                        "bg-card text-card-foreground rounded-md shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
-                                                    )}
-                                                >
-                                                    <Image 
-                                                        src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
-                                                        alt={option.displayName || option.name}
-                                                        width={120}
-                                                        height={80}
-                                                        className={cn(
-                                                            "rounded-md object-cover border-2",
-                                                            isSelected ? "border-primary" : "border-transparent"
-                                                        )}
-                                                    />
-                                                    <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
-                                                        isSelected ? "text-primary" : "text-muted-foreground"
-                                                    )}>
-                                                        <span className="truncate">{option.displayName || option.name}</span>
-                                                        {isSelected && (
-                                                            <Check className="h-4 w-4 flex-shrink-0" />
-                                                        )}
-                                                    </div>
-                                                </button>
-                                            )
-                                        })}
+                                    <Label>Alto (mm)</Label>
+                                    <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                    {(Number(measurements.height) || 0) > 2700 && (
+                                        <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
+                                    )}
+                                    {(Number(measurements.height) || 0) < 1500 && (
+                                        <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label>Ancho (mm)</Label>
+                                    <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                                </div>
+                                 <div>
+                                    <Label>Nº de Paneles</Label>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                        <Input type="number" className="w-20 text-center" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />
+                                        <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div className="space-y-4 pt-4">
-                                    <Label>Colores de Perfil</Label>
-                                    <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
-                                    <div className="flex flex-wrap gap-2 pb-4">
-                                        {colorOptions.map((color) => (
+                            <div className='space-y-2'>
+                                <Label>Tipo de Apertura</Label>
+                                <ToggleGroup type="single" value={openingType} onValueChange={(value) => { if (value) setOpeningType(value) }} className="justify-start">
+                                    {openingOptions.map((type) => (
+                                        <ToggleGroupItem key={type} value={type} aria-label={`Toggle ${type}`}>
+                                            {type}
+                                        </ToggleGroupItem>
+                                    ))}
+                                </ToggleGroup>
+                            </div>
+                            
+                            <div>
+                                <Label>Colección / Cristal</Label>
+                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                                    {panelOptions.map((option) => {
+                                        const isSelected = selectedPanel === option.name;
+                                        return (
+                                            <button
+                                                key={option.name}
+                                                type="button"
+                                                onClick={() => setSelectedPanel(option.name)}
+                                                disabled={isOptionDisabled(option)}
+                                                className={cn(
+                                                    "bg-card text-card-foreground rounded-md shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                                                )}
+                                            >
+                                                <Image 
+                                                    src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
+                                                    alt={option.displayName || option.name}
+                                                    width={120}
+                                                    height={80}
+                                                    className={cn(
+                                                        "rounded-md object-cover border-2",
+                                                        isSelected ? "border-primary" : "border-transparent"
+                                                    )}
+                                                />
+                                                <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
+                                                    isSelected ? "text-primary" : "text-muted-foreground"
+                                                )}>
+                                                    <span className="truncate">{option.displayName || option.name}</span>
+                                                    {isSelected && (
+                                                        <Check className="h-4 w-4 flex-shrink-0" />
+                                                    )}
+                                                </div>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 pt-4">
+                                <Label>Colores de Perfil</Label>
+                                <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
+                                <div className="flex flex-wrap gap-2 pb-4">
+                                    {colorOptions.map((color) => {
+                                        const isSelected = selectedColor === color.name;
+                                        return (
                                             <div key={color.name} className="flex flex-col items-center gap-2 w-20">
                                                 <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
                                                     <div className="relative">
@@ -290,30 +287,33 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                             width={64}
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                                selectedColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow'
+                                                                isSelected ? 'border-primary' : 'border-transparent',
+                                                                (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
                                                             )}
                                                         />
-                                                        {selectedColor === color.name && (
+                                                        {isSelected && (
                                                             <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
                                                                 <Check className="h-6 w-6 text-primary-foreground" />
                                                             </div>
                                                         )}
                                                     </div>
                                                 </button>
-                                                <p className={cn("text-xs text-center w-full", selectedColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground')}>
+                                                <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
                                                     {color.name}
                                                 </p>
                                             </div>
-                                        ))}
-                                    </div>
+                                        )
+                                    })}
                                 </div>
+                            </div>
 
-                                <div className="space-y-4 pt-4">
-                                    <Label>Cristales</Label>
-                                    <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
-                                    <div className="flex flex-wrap gap-2 pb-4">
-                                        {glassOptions.map((glass) => (
+                            <div className="space-y-4 pt-4">
+                                <Label>Cristales</Label>
+                                <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
+                                <div className="flex flex-wrap gap-2 pb-4">
+                                    {glassOptions.map((glass) => {
+                                        const isSelected = selectedGlass === glass.name;
+                                        return (
                                              <div key={glass.name} className="flex flex-col items-center gap-2 w-20">
                                                 <button type="button" onClick={() => setSelectedGlass(glass.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
                                                     <div className="relative">
@@ -323,25 +323,25 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                             width={64}
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                                selectedGlass === glass.name ? 'border-primary' : 'border-transparent'
+                                                                isSelected ? 'border-primary' : 'border-transparent'
                                                             )}
                                                         />
-                                                        {selectedGlass === glass.name && (
+                                                        {isSelected && (
                                                             <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
                                                                 <Check className="h-6 w-6 text-primary-foreground" />
                                                             </div>
                                                         )}
                                                     </div>
                                                 </button>
-                                                <p className={cn("text-xs text-center w-full", selectedGlass === glass.name ? 'font-semibold text-primary' : 'text-muted-foreground')}>
+                                                <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
                                                     {glass.name}
                                                 </p>
                                             </div>
-                                        ))}
-                                    </div>
+                                        )
+                                    })}
                                 </div>
                             </div>
-                        </ScrollArea>
+                        </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-[40rem] border rounded-md p-4">
