@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -200,5 +199,3 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         </div>
     );
 };
-
-    

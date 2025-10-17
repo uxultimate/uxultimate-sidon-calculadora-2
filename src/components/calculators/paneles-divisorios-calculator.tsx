@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -35,11 +34,11 @@ const cristalImages: Record<string, string> = {
 };
 
 const panelSmallImages: Record<string, string> = {
-    'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png?v=1.0',
-    'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png?v=1.0',
-    'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png?v=1.0',
     'Livorno (Transparente)': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png?v=1.0',
     'Joros (Ahumado)': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png?v=1.0',
+    'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png?v=1.0',
+    'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png?v=1.0',
+    'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png?v=1.0',
     'Flutes (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png?v=1.0',
 }
 
@@ -336,7 +335,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                                 height={64}
                                                                 className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                     isSelected ? 'border-primary' : 'border-transparent',
-                                                                    (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-md'
+                                                                    (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
                                                                 )}
                                                             />
                                                             {isSelected && (
@@ -466,7 +465,3 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 };
-
-    
-
-    

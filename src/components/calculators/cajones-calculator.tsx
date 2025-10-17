@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -143,30 +142,28 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                         <Label className="mb-2 block">Color Laca (+20% sobre material)</Label>
                         <div className="flex flex-wrap gap-2 pb-4">
                             {lacaColorOptions.map((color, index) => (
-                                <div key={`${color.name}-${index}`} className="flex flex-col items-center gap-2 w-20">
-                                    <button type="button" onClick={() => setSelectedLacaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                                        <div className="relative">
-                                            <Image 
-                                                src={color.imageUrl}
-                                                alt={color.name}
-                                                width={64}
-                                                height={64}
-                                                className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
-                                                    selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                    (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
-                                                )}
-                                            />
-                                            {selectedLacaColor === color.name && (
-                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                    <Check className="h-6 w-6 text-primary-foreground" />
-                                                </div>
+                                <button type="button" key={`${color.name}-${index}`} onClick={() => setSelectedLacaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                    <div className="relative">
+                                        <Image 
+                                            src={color.imageUrl}
+                                            alt={color.name}
+                                            width={64}
+                                            height={64}
+                                            className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
+                                                selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
                                             )}
-                                        </div>
-                                    </button>
+                                        />
+                                        {selectedLacaColor === color.name && (
+                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                <Check className="h-6 w-6 text-primary-foreground" />
+                                            </div>
+                                        )}
+                                    </div>
                                     <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
                                         {color.name}
                                     </p>
-                                </div>
+                                </button>
                             ))}
                         </div>
                     </div>
@@ -176,32 +173,28 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                         <Label className="mb-2 block">Color Melamina</Label>
                         <div className="flex flex-wrap gap-4">
                             {melaminaColorOptions.map((color) => (
-                                <div key={color.name}>
-                                    <div className="flex flex-col items-center gap-2 w-20">
-                                        <button type="button" onClick={() => setSelectedMelaminaColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                                            <div className="relative">
-                                                <Image
-                                                    src={color.imageUrl}
-                                                    alt={color.name}
-                                                    width={64}
-                                                    height={64}
-                                                    className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                        selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                        color.name === 'Blanco' && 'shadow-lg'
-                                                    )}
-                                                />
-                                                {selectedMelaminaColor === color.name && (
-                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                         <Check className="h-6 w-6 text-primary-foreground" />
-                                                    </div>
-                                                )}
+                                <button type="button" key={color.name} onClick={() => setSelectedMelaminaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                    <div className="relative">
+                                        <Image
+                                            src={color.imageUrl}
+                                            alt={color.name}
+                                            width={64}
+                                            height={64}
+                                            className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                color.name === 'Blanco' && 'shadow-lg'
+                                            )}
+                                        />
+                                        {selectedMelaminaColor === color.name && (
+                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                 <Check className="h-6 w-6 text-primary-foreground" />
                                             </div>
-                                        </button>
-                                        <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
-                                            {color.name}
-                                        </p>
+                                        )}
                                     </div>
-                                </div>
+                                    <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                        {color.name}
+                                    </p>
+                                </button>
                             ))}
                         </div>
                     </div>
