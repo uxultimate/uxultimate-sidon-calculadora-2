@@ -91,7 +91,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    <div className="space-y-2">
                         <Label>Tipo de Accesorio</Label>
                         <Select value={itemType} onValueChange={handleItemTypeChange}>
                             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -102,7 +102,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                             </SelectContent>
                         </Select>
                     </div>
-                    <div>
+                    <div className="space-y-2">
                         <Label>Material</Label>
                         <Select value={material} onValueChange={setMaterial}>
                             <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
@@ -125,7 +125,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     </div>
                 </div>
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    <div className="space-y-2">
                         <Label>Ancho del Hueco (mm)</Label>
                         <Input type="number" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
                         <Slider
@@ -239,9 +239,3 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
-
-    
-
-    
-
-    

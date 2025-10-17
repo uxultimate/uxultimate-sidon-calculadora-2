@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -182,7 +183,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div>
+                     <div className="space-y-2">
                         <Label>Producto</Label>
                         <ScrollArea className="h-96 w-full rounded-md border mt-2">
                              <div className="p-2 pr-3 space-y-1">
@@ -229,11 +230,13 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                         </ScrollArea>
                     </div>
                     <div>
-                        <Label>Cantidad</Label>
-                        <div className="flex items-center gap-2 mt-2">
-                            <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                            <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
-                            <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                        <div className="space-y-2">
+                            <Label>Cantidad</Label>
+                            <div className="flex items-center gap-2">
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                            </div>
                         </div>
                          <Card className='mt-4'>
                             <CardHeader><CardTitle>Detalles</CardTitle></CardHeader>
@@ -249,7 +252,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                     </div>
                 </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <Image
                     src={currentImage}
                     alt={selectedProduct.Producto}

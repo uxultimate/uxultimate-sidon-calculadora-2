@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -50,7 +51,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                     Añade cualquier servicio o producto personalizado al presupuesto, como instalación, transporte u otros cargos.
                 </p>
                  <div className="space-y-4 pt-4">
-                     <div>
+                     <div className="space-y-2">
                         <Label htmlFor="free-concept-name">Nombre del Concepto</Label>
                         <Input 
                             id="free-concept-name"
@@ -59,7 +60,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                             placeholder="Ej: Instalación y montaje"
                         />
                     </div>
-                     <div>
+                     <div className="space-y-2">
                         <Label htmlFor="free-concept-details">Detalles (Opcional)</Label>
                         <Textarea
                              id="free-concept-details"
@@ -69,7 +70,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                         />
                     </div>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
+                        <div className="space-y-2">
                             <Label>Precio Unitario (€)</Label>
                             <Input 
                                 type="number" 
@@ -78,7 +79,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                                 min="0"
                             />
                         </div>
-                        <div>
+                        <div className="space-y-2">
                             <Label>Cantidad</Label>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
@@ -89,7 +90,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                     </div>
                  </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <Image
                     src="/images/otros/instalacion-u-otros-conceptos-600x400.png?v=1.0"
                     alt="Concepto Libre"

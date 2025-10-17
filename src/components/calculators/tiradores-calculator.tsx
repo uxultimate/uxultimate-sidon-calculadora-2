@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -101,9 +102,9 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             <div className="md:col-span-2 flex flex-col space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                    <div>
+                    <div className="space-y-2">
                         <Label>Modelo de Tirador</Label>
-                        <ScrollArea className="h-72 w-full rounded-md border mt-2">
+                        <ScrollArea className="h-72 w-full rounded-md border">
                              <div className="p-2 pr-4 space-y-1">
                                 {tarifa2025.Tiradores.map((t) => (
                                     <button
@@ -137,16 +138,16 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                         </ScrollArea>
                     </div>
                      <div>
-                         <div>
+                         <div className="space-y-2">
                             <Label>Cantidad</Label>
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex items-center gap-2">
                                 <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                 <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
                                 <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                             </div>
                         </div>
-                        <div className="mt-4">
-                            <Label className="mb-2 block">Acabado / Color</Label>
+                        <div className="mt-4 space-y-2">
+                            <Label>Acabado / Color</Label>
                             <div className="flex flex-wrap gap-x-4 gap-y-2">
                                 {selectedTirador.colors.map((color, index) => (
                                     <ColorSwatch
@@ -172,7 +173,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                     </CardContent>
                 </Card>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <div className='rounded-lg border bg-card text-card-foreground shadow-sm p-1.5'>
                     <Image
                         src={currentImage}
