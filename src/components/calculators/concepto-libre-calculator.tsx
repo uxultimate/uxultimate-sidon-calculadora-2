@@ -89,7 +89,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                     </div>
                  </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
+            <div className="md:col-span-1 space-y-4 self-start">
                  <Image
                     src="/images/otros/instalacion-u-otros-conceptos-600x400.png?v=1.0"
                     alt="Concepto Libre"

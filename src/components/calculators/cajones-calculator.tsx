@@ -204,7 +204,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     <p>Calculadora para cajones, zapateros y otros accesorios. Selecciona el tipo, material, ancho del hueco y la cantidad.</p>
                 </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
+            <div className="md:col-span-1 space-y-4 self-start">
                  <Image
                     src="/images/cajones/cajones-armarios-sidon-600x400.png?v=1.0"
                     alt="Cajones y Accesorios"

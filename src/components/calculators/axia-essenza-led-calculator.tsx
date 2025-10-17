@@ -249,7 +249,7 @@ export const AxiaEssenzaLedCalculator: React.FC<AxiaEssenzaLedCalculatorProps> =
                     </div>
                 </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
+            <div className="md:col-span-1 space-y-4 self-start">
                  <Image
                     src={currentImage}
                     alt={selectedProduct.Producto}
