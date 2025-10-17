@@ -251,12 +251,12 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                             selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-md'
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
-                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                            <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                            <Check className="h-6 w-6 text-primary-foreground" />
                                                         </div>
                                                     )}
                                                 </div>
@@ -285,12 +285,12 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                 selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                color.name === 'Blanco' && 'shadow-lg'
+                                                                color.name === 'Blanco' && 'shadow-md'
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                                <Check className={cn("h-6 w-6", color.name === 'Blanco' ? 'text-gray-800' : 'text-white')} />
+                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                                <Check className="h-6 w-6 text-primary-foreground" />
                                                             </div>
                                                         )}
                                                     </div>
@@ -338,7 +338,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                     </TabsContent>
                  </Tabs>
             </div>
-            <div className="md:col-span-1 space-y-4">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                 <Image
                     src="/images/interior/sidon-armarios-vestidor-modular-19-600x400.png?v=1.0"
                     alt="Interior y Vestidor"

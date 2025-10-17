@@ -157,8 +157,8 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                                                 )}
                                             />
                                             {selectedLacaColor === color.name && (
-                                                <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                    <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                    <Check className="h-6 w-6 text-primary-foreground" />
                                                 </div>
                                             )}
                                         </div>
@@ -191,8 +191,8 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                                                     )}
                                                 />
                                                 {selectedMelaminaColor === color.name && (
-                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                         <Check className={cn("h-6 w-6", color.name === 'Blanco' ? 'text-gray-800' : 'text-white')} />
+                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                         <Check className="h-6 w-6 text-primary-foreground" />
                                                     </div>
                                                 )}
                                             </div>
@@ -211,7 +211,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     <p>Calculadora para cajones, zapateros y otros accesorios. Selecciona el tipo, material, ancho del hueco y la cantidad.</p>
                 </div>
             </div>
-            <div className="md:col-span-1 space-y-4">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <Image
                     src="/images/cajones/cajones-armarios-sidon-600x400.png?v=1.0"
                     alt="Cajones y Accesorios"

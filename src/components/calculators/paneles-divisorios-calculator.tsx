@@ -29,27 +29,27 @@ const collectionImages: Record<string, string> = {
 };
 
 const cristalImages: Record<string, string> = {
-    'Cristal Transparente': '/images/paneles/cristal/sidon-armarios-panel-livorno-corredera-closed-600x400.png',
-    'Cristal Ahumado': '/images/paneles/cristal/sidon-armarios-panel-joros-paralel-600x400.png',
-    'Cristal Fluted (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
+    'Livorno (Transparente)': '/images/paneles/cristal/sidon-armarios-panel-livorno-corredera-closed-600x400.png',
+    'Joros (Ahumado)': '/images/paneles/cristal/sidon-armarios-panel-joros-paralel-600x400.png',
+    'Flutes (Acanalado)': '/images/paneles/cristal/sidon-armarios-panel-fluted-600x400.png',
 };
 
 const panelSmallImages: Record<string, string> = {
     'Meridian': '/images/paneles/small/sidon-armarios-panel-meridian-150x100.png?v=1.0',
     'Paralel': '/images/paneles/small/sidon-armarios-panel-paralel-150x100.png?v=1.0',
     'Desi': '/images/paneles/small/sidon-armarios-panel-desi-150x100.png?v=1.0',
-    'Cristal Transparente': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png?v=1.0',
-    'Cristal Ahumado': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png?v=1.0',
-    'Cristal Fluted (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png?v=1.0',
+    'Livorno (Transparente)': '/images/paneles/small/sidon-armarios-panel-livorno-corredera-closed-150x100.png?v=1.0',
+    'Joros (Ahumado)': '/images/paneles/small/sidon-armarios-panel-joros-paralel-150x100.png?v=1.0',
+    'Flutes (Acanalado)': '/images/paneles/small/sidon-armarios-panel-fluted-150x100.png?v=1.0',
 }
 
 const panelOptions = [
-    { name: 'Cristal Transparente', displayName: 'Livorno (Transparente)', type: 'cristal' as const },
-    { name: 'Cristal Ahumado', displayName: 'Joros (Ahumado)', type: 'cristal' as const },
+    { name: 'Livorno (Transparente)', type: 'cristal' as const },
+    { name: 'Joros (Ahumado)', type: 'cristal' as const },
     { name: 'Desi', type: 'coleccion' as const },
     { name: 'Meridian', type: 'coleccion' as const },
     { name: 'Paralel', type: 'coleccion' as const },
-    { name: 'Cristal Fluted (Acanalado)', displayName: 'Flutes (Acanalado)', type: 'cristal' as const },
+    { name: 'Flutes (Acanalado)', type: 'cristal' as const },
 ];
 
 const colorOptions = [
@@ -71,7 +71,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Abatible');
     const [doorCount, setDoorCount] = useState(1);
-    const [selectedPanel, setSelectedPanel] = useState('Cristal Transparente');
+    const [selectedPanel, setSelectedPanel] = useState('Livorno (Transparente)');
     const [selectedColor, setSelectedColor] = useState(colorOptions[0].name);
     const [selectedGlass, setSelectedGlass] = useState(glassOptions[2].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
@@ -112,21 +112,24 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
         
         const priceListForType = priceData[constructedPanelType as keyof typeof priceData] || {};
+
+        let keyForPrice:string = selectedPanel;
+        if(selectedPanel === "Livorno (Transparente)") keyForPrice = "Cristal Transparente";
+        if(selectedPanel === "Joros (Ahumado)") keyForPrice = "Cristal Ahumado";
+        if(selectedPanel === "Flutes (Acanalado)") keyForPrice = "Cristal Fluted (Acanalado)";
         
-        let basePrice = (priceListForType[selectedPanel as keyof typeof priceListForType] || 0) * widthInMeters;
+        let basePrice = (priceListForType[keyForPrice as keyof typeof priceListForType] || 0) * widthInMeters;
 
         let total = basePrice;
         
         const unitLabel = openingType === 'Fijo' ? 'Panel' : 'Puerta';
         const doorString = `${doorCount} ${unitLabel}${doorCount > 1 ? 's' : ''}`;
         
-        const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
-        const displayName = selectedOption?.displayName || selectedPanel;
-        const finalName = `Panel Divisorio ${displayName}`;
+        const finalName = `Panel Divisorio ${selectedPanel}`;
         
         const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`];
         
-        if (selectedPanel === 'Cristal Transparente') {
+        if (selectedPanel === 'Livorno (Transparente)') {
             detailsArray.push(`Perfil: ${selectedColor}`);
             detailsArray.push(`Cristal: ${selectedGlass}`);
         }
@@ -136,7 +139,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             detailsArray.push('Dto. altura < 1500mm (-25%)');
         }
 
-        if (selectedPanel === 'Cristal Transparente') {
+        if (selectedPanel === 'Livorno (Transparente)') {
             if (selectedColor === 'Lacado RAL') {
                 total += basePrice * 0.20;
                 detailsArray.push('Sup. Perfil laca RAL (+20%)');
@@ -203,15 +206,14 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     };
 
     const currentImage = useMemo(() => {
-        const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
-        if (selectedOption?.type === 'coleccion') {
+        if (pricingModel === 'coleccion') {
             return (collectionImages[selectedPanel] || 'https://placehold.co/600x400.png') + '?v=1.0';
         }
-        if (selectedOption?.type === 'cristal') {
+        if (pricingModel === 'cristal') {
             return (cristalImages[selectedPanel] || 'https://placehold.co/600x400.png') + '?v=1.0';
         }
         return 'https://placehold.co/600x400.png?v=1.0';
-    }, [selectedPanel]);
+    }, [selectedPanel, pricingModel]);
 
     const isOptionDisabled = (option: typeof panelOptions[0]) => {
         const priceData = option.type === 'coleccion' 
@@ -219,8 +221,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             : tarifa2025['Paneles Divisorios'].Precios_por_Cristal_Euro_m_lineal;
     
         const priceListForType = priceData[constructedPanelType as keyof typeof priceData];
-    
-        return !priceListForType || !priceListForType[option.name as keyof typeof priceListForType];
+        
+        let keyForPrice:string = option.name;
+        if(option.name === "Livorno (Transparente)") keyForPrice = "Cristal Transparente";
+        if(option.name === "Joros (Ahumado)") keyForPrice = "Cristal Ahumado";
+        if(option.name === "Flutes (Acanalado)") keyForPrice = "Cristal Fluted (Acanalado)";
+
+        return !priceListForType || !priceListForType[keyForPrice as keyof typeof priceListForType];
     };
     
     const unitLabel = openingType === 'Fijo' ? 'Nº de Paneles' : 'Nº de Puertas';
@@ -289,7 +296,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                             >
                                                 <Image 
                                                     src={panelSmallImages[option.name] || 'https://placehold.co/120x80.png'}
-                                                    alt={option.displayName || option.name}
+                                                    alt={option.name}
                                                     width={120}
                                                     height={80}
                                                     className={cn(
@@ -301,7 +308,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                     isSelected ? "text-primary" : "text-muted-foreground",
                                                     isDisabled && "text-muted-foreground/50"
                                                 )}>
-                                                    <span className="truncate">{option.displayName || option.name}</span>
+                                                    <span className="truncate">{option.name}</span>
                                                     {isSelected && (
                                                         <Check className="h-4 w-4 flex-shrink-0" />
                                                     )}
@@ -312,11 +319,10 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 </div>
                             </div>
                             
-                            {selectedPanel === 'Cristal Transparente' && (
+                            {selectedPanel === 'Livorno (Transparente)' && (
                                 <>
                                     <div className="space-y-2 pt-4">
                                         <Label>Colores de Perfil</Label>
-                                        <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
                                         <div className="flex flex-wrap gap-2 pb-2">
                                             {colorOptions.map((color) => {
                                                 const isSelected = selectedColor === color.name;
@@ -330,7 +336,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                                 height={64}
                                                                 className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                     isSelected ? 'border-primary' : 'border-transparent',
-                                                                    (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
+                                                                    (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-md'
                                                                 )}
                                                             />
                                                             {isSelected && (
@@ -350,7 +356,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
                                     <div className="space-y-2 pt-4">
                                         <Label>Cristales</Label>
-                                        <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solucion que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
                                         <div className="flex flex-wrap gap-2 pb-2">
                                             {glassOptions.map((glass) => {
                                                 const isSelected = selectedGlass === glass.name;
@@ -402,7 +407,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         <ScrollArea className="h-[40rem] border rounded-md p-4">
                              <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
-                                    // Hide supplements handled in config tab
                                     if (["Perfil laca RAL o según muestra", "Perfil rechapado Nogal barniz", "Cristal acanalado", "Barrotillo a 2 caras"].includes(supp.Concepto)) {
                                         return null;
                                     }
@@ -436,7 +440,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     </TabsContent>
                 </Tabs>
             </div>
-            <div className="md:col-span-1 space-y-4">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <Image
                     src={currentImage}
                     alt={selectedPanel}

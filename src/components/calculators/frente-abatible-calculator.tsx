@@ -213,7 +213,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                             selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-md'
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
@@ -247,7 +247,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                 selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                color.name === 'Blanco' && 'shadow-lg'
+                                                                color.name === 'Blanco' && 'shadow-md'
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
@@ -300,7 +300,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                     </TabsContent>
                  </Tabs>
             </div>
-            <div className="md:col-span-1 space-y-4">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                 <Image
                     src="/images/armarios/sidon-armario-abatible-mura-600x400.png"
                     alt="Frente Abatible"

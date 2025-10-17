@@ -173,7 +173,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                     </CardContent>
                 </Card>
             </div>
-            <div className="md:col-span-1 space-y-4">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <div className='rounded-lg border bg-card text-card-foreground shadow-sm p-1.5'>
                     <Image
                         src={currentImage}
