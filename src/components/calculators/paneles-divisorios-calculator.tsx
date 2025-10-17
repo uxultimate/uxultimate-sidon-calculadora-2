@@ -15,6 +15,7 @@ import { Check, Minus, Plus } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ScrollArea } from '../ui/scroll-area';
 import { Checkbox } from '../ui/checkbox';
+import { Slider } from '@/components/ui/slider';
 
 
 interface PanelesDivisoriosCalculatorProps {
@@ -82,9 +83,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         return selectedOption?.type === 'coleccion' ? 'coleccion' : 'cristal';
     }, [selectedPanel]);
 
-    const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setMeasurements(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
+    const handleMeasurementChange = (field: 'width' | 'height', value: string | number) => {
+        setMeasurements(prev => ({ ...prev, [field]: value }));
     };
 
     const handlePanelSupplementChange = (concepto: string, checked: boolean) => {
@@ -242,9 +242,16 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     <TabsContent value="config" className="pt-4">
                         <div className='space-y-4'>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div>
+                                <div className='space-y-2'>
                                     <Label>Alto (mm)</Label>
-                                    <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} placeholder="E.g. 2400"/>
+                                    <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} placeholder="E.g. 2400"/>
+                                    <Slider
+                                        value={[Number(measurements.height) || 0]}
+                                        onValueChange={(value) => handleMeasurementChange('height', value[0])}
+                                        max={4000}
+                                        min={500}
+                                        step={10}
+                                    />
                                     {(Number(measurements.height) || 0) > 2700 && (
                                         <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
                                     )}
@@ -252,9 +259,16 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
                                     )}
                                 </div>
-                                <div>
+                                <div className='space-y-2'>
                                     <Label>Ancho (mm)</Label>
-                                    <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} placeholder="E.g. 2000" />
+                                    <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} placeholder="E.g. 2000" />
+                                    <Slider
+                                        value={[Number(measurements.width) || 0]}
+                                        onValueChange={(value) => handleMeasurementChange('width', value[0])}
+                                        max={6000}
+                                        min={500}
+                                        step={10}
+                                    />
                                 </div>
                                  <div>
                                     <Label>{unitLabel}</Label>

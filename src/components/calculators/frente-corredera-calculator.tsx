@@ -16,6 +16,7 @@ import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { Check, Minus, Plus } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 
 interface FrenteCorrederaCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -43,9 +44,8 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
     }, [doorCountKey, material]);
 
 
-    const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setMeasurements(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
+    const handleMeasurementChange = (field: 'width' | 'height', value: string | number) => {
+        setMeasurements(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSupplementChange = (concepto: string, checked: boolean) => {
@@ -138,9 +138,16 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
+                            <div className='space-y-2'>
                                 <Label>Alto (mm)</Label>
-                                <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} />
+                                 <Slider
+                                    value={[Number(measurements.height) || 0]}
+                                    onValueChange={(value) => handleMeasurementChange('height', value[0])}
+                                    max={4000}
+                                    min={500}
+                                    step={10}
+                                />
                                 {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
                                 )}
@@ -151,9 +158,16 @@ export function FrenteCorrederaCalculator({ onSave }: FrenteCorrederaCalculatorP
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
-                            <div>
+                            <div className='space-y-2'>
                                 <Label>Ancho (mm)</Label>
-                                <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                                <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} />
+                                <Slider
+                                    value={[Number(measurements.width) || 0]}
+                                    onValueChange={(value) => handleMeasurementChange('width', value[0])}
+                                    max={6000}
+                                    min={500}
+                                    step={10}
+                                />
                             </div>
                             <div>
                                 <Label>Nº Puertas</Label>

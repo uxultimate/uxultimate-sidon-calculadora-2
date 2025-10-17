@@ -13,6 +13,7 @@ import { Minus, Plus, Check } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { cn } from '@/lib/utils';
+import { Slider } from '@/components/ui/slider';
 
 
 interface CajonesCalculatorProps {
@@ -123,9 +124,16 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     </div>
                 </div>
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Ancho del Hueco (mm)</Label>
                         <Input type="number" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
+                        <Slider
+                            value={[Number(width) || 0]}
+                            onValueChange={(value) => setWidth(value[0])}
+                            max={1100}
+                            min={200}
+                            step={10}
+                        />
                     </div>
                     <div>
                         <Label>Cantidad</Label>
