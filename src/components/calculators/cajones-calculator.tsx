@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -135,7 +136,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                             step={10}
                         />
                     </div>
-                    <div>
+                    <div className='space-y-2'>
                         <Label>Cantidad</Label>
                          <div className="flex items-center gap-2">
                              <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
@@ -212,7 +213,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     <p>Calculadora para cajones, zapateros y otros accesorios. Selecciona el tipo, material, ancho del hueco y la cantidad.</p>
                 </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start">
+            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                  <Image
                     src="/images/cajones/cajones-armarios-sidon-600x400.png?v=1.0"
                     alt="Cajones y Accesorios"
@@ -237,3 +238,5 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
+
+    
