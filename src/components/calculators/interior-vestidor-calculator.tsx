@@ -174,7 +174,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div className='space-y-4'>
+                            <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} />
                                 <Slider
@@ -183,6 +183,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     max={4000}
                                     min={500}
                                     step={10}
+                                    className="mt-4"
                                 />
                                 {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
@@ -194,7 +195,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
-                            <div className='space-y-4'>
+                            <div>
                                 <Label>Ancho (mm)</Label>
                                 <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} />
                                 <Slider
@@ -203,9 +204,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     max={6000}
                                     min={500}
                                     step={10}
+                                    className="mt-4"
                                 />
                             </div>
-                            <div className='space-y-4'>
+                            <div>
                                 <Label>Fondo (mm)</Label>
                                 <Input name="depth" type="number" value={measurements.depth} onChange={(e) => handleMeasurementChange('depth', e.target.value)} />
                                 <Slider
@@ -214,6 +216,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     max={1000}
                                     min={300}
                                     step={10}
+                                    className="mt-4"
                                 />
                                 {(Number(measurements.depth) || 0) > 650 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. fondo &gt; 650mm (+10% cada 10cm)</p>

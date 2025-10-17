@@ -152,7 +152,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div className='space-y-4'>
+                            <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} />
                                 <Slider
@@ -161,6 +161,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                     max={4000}
                                     min={500}
                                     step={10}
+                                    className="mt-4"
                                 />
                                 {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil(((Number(measurements.height) || 0) - 2400) / 100) * 10}%)</p>
@@ -172,7 +173,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
-                            <div className='space-y-4'>
+                            <div>
                                 <Label>Ancho (mm)</Label>
                                 <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} />
                                 <Slider
@@ -181,6 +182,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                     max={6000}
                                     min={500}
                                     step={10}
+                                    className="mt-4"
                                 />
                             </div>
                             <div className='space-y-2'>
