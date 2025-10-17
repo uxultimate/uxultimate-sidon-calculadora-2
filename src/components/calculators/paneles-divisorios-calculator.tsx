@@ -73,7 +73,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const [doorCount, setDoorCount] = useState(1);
     const [selectedPanel, setSelectedPanel] = useState('Cristal Transparente');
     const [selectedColor, setSelectedColor] = useState(colorOptions[0].name);
-    const [selectedGlass, setSelectedGlass] = useState(glassOptions[0].name);
+    const [selectedGlass, setSelectedGlass] = useState(glassOptions[2].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     
     const openingOptions = ['Abatible', 'Corredera', 'Fijo'];
@@ -103,8 +103,9 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
     const { total, details, name } = useMemo(() => {
         const widthInMeters = (Number(measurements.width) || 0) / 1000;
+        const heightInMeters = (Number(measurements.height) || 0) / 1000;
         const heightInMm = Number(measurements.height) || 0;
-        const area = widthInMeters * (heightInMm / 1000);
+        const area = widthInMeters * heightInMeters;
         
         const priceData = pricingModel === 'coleccion' 
             ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
@@ -122,35 +123,48 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
         const displayName = selectedOption?.displayName || selectedPanel;
         const finalName = `Panel Divisorio ${displayName}`;
-
-        const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`, `Perfil: ${selectedColor}`, `Cristal: ${selectedGlass}`];
+        
+        const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`];
+        
+        if (selectedPanel === 'Cristal Transparente') {
+            detailsArray.push(`Perfil: ${selectedColor}`);
+            detailsArray.push(`Cristal: ${selectedGlass}`);
+        }
         
         if (heightInMm < 1500 && heightInMm > 0) {
             total *= 0.75; // 25% discount
             detailsArray.push('Dto. altura < 1500mm (-25%)');
         }
 
-        // Integrated supplement logic
-        if (selectedColor === 'Lacado RAL') {
-            total += basePrice * 0.20;
-            detailsArray.push('Sup. Perfil laca RAL (+20%)');
-        }
-        if (selectedColor === 'Madera Nogal Barniz mate natura') {
-            total += basePrice * 0.20;
-            detailsArray.push('Sup. Perfil rechapado Nogal barniz (+20%)');
-        }
-        if (selectedGlass === 'Fluted' || selectedPanel === 'Cristal Fluted (Acanalado)') {
-            const supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === "Cristal acanalado");
-            if (supplementInfo) {
-                const pricePerSqm = parseFloat(supplementInfo.Valor.replace('€ m2', ''));
-                total += pricePerSqm * area;
-                detailsArray.push(`Sup. Cristal acanalado (${formatCurrency(pricePerSqm)}/m²)`);
+        if (selectedPanel === 'Cristal Transparente') {
+            if (selectedColor === 'Lacado RAL') {
+                total += basePrice * 0.20;
+                detailsArray.push('Sup. Perfil laca RAL (+20%)');
+            }
+            if (selectedColor === 'Madera Nogal Barniz mate natura') {
+                total += basePrice * 0.20;
+                detailsArray.push('Sup. Perfil rechapado Nogal barniz (+20%)');
+            }
+            if (selectedGlass === 'Fluted') {
+                const supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === "Cristal acanalado");
+                if (supplementInfo) {
+                    const pricePerSqm = parseFloat(supplementInfo.Valor.replace('€ m2', ''));
+                    total += pricePerSqm * area;
+                    detailsArray.push(`Sup. Cristal acanalado (${formatCurrency(pricePerSqm)}/m²)`);
+                }
             }
         }
 
+
         Object.entries(panelSupplements).forEach(([concepto, { checked, quantity }]) => {
             if (checked) {
-                const supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
+                let supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
+                
+                // Special handling for barrotillos
+                if (concepto === "Barrotillos (1 vertical + 3 horizontales)") {
+                    supplementInfo = { Concepto: concepto, Valor: "50€/ml" };
+                }
+
                 if (supplementInfo) {
                     let supplementPrice = 0;
                     let description = `${concepto}`;
@@ -166,7 +180,12 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         const pricePerUnit = parseFloat(supplementInfo.Valor.replace(/€ ud\.?/i, ''));
                         supplementPrice = pricePerUnit * (quantity || 1);
                         description += ` (x${quantity || 1})`;
+                    } else if (concepto === "Barrotillos (1 vertical + 3 horizontales)") {
+                        const pricePerMeter = 50;
+                        const barrotillosLength = (heightInMeters + 3 * widthInMeters);
+                        supplementPrice = barrotillosLength * pricePerMeter;
                     }
+
                     total += supplementPrice;
                     detailsArray.push(description);
                 }
@@ -217,7 +236,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
                                     <Label>Alto (mm)</Label>
-                                    <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
+                                    <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} placeholder="E.g. 2400"/>
                                     {(Number(measurements.height) || 0) > 2700 && (
                                         <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
                                     )}
@@ -227,7 +246,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 </div>
                                 <div>
                                     <Label>Ancho (mm)</Label>
-                                    <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
+                                    <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} placeholder="E.g. 2000" />
                                 </div>
                                  <div>
                                     <Label>{unitLabel}</Label>
@@ -290,80 +309,93 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     })}
                                 </div>
                             </div>
-
-                            <div className="space-y-2 pt-4">
-                                <Label>Colores de Perfil</Label>
-                                <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
-                                <div className="flex flex-wrap gap-2 pb-2">
-                                    {colorOptions.map((color) => {
-                                        const isSelected = selectedColor === color.name;
-                                        return (
-                                            <button key={color.name} type="button" onClick={() => setSelectedColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
-                                                <div className="relative">
-                                                    <Image
-                                                        src={color.image}
-                                                        alt={color.name}
-                                                        width={64}
-                                                        height={64}
-                                                        className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                            isSelected ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
-                                                        )}
-                                                    />
-                                                    {isSelected && (
-                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                            <Check className="h-6 w-6 text-primary-foreground" />
+                            
+                            {selectedPanel === 'Cristal Transparente' && (
+                                <>
+                                    <div className="space-y-2 pt-4">
+                                        <Label>Colores de Perfil</Label>
+                                        <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
+                                        <div className="flex flex-wrap gap-2 pb-2">
+                                            {colorOptions.map((color) => {
+                                                const isSelected = selectedColor === color.name;
+                                                return (
+                                                    <button key={color.name} type="button" onClick={() => setSelectedColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                                        <div className="relative">
+                                                            <Image
+                                                                src={color.image}
+                                                                alt={color.name}
+                                                                width={64}
+                                                                height={64}
+                                                                className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                                    isSelected ? 'border-primary' : 'border-transparent',
+                                                                    (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
+                                                                )}
+                                                            />
+                                                            {isSelected && (
+                                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                                    <Check className="h-6 w-6 text-primary-foreground" />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </div>
-                                                <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
-                                                    {color.name}
-                                                </p>
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                            </div>
+                                                        <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
+                                                            {color.name}
+                                                        </p>
+                                                    </button>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
 
-                            <div className="space-y-2 pt-4">
-                                <Label>Cristales</Label>
-                                <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solucion que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
-                                <div className="flex flex-wrap gap-2 pb-2">
-                                    {glassOptions.map((glass) => {
-                                        const isSelected = selectedGlass === glass.name;
-                                        return (
-                                             <button key={glass.name} type="button" onClick={() => setSelectedGlass(glass.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
-                                                <div className="relative">
-                                                    <Image
-                                                        src={glass.image}
-                                                        alt={glass.name}
-                                                        width={64}
-                                                        height={64}
-                                                        className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                            isSelected ? 'border-primary' : 'border-transparent'
-                                                        )}
-                                                    />
-                                                    {isSelected && (
-                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                            <Check className="h-6 w-6 text-primary-foreground" />
+                                    <div className="space-y-2 pt-4">
+                                        <Label>Cristales</Label>
+                                        <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solucion que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
+                                        <div className="flex flex-wrap gap-2 pb-2">
+                                            {glassOptions.map((glass) => {
+                                                const isSelected = selectedGlass === glass.name;
+                                                return (
+                                                    <button key={glass.name} type="button" onClick={() => setSelectedGlass(glass.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                                        <div className="relative">
+                                                            <Image
+                                                                src={glass.image}
+                                                                alt={glass.name}
+                                                                width={64}
+                                                                height={64}
+                                                                className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                                    isSelected ? 'border-primary' : 'border-transparent'
+                                                                )}
+                                                            />
+                                                            {isSelected && (
+                                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                                    <Check className="h-6 w-6 text-primary-foreground" />
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    )}
-                                                </div>
-                                                <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
-                                                    {glass.name}
-                                                </p>
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                            </div>
+                                                        <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
+                                                            {glass.name}
+                                                        </p>
+                                                    </button>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-[40rem] border rounded-md p-4">
                              <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar') || supp.Concepto.startsWith('Perfil') || supp.Concepto.startsWith('Cristal')) return null;
+                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
+
+                                    // Special logic for barrotillos
+                                    if (supp.Concepto === "Barrotillo a 2 caras" && selectedPanel !== 'Cristal Transparente') {
+                                        return null;
+                                    }
+                                     if (supp.Concepto === "Barrotillo a 2 caras"){
+                                         supp = {Concepto: "Barrotillos (1 vertical + 3 horizontales)", Valor: "50€/ml"};
+                                     }
+
                                     const needsQuantity = supp.Valor.includes('€ ud');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
