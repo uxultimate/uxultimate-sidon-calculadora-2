@@ -139,7 +139,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                     </div>
                      <div>
                          <div className="space-y-2">
-                            <Label>Cantidad</Label>
+                            <Label className='mb-2 block'>Cantidad</Label>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                 <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
@@ -173,7 +173,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                     </CardContent>
                 </Card>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
+            <div className="md:col-span-1 space-y-4 self-start">
                  <div className='rounded-lg border bg-card text-card-foreground shadow-sm p-1.5'>
                     <Image
                         src={currentImage}
@@ -200,3 +200,5 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         </div>
     );
 };
+
+    

@@ -183,8 +183,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                     step={10}
                                 />
                             </div>
-                            <div className='space-y-2'>
-                                <Label>Nº Puertas</Label>
+                            <div>
+                                <Label className='mb-2 block'>Nº Puertas</Label>
                                 <div className="flex items-center gap-2">
                                     <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                     <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />

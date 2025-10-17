@@ -80,7 +80,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Cantidad</Label>
+                            <Label className='mb-2 block'>Cantidad</Label>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                 <Input type="number" className="w-20 text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} min="1" />
@@ -90,7 +90,7 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
                     </div>
                  </div>
             </div>
-            <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
+            <div className="md:col-span-1 space-y-4 self-start">
                  <Image
                     src="/images/otros/instalacion-u-otros-conceptos-600x400.png?v=1.0"
                     alt="Concepto Libre"
@@ -115,3 +115,5 @@ export const ConceptoLibreCalculator: React.FC<ConceptoLibreCalculatorProps> = (
         </div>
     );
 };
+
+    

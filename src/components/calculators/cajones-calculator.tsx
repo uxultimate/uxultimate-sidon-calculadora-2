@@ -136,8 +136,8 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                             step={10}
                         />
                     </div>
-                    <div className='space-y-2'>
-                        <Label>Cantidad</Label>
+                    <div>
+                        <Label className='mb-2 block'>Cantidad</Label>
                          <div className="flex items-center gap-2">
                              <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                             <Input type="number" className="w-20 text-center" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />

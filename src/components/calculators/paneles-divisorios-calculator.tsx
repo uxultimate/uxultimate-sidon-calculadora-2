@@ -271,8 +271,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         step={10}
                                     />
                                 </div>
-                                 <div className='space-y-2'>
-                                    <Label>{unitLabel}</Label>
+                                 <div>
+                                    <Label className='mb-2 block'>{unitLabel}</Label>
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                         <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(e.target.value === '' ? 1 : Number(e.target.value))} min="1" />
