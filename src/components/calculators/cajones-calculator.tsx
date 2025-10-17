@@ -125,7 +125,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                     </div>
                 </div>
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className='space-y-2'>
+                    <div className='space-y-4'>
                         <Label>Ancho del Hueco (mm)</Label>
                         <Input type="number" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
                         <Slider
@@ -238,6 +238,8 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
+
+    
 
     
 

@@ -243,7 +243,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     <TabsContent value="config" className="pt-4">
                         <div className='space-y-4'>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div className='space-y-2'>
+                                <div className='space-y-4'>
                                     <Label>Alto (mm)</Label>
                                     <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} placeholder="E.g. 2400"/>
                                     <Slider
@@ -260,7 +260,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
                                     )}
                                 </div>
-                                <div className='space-y-2'>
+                                <div className='space-y-4'>
                                     <Label>Ancho (mm)</Label>
                                     <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} placeholder="E.g. 2000" />
                                     <Slider
@@ -480,5 +480,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 };
+
+    
 
     
