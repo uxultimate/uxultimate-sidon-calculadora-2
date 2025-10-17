@@ -44,11 +44,11 @@ const panelSmallImages: Record<string, string> = {
 }
 
 const panelOptions = [
-    { name: 'Meridian', type: 'coleccion' as const },
-    { name: 'Paralel', type: 'coleccion' as const },
-    { name: 'Desi', type: 'coleccion' as const },
     { name: 'Cristal Transparente', displayName: 'Livorno (Transparente)', type: 'cristal' as const },
     { name: 'Cristal Ahumado', displayName: 'Joros (Ahumado)', type: 'cristal' as const },
+    { name: 'Desi', type: 'coleccion' as const },
+    { name: 'Meridian', type: 'coleccion' as const },
+    { name: 'Paralel', type: 'coleccion' as const },
     { name: 'Cristal Fluted (Acanalado)', displayName: 'Flutes (Acanalado)', type: 'cristal' as const },
 ];
 
@@ -71,7 +71,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Abatible');
     const [doorCount, setDoorCount] = useState(1);
-    const [selectedPanel, setSelectedPanel] = useState('Meridian');
+    const [selectedPanel, setSelectedPanel] = useState('Cristal Transparente');
     const [selectedColor, setSelectedColor] = useState(colorOptions[0].name);
     const [selectedGlass, setSelectedGlass] = useState(glassOptions[0].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
@@ -202,6 +202,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         return !priceListForType || !priceListForType[option.name as keyof typeof priceListForType];
     };
     
+    const unitLabel = openingType === 'Fijo' ? 'Nº de Paneles' : 'Nº de Puertas';
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -229,7 +230,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                                 </div>
                                  <div>
-                                    <Label>{openingType === 'Fijo' ? 'Nº de Paneles' : 'Nº de Puertas'}</Label>
+                                    <Label>{unitLabel}</Label>
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                         <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(e.target.value === '' ? 1 : Number(e.target.value))} min="1" />
@@ -254,12 +255,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
                                     {panelOptions.map((option) => {
                                         const isSelected = selectedPanel === option.name;
+                                        const isDisabled = isOptionDisabled(option);
                                         return (
                                             <button
                                                 key={option.name}
                                                 type="button"
                                                 onClick={() => setSelectedPanel(option.name)}
-                                                disabled={isOptionDisabled(option)}
+                                                disabled={isDisabled}
                                                 className={cn(
                                                     "bg-card text-card-foreground rounded-md shadow-sm transition-all flex flex-col items-center gap-1 p-1 hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
                                                 )}
@@ -275,7 +277,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                     )}
                                                 />
                                                 <div className={cn("text-xs text-center font-medium w-full flex items-center justify-center gap-1 h-8 px-1",
-                                                    isSelected ? "text-primary" : "text-muted-foreground"
+                                                    isSelected ? "text-primary" : "text-muted-foreground",
+                                                    isDisabled && "text-muted-foreground/50"
                                                 )}>
                                                     <span className="truncate">{option.displayName || option.name}</span>
                                                     {isSelected && (
@@ -304,7 +307,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                             isSelected ? 'border-primary' : 'border-transparent',
-                                                             (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
+                                                            (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
                                                         )}
                                                     />
                                                     {isSelected && (
@@ -416,3 +419,4 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     );
 };
 
+    
