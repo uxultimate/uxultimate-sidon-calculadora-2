@@ -104,6 +104,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     const { total, details, name } = useMemo(() => {
         const widthInMeters = (Number(measurements.width) || 0) / 1000;
         const heightInMm = Number(measurements.height) || 0;
+        const area = widthInMeters * (heightInMm / 1000);
         
         const priceData = pricingModel === 'coleccion' 
             ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
@@ -128,6 +129,24 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             detailsArray.push('Dto. altura < 1500mm (-25%)');
         }
 
+        // Integrated supplement logic
+        if (selectedColor === 'Lacado RAL') {
+            total += basePrice * 0.20;
+            detailsArray.push('Sup. Perfil laca RAL (+20%)');
+        }
+        if (selectedColor === 'Madera Nogal Barniz mate natura') {
+            total += basePrice * 0.20;
+            detailsArray.push('Sup. Perfil rechapado Nogal barniz (+20%)');
+        }
+        if (selectedGlass === 'Fluted' || selectedPanel === 'Cristal Fluted (Acanalado)') {
+            const supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === "Cristal acanalado");
+            if (supplementInfo) {
+                const pricePerSqm = parseFloat(supplementInfo.Valor.replace('€ m2', ''));
+                total += pricePerSqm * area;
+                detailsArray.push(`Sup. Cristal acanalado (${formatCurrency(pricePerSqm)}/m²)`);
+            }
+        }
+
         Object.entries(panelSupplements).forEach(([concepto, { checked, quantity }]) => {
             if (checked) {
                 const supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
@@ -139,12 +158,9 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         const percentage = parseFloat(supplementInfo.Valor.replace('%', '')) / 100;
                         supplementPrice = basePrice * percentage;
                     } else if (supplementInfo.Valor.includes('€ m2')) {
-                         const pricePerSqm = parseFloat(supplementInfo.Valor.replace('€ m2', ''));
-                         const area = ((Number(measurements.width) || 0) / 1000) * (heightInMm / 1000);
-                         supplementPrice = pricePerSqm * area;
+                         supplementPrice = parseFloat(supplementInfo.Valor.replace('€ m2', '')) * area;
                     } else if (supplementInfo.Valor.includes('€ m/l')) {
-                         const pricePerLm = parseFloat(supplementInfo.Valor.replace('€ m/l', ''));
-                         supplementPrice = pricePerLm * widthInMeters;
+                         supplementPrice = parseFloat(supplementInfo.Valor.replace('€ m/l', '')) * widthInMeters;
                     } else if (supplementInfo.Valor.includes('€ ud')) {
                         const pricePerUnit = parseFloat(supplementInfo.Valor.replace(/€ ud\.?/i, ''));
                         supplementPrice = pricePerUnit * (quantity || 1);
@@ -215,7 +231,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     <Label>Nº de Paneles</Label>
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                                        <Input type="number" className="w-20 text-center" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />
+                                        <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(e.target.value === '' ? 1 : Number(e.target.value))} min="1" />
                                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
@@ -271,72 +287,68 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 </div>
                             </div>
 
-                            <div className="space-y-4 pt-4">
+                            <div className="space-y-2 pt-4">
                                 <Label>Colores de Perfil</Label>
                                 <p className="text-sm text-muted-foreground">Con la opcion de elegir perfiles y cristales puedes adaptar este panel divisor a tu estilo único.</p>
-                                <div className="flex flex-wrap gap-2 pb-4">
+                                <div className="flex flex-wrap gap-2 pb-2">
                                     {colorOptions.map((color) => {
                                         const isSelected = selectedColor === color.name;
                                         return (
-                                            <div key={color.name} className="flex flex-col items-center gap-2 w-20">
-                                                <button type="button" onClick={() => setSelectedColor(color.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                                                    <div className="relative">
-                                                        <Image
-                                                            src={color.image}
-                                                            alt={color.name}
-                                                            width={64}
-                                                            height={64}
-                                                            className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                                isSelected ? 'border-primary' : 'border-transparent',
-                                                                (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
-                                                            )}
-                                                        />
-                                                        {isSelected && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                                <Check className="h-6 w-6 text-primary-foreground" />
-                                                            </div>
+                                            <button key={color.name} type="button" onClick={() => setSelectedColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                                <div className="relative">
+                                                    <Image
+                                                        src={color.image}
+                                                        alt={color.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                            isSelected ? 'border-primary' : 'border-transparent',
+                                                            (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
                                                         )}
-                                                    </div>
-                                                </button>
+                                                    />
+                                                    {isSelected && (
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                            <Check className="h-6 w-6 text-primary-foreground" />
+                                                        </div>
+                                                    )}
+                                                </div>
                                                 <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
                                                     {color.name}
                                                 </p>
-                                            </div>
+                                            </button>
                                         )
                                     })}
                                 </div>
                             </div>
 
-                            <div className="space-y-4 pt-4">
+                            <div className="space-y-2 pt-4">
                                 <Label>Cristales</Label>
-                                <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solución que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
-                                <div className="flex flex-wrap gap-2 pb-4">
+                                <p className="text-sm text-muted-foreground">Explora una variedad de opciones para lograr una solucion que refleje tu personalidad y se integre perfectamente en tu decoracion.</p>
+                                <div className="flex flex-wrap gap-2 pb-2">
                                     {glassOptions.map((glass) => {
                                         const isSelected = selectedGlass === glass.name;
                                         return (
-                                             <div key={glass.name} className="flex flex-col items-center gap-2 w-20">
-                                                <button type="button" onClick={() => setSelectedGlass(glass.name)} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-                                                    <div className="relative">
-                                                        <Image
-                                                            src={glass.image}
-                                                            alt={glass.name}
-                                                            width={64}
-                                                            height={64}
-                                                            className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                                isSelected ? 'border-primary' : 'border-transparent'
-                                                            )}
-                                                        />
-                                                        {isSelected && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                                <Check className="h-6 w-6 text-primary-foreground" />
-                                                            </div>
+                                             <button key={glass.name} type="button" onClick={() => setSelectedGlass(glass.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                                <div className="relative">
+                                                    <Image
+                                                        src={glass.image}
+                                                        alt={glass.name}
+                                                        width={64}
+                                                        height={64}
+                                                        className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                            isSelected ? 'border-primary' : 'border-transparent'
                                                         )}
-                                                    </div>
-                                                </button>
+                                                    />
+                                                    {isSelected && (
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                            <Check className="h-6 w-6 text-primary-foreground" />
+                                                        </div>
+                                                    )}
+                                                </div>
                                                 <p className={cn("text-xs text-center w-full", isSelected ? 'font-semibold text-primary' : 'text-muted-foreground')}>
                                                     {glass.name}
                                                 </p>
-                                            </div>
+                                            </button>
                                         )
                                     })}
                                 </div>
@@ -347,7 +359,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         <ScrollArea className="h-[40rem] border rounded-md p-4">
                              <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
+                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar') || supp.Concepto.startsWith('Perfil') || supp.Concepto.startsWith('Cristal')) return null;
                                     const needsQuantity = supp.Valor.includes('€ ud');
                                     return (
                                         <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
@@ -385,6 +397,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                     className="rounded-md object-cover aspect-[3/2]"
                     data-ai-hint="divider"
                     priority
+                    key={currentImage}
                 />
                 <Card>
                     <CardHeader>
