@@ -22,7 +22,7 @@ interface CajonesCalculatorProps {
 
 export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) => {
     const [itemType, setItemType] = useState('Cajones');
-    const [width, setWidth] = useState(500);
+    const [width, setWidth] = useState<number | ''>(500);
     const [material, setMaterial] = useState('Melamina_blanco_o_lino_cancun_textil');
     const [quantity, setQuantity] = useState(1);
     const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
@@ -50,11 +50,12 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
     };
 
     const getPriceForWidth = () => {
+        const numericWidth = Number(width) || 0;
         if (!materialData) return 0;
-        if (width <= 500) return materialData.hasta_500;
-        if (width <= 700) return materialData.hasta_700;
-        if (width <= 900) return materialData.hasta_900;
-        if (width <= 1100) return materialData.hasta_1100;
+        if (numericWidth <= 500) return materialData.hasta_500;
+        if (numericWidth <= 700) return materialData.hasta_700;
+        if (numericWidth <= 900) return materialData.hasta_900;
+        if (numericWidth <= 1100) return materialData.hasta_1100;
         return 0;
     };
 
@@ -125,7 +126,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <Label>Ancho del Hueco (mm)</Label>
-                        <Input type="number" value={width} onChange={e => setWidth(Number(e.target.value))} />
+                        <Input type="number" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
                     </div>
                     <div>
                         <Label>Cantidad</Label>
@@ -152,7 +153,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                                                 height={64}
                                                 className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                     selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                    (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                    (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
                                                 )}
                                             />
                                             {selectedLacaColor === color.name && (
@@ -186,7 +187,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                                                     height={64}
                                                     className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                         selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                        color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                        color.name === 'Blanco' && 'shadow-lg'
                                                     )}
                                                 />
                                                 {selectedMelaminaColor === color.name && (
@@ -235,5 +236,3 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
-
-    

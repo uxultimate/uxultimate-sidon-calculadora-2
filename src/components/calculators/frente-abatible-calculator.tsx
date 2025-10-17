@@ -23,7 +23,7 @@ interface FrenteAbatibleCalculatorProps {
 }
 
 export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorProps) {
-    const [measurements, setMeasurements] = useState({ width: 1000, height: 2400 });
+    const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 1000, height: 2400 });
     const [doorCount, setDoorCount] = useState(2);
     const [material, setMaterial] = useState('Laca_blanca_lisa');
     const materials = tarifa2025["Frente Abatible y Plegable"].Precios_por_Material_Euro_m_lineal["19mm"];
@@ -35,7 +35,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
     const showMelaminaColorSwatches = material === 'Melamina_colores';
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
+        const { name, value } = e.target;
+        setMeasurements(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
     };
 
     const handleSupplementChange = (concepto: string, checked: boolean) => {
@@ -50,8 +51,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
     };
 
     const { total, name, details } = useMemo(() => {
-        const widthInMeters = measurements.width / 1000;
-        const heightInMm = measurements.height;
+        const widthInMeters = (Number(measurements.width) || 0) / 1000;
+        const heightInMm = Number(measurements.height) || 0;
         let basePricePerMeter = materials[material as keyof typeof materials] || 0;
         let baseTotal = basePricePerMeter * widthInMeters;
 
@@ -71,10 +72,10 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
             const heightSupplement = baseTotal * extraCostPercentage;
             finalTotal += heightSupplement;
             heightSupplementText = `Sup. altura > 2400mm (+${(extraCostPercentage * 100).toFixed(0)}%)`;
-        } else if (heightInMm < 800) {
+        } else if (heightInMm > 0 && heightInMm < 800) {
             finalTotal *= 0.50; // 50% discount
             discountText = `Dto. altura < 800mm (-50%)`;
-        } else if (heightInMm < 1500) {
+        } else if (heightInMm > 0 && heightInMm < 1500) {
             finalTotal *= 0.70; // 30% discount
             discountText = `Dto. altura < 1500mm (-30%)`;
         }
@@ -154,13 +155,13 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
-                                {measurements.height > 2400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil((measurements.height - 2400) / 100) * 10}%)</p>
+                                {(Number(measurements.height) || 0) > 2400 && (
+                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil(((Number(measurements.height) || 0) - 2400) / 100) * 10}%)</p>
                                 )}
-                                {measurements.height < 1500 && measurements.height >= 800 && (
+                                {(Number(measurements.height) || 0) < 1500 && (Number(measurements.height) || 0) >= 800 && (
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
                                 )}
-                                {measurements.height < 800 && (
+                                {(Number(measurements.height) || 0) < 800 && (Number(measurements.height) || 0) > 0 && (
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
@@ -208,7 +209,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                             selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
@@ -242,7 +243,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                 selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                                color.name === 'Blanco' && 'shadow-lg'
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (

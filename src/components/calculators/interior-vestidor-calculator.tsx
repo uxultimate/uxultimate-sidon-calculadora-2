@@ -23,7 +23,7 @@ interface InteriorVestidorCalculatorProps {
 }
 
 export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProps> = ({ onSave }) => {
-    const [measurements, setMeasurements] = useState({ width: 2000, height: 2400, depth: 550 });
+    const [measurements, setMeasurements] = useState<{width: number | '', height: number | '', depth: number | ''}>({ width: 2000, height: 2400, depth: 550 });
     const [thickness, setThickness] = useState<'19mm' | '30mm'>('19mm');
     const [materialKey, setMaterialKey] = useState<string>('Melamina_blanco_o_lino_cancun_textil');
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
@@ -50,9 +50,9 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         }
     };
 
-
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
+        const { name, value } = e.target;
+        setMeasurements(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
     };
 
     const handleSupplementChange = (concepto: string, checked: boolean) => {
@@ -65,10 +65,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
 
 
     const { total, details, name } = useMemo(() => {
-        const widthInMeters = measurements.width / 1000;
-        const widthInMm = measurements.width;
-        const heightInMm = measurements.height;
-        const depthInMm = measurements.depth;
+        const widthInMeters = (Number(measurements.width) || 0) / 1000;
+        const widthInMm = Number(measurements.width) || 0;
+        const heightInMm = Number(measurements.height) || 0;
+        const depthInMm = Number(measurements.depth) || 0;
 
         let priceRange;
         const materialData = materialsForThickness[materialKey as keyof typeof materialsForThickness];
@@ -95,10 +95,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
             const extraCostPercentage = extraHeightCm * 0.10;
             finalTotal += baseTotal * extraCostPercentage;
             detailsArray.push(`Sup. altura > 2400mm (+${(extraCostPercentage*100).toFixed(0)}%)`);
-        } else if (heightInMm < 800) {
+        } else if (heightInMm > 0 && heightInMm < 800) {
              finalTotal *= 0.50; // 50% discount
              detailsArray.push('Dto. altura < 800mm (-50%)');
-        } else if (heightInMm < 1500) {
+        } else if (heightInMm > 0 && heightInMm < 1500) {
              finalTotal *= 0.70; // 30% discount
              detailsArray.push('Dto. altura < 1500mm (-30%)');
         }
@@ -108,7 +108,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
             const extraCostPercentage = extraDepthCm * 0.10;
             finalTotal += baseTotal * extraCostPercentage;
             detailsArray.push(`Sup. fondo > 650mm (+${(extraCostPercentage*100).toFixed(0)}%)`);
-        } else if (depthInMm < 400) {
+        } else if (depthInMm > 0 && depthInMm < 400) {
             finalTotal *= 0.75; // 25% discount
             detailsArray.push('Dto. fondo < 400mm (-25%)');
         }
@@ -177,13 +177,13 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                             <div>
                                 <Label>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
-                                {measurements.height > 2400 && (
+                                {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
                                 )}
-                                {measurements.height < 1500 && measurements.height >= 800 && (
+                                {(Number(measurements.height) || 0) < 1500 && (Number(measurements.height) || 0) >= 800 && (
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
                                 )}
-                                {measurements.height < 800 && (
+                                {(Number(measurements.height) || 0) < 800 && (Number(measurements.height) || 0) > 0 && (
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
@@ -194,10 +194,10 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                             <div>
                                 <Label>Fondo (mm)</Label>
                                 <Input name="depth" type="number" value={measurements.depth} onChange={handleMeasurementChange} />
-                                {measurements.depth > 650 && (
+                                {(Number(measurements.depth) || 0) > 650 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. fondo &gt; 650mm (+10% cada 10cm)</p>
                                 )}
-                                {measurements.depth < 400 && (
+                                {(Number(measurements.depth) || 0) < 400 && (Number(measurements.depth) || 0) > 0 && (
                                     <p className="text-xs text-muted-foreground mt-1">Dto. fondo &lt; 400mm (-25%)</p>
                                 )}
                             </div>
@@ -251,7 +251,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
                                                             selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-[1px_1px_2px_#aaa]'
+                                                            (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
@@ -285,7 +285,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                                             height={64}
                                                             className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                                 selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                                color.name === 'Blanco' && 'shadow-[1px_1px_2px_#aaa]'
+                                                                color.name === 'Blanco' && 'shadow-lg'
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
@@ -360,5 +360,3 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
-
-    

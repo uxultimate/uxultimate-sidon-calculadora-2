@@ -67,7 +67,7 @@ const glassOptions = [
 ];
 
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
-    const [measurements, setMeasurements] = useState({ width: 2000, height: 2400 });
+    const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 2000, height: 2400 });
     const [openingType, setOpeningType] = useState('Corredera');
     const [doorCount, setDoorCount] = useState(1);
     const [selectedPanel, setSelectedPanel] = useState('Meridian');
@@ -83,7 +83,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     }, [selectedPanel]);
 
     const handleMeasurementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setMeasurements({ ...measurements, [e.target.name]: Number(e.target.value) });
+        const { name, value } = e.target;
+        setMeasurements(prev => ({ ...prev, [name]: value === '' ? '' : Number(value) }));
     };
 
     const handlePanelSupplementChange = (concepto: string, checked: boolean) => {
@@ -101,7 +102,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
     }, [openingType, doorCount]);
 
     const { total, details, name } = useMemo(() => {
-        const widthInMeters = measurements.width / 1000;
+        const widthInMeters = (Number(measurements.width) || 0) / 1000;
+        const heightInMm = Number(measurements.height) || 0;
         
         const priceData = pricingModel === 'coleccion' 
             ? tarifa2025['Paneles Divisorios'].Precios_por_Coleccion_Euro_m_lineal
@@ -121,7 +123,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
         const detailsArray = [openingType, doorString, `${measurements.height}x${measurements.width}mm`, `Perfil: ${selectedColor}`, `Cristal: ${selectedGlass}`];
         
-        if (measurements.height < 1500) {
+        if (heightInMm < 1500 && heightInMm > 0) {
             total *= 0.75; // 25% discount
             detailsArray.push('Dto. altura < 1500mm (-25%)');
         }
@@ -138,7 +140,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         supplementPrice = basePrice * percentage;
                     } else if (supplementInfo.Valor.includes('€ m2')) {
                          const pricePerSqm = parseFloat(supplementInfo.Valor.replace('€ m2', ''));
-                         const area = (measurements.width / 1000) * (measurements.height / 1000);
+                         const area = ((Number(measurements.width) || 0) / 1000) * (heightInMm / 1000);
                          supplementPrice = pricePerSqm * area;
                     } else if (supplementInfo.Valor.includes('€ m/l')) {
                          const pricePerLm = parseFloat(supplementInfo.Valor.replace('€ m/l', ''));
@@ -199,10 +201,10 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     <div>
                                         <Label>Alto (mm)</Label>
                                         <Input name="height" type="number" value={measurements.height} onChange={handleMeasurementChange} />
-                                        {measurements.height > 2700 && (
+                                        {(Number(measurements.height) || 0) > 2700 && (
                                             <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
                                         )}
-                                        {measurements.height < 1500 && (
+                                        {(Number(measurements.height) || 0) < 1500 && (
                                             <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-25%)</p>
                                         )}
                                     </div>
