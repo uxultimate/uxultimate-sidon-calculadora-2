@@ -160,12 +160,18 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
             if (checked) {
                 let supplementInfo = tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.find(s => s.Concepto === concepto);
                 
-                // Special handling for barrotillos
+                // Special handling for barrotillos logic moved inside useMemo
                 if (concepto === "Barrotillos (1 vertical + 3 horizontales)") {
-                    supplementInfo = { Concepto: concepto, Valor: "50€/ml" };
-                }
+                    const pricePerMeter = 50;
+                    // Ensure measurements are numbers before calculation
+                    const h = Number(measurements.height) || 0;
+                    const w = Number(measurements.width) || 0;
+                    const barrotillosLength = (h / 1000) + (3 * w / 1000);
+                    const supplementPrice = barrotillosLength * pricePerMeter;
+                    total += supplementPrice;
+                    detailsArray.push(`${concepto} (${formatCurrency(pricePerMeter)}/ml)`);
 
-                if (supplementInfo) {
+                } else if (supplementInfo) {
                     let supplementPrice = 0;
                     let description = `${concepto}`;
                     
@@ -180,10 +186,6 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         const pricePerUnit = parseFloat(supplementInfo.Valor.replace(/€ ud\.?/i, ''));
                         supplementPrice = pricePerUnit * (quantity || 1);
                         description += ` (x${quantity || 1})`;
-                    } else if (concepto === "Barrotillos (1 vertical + 3 horizontales)") {
-                        const pricePerMeter = 50;
-                        const barrotillosLength = (heightInMeters + 3 * widthInMeters);
-                        supplementPrice = barrotillosLength * pricePerMeter;
                     }
 
                     total += supplementPrice;
@@ -378,6 +380,20 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                             })}
                                         </div>
                                     </div>
+                                    <div className="space-y-2 pt-4">
+                                        <Label>Barrotillos</Label>
+                                        <div className="flex items-center space-x-2 p-2 rounded-md border">
+                                            <Checkbox
+                                                id="barrotillos-check"
+                                                onCheckedChange={(checked) => handlePanelSupplementChange("Barrotillos (1 vertical + 3 horizontales)", !!checked)}
+                                                checked={panelSupplements["Barrotillos (1 vertical + 3 horizontales)"]?.checked || false}
+                                            />
+                                            <Label htmlFor="barrotillos-check" className="font-normal text-sm">
+                                                Añadir Barrotillos (1 vertical + 3 horizontales)
+                                                <span className="text-xs text-muted-foreground"> (50€/ml)</span>
+                                            </Label>
+                                        </div>
+                                    </div>
                                 </>
                             )}
                         </div>
@@ -386,15 +402,11 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                         <ScrollArea className="h-[40rem] border rounded-md p-4">
                              <div className="space-y-2 pr-2">
                                 {tarifa2025['Paneles Divisorios'].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
-
-                                    // Special logic for barrotillos
-                                    if (supp.Concepto === "Barrotillo a 2 caras" && selectedPanel !== 'Cristal Transparente') {
+                                    // Hide supplements handled in config tab
+                                    if (["Perfil laca RAL o según muestra", "Perfil rechapado Nogal barniz", "Cristal acanalado", "Barrotillo a 2 caras"].includes(supp.Concepto)) {
                                         return null;
                                     }
-                                     if (supp.Concepto === "Barrotillo a 2 caras"){
-                                         supp = {Concepto: "Barrotillos (1 vertical + 3 horizontales)", Valor: "50€/ml"};
-                                     }
+                                    if (supp.Valor.includes('dto') || supp.Valor.includes('consultar')) return null;
 
                                     const needsQuantity = supp.Valor.includes('€ ud');
                                     return (
@@ -450,5 +462,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 };
+
+    
 
     
