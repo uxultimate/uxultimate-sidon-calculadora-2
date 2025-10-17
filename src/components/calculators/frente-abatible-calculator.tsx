@@ -16,7 +16,7 @@ import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '../ui/scroll-area';
-import { Check } from 'lucide-react';
+import { Check, Minus, Plus } from 'lucide-react';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -171,7 +171,11 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                             </div>
                             <div>
                                 <Label>Nº Puertas</Label>
-                                <Input name="doorCount" type="number" value={doorCount} min="1" onChange={(e) => setDoorCount(Number(e.target.value) || 1)} />
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                    <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />
+                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -213,8 +217,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                         )}
                                                     />
                                                      {selectedLacaColor === color.name && (
-                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                            <Check className={cn("h-6 w-6", (color.name === 'Laca Blanca' || color.name === 'Laca RAL') ? 'text-gray-800' : 'text-white')} />
+                                                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                            <Check className="h-6 w-6 text-primary-foreground" />
                                                         </div>
                                                     )}
                                                 </div>
@@ -247,8 +251,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                                             )}
                                                         />
                                                         {selectedMelaminaColor === color.name && (
-                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                                                                <Check className={cn("h-6 w-6", color.name === 'Blanco' ? 'text-gray-800' : 'text-white')} />
+                                                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                                <Check className="h-6 w-6 text-primary-foreground" />
                                                             </div>
                                                         )}
                                                     </div>
@@ -318,3 +322,5 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
+
+    
