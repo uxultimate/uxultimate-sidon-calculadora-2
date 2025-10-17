@@ -9,13 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { Check, Minus, Plus } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { ScrollArea } from '../ui/scroll-area';
+import { Checkbox } from '../ui/checkbox';
 
 
 interface PanelesDivisoriosCalculatorProps {
@@ -69,14 +69,14 @@ const glassOptions = [
 
 export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorProps> = ({ onSave }) => {
     const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 2000, height: 2400 });
-    const [openingType, setOpeningType] = useState('Corredera');
+    const [openingType, setOpeningType] = useState('Abatible');
     const [doorCount, setDoorCount] = useState(1);
     const [selectedPanel, setSelectedPanel] = useState('Meridian');
     const [selectedColor, setSelectedColor] = useState(colorOptions[0].name);
     const [selectedGlass, setSelectedGlass] = useState(glassOptions[0].name);
     const [panelSupplements, setPanelSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     
-    const openingOptions = ['Corredera', 'Fijo', 'Abatible'];
+    const openingOptions = ['Abatible', 'Corredera', 'Fijo'];
 
     const pricingModel = useMemo(() => {
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
@@ -116,7 +116,8 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
 
         let total = basePrice;
         
-        const doorString = `${doorCount} ${doorCount > 1 ? 'Paneles' : 'Panel'}`;
+        const unitLabel = openingType === 'Fijo' ? 'Panel' : 'Puerta';
+        const doorString = `${doorCount} ${unitLabel}${doorCount > 1 ? 's' : ''}`;
         
         const selectedOption = panelOptions.find(opt => opt.name === selectedPanel);
         const displayName = selectedOption?.displayName || selectedPanel;
@@ -228,7 +229,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                     <Input name="width" type="number" value={measurements.width} onChange={handleMeasurementChange} />
                                 </div>
                                  <div>
-                                    <Label>Nº de Paneles</Label>
+                                    <Label>{openingType === 'Fijo' ? 'Nº de Paneles' : 'Nº de Puertas'}</Label>
                                     <div className="flex items-center gap-2">
                                         <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
                                         <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(e.target.value === '' ? 1 : Number(e.target.value))} min="1" />
@@ -303,7 +304,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                                         height={64}
                                                         className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
                                                             isSelected ? 'border-primary' : 'border-transparent',
-                                                            (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
+                                                             (color.name === 'Lacado blanco mate' || color.name === 'Lacado RAL') && 'shadow-lg'
                                                         )}
                                                     />
                                                     {isSelected && (
@@ -414,3 +415,4 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 };
+
