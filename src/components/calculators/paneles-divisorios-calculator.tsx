@@ -245,14 +245,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div className="space-y-2">
                                     <Label>Alto (mm)</Label>
-                                    <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} placeholder="E.g. 2400"/>
+                                    <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} placeholder="E.g. 2400" className="mb-[15px]"/>
                                     <Slider
                                         value={[Number(measurements.height) || 0]}
                                         onValueChange={(value) => handleMeasurementChange('height', value[0])}
                                         max={4000}
                                         min={500}
                                         step={10}
-                                        className="mt-4"
                                     />
                                     {(Number(measurements.height) || 0) > 2700 && (
                                         <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
@@ -263,14 +262,13 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Ancho (mm)</Label>
-                                    <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} placeholder="E.g. 2000" />
+                                    <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} placeholder="E.g. 2000" className="mb-[15px]" />
                                     <Slider
                                         value={[Number(measurements.width) || 0]}
                                         onValueChange={(value) => handleMeasurementChange('width', value[0])}
                                         max={6000}
                                         min={500}
                                         step={10}
-                                        className="mt-4"
                                     />
                                 </div>
                                  <div className='space-y-2'>

@@ -154,14 +154,13 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div className="space-y-2">
                                 <Label>Alto (mm)</Label>
-                                <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} />
+                                <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} className="mb-[15px]" />
                                 <Slider
                                     value={[Number(measurements.height) || 0]}
                                     onValueChange={(value) => handleMeasurementChange('height', value[0])}
                                     max={4000}
                                     min={500}
                                     step={10}
-                                    className="mt-4"
                                 />
                                 {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil(((Number(measurements.height) || 0) - 2400) / 100) * 10}%)</p>
@@ -175,14 +174,13 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                             </div>
                             <div className="space-y-2">
                                 <Label>Ancho (mm)</Label>
-                                <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} />
+                                <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} className="mb-[15px]" />
                                 <Slider
                                     value={[Number(measurements.width) || 0]}
                                     onValueChange={(value) => handleMeasurementChange('width', value[0])}
                                     max={6000}
                                     min={500}
                                     step={10}
-                                    className="mt-4"
                                 />
                             </div>
                             <div className='space-y-2'>
