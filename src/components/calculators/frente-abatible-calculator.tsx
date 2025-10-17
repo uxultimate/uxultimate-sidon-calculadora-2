@@ -152,8 +152,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label>Alto (mm)</Label>
+                            <div>
+                                <Label className='mb-2 block'>Alto (mm)</Label>
                                 <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} className="mb-[15px]" />
                                 <Slider
                                     value={[Number(measurements.height) || 0]}
@@ -172,8 +172,8 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                      <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
                                 )}
                             </div>
-                            <div className="space-y-2">
-                                <Label>Ancho (mm)</Label>
+                            <div>
+                                <Label className='mb-2 block'>Ancho (mm)</Label>
                                 <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} className="mb-[15px]" />
                                 <Slider
                                     value={[Number(measurements.width) || 0]}
@@ -330,3 +330,5 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
+
+    
