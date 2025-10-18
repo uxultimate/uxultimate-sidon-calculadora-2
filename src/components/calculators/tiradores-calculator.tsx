@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { tarifa2025 } from '@/lib/tarifa';
 import type { LineItem } from '@/lib/types';
@@ -15,8 +15,17 @@ import { formatCurrency } from '@/lib/utils';
 import { ScrollArea } from '../ui/scroll-area';
 import { cn } from '@/lib/utils';
 
+interface TiradorInfo {
+    name: string;
+    details: string;
+    quantity: number;
+    price: number;
+    total: number;
+}
+
 interface TiradoresCalculatorProps {
-    onSave: (item: Omit<LineItem, 'id'>) => void;
+    onSave: (item: Omit<LineItem, 'id'> | TiradorInfo) => void;
+    isEmbedded?: boolean;
 }
 
 const tiradorImages: Record<string, string> = {
@@ -62,7 +71,7 @@ const tiradorSmallImages: Record<string, string> = {
 };
 
 
-export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave }) => {
+export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave, isEmbedded = false }) => {
     const tiradorDefault = tarifa2025.Tiradores.find(t => t.Modulo === 'TIR10') || tarifa2025.Tiradores[0];
     const [selectedTirador, setSelectedTirador] = useState(tiradorDefault);
     const [quantity, setQuantity] = useState(1);
@@ -84,6 +93,18 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         return { name: finalName, details: finalDetails };
     }, [selectedTirador, selectedColor]);
 
+    useEffect(() => {
+        if (isEmbedded) {
+            onSave({
+                name,
+                details,
+                quantity,
+                price: selectedTirador.Precio,
+                total,
+            });
+        }
+    }, [name, details, quantity, selectedTirador.Precio, total, isEmbedded, onSave]);
+
     const handleSaveItem = () => {
         onSave({
             name,
@@ -98,12 +119,12 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
         return (tiradorImages[selectedTirador.Modulo] || 'https://placehold.co/600x400.png') + '?v=1.0';
     }, [selectedTirador]);
 
-    return (
+    const mainContent = (
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             <div className="md:col-span-2 flex flex-col space-y-4">
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                     <div className="space-y-2">
-                        <Label>Modelo de Tirador</Label>
+                        <Label className='mb-2 block'>Modelo de Tirador</Label>
                         <ScrollArea className="h-72 w-full rounded-md border">
                              <div className="p-2 pr-4 space-y-1">
                                 {tarifa2025.Tiradores.map((t) => (
@@ -147,7 +168,7 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                             </div>
                         </div>
                         <div className="mt-4 space-y-2">
-                            <Label>Acabado / Color</Label>
+                            <Label className='mb-2 block'>Acabado / Color</Label>
                             <div className="flex flex-wrap gap-x-4 gap-y-2">
                                 {selectedTirador.colors.map((color, index) => (
                                     <ColorSwatch
@@ -184,21 +205,97 @@ export const TiradoresCalculator: React.FC<TiradoresCalculatorProps> = ({ onSave
                         data-ai-hint="handle"
                     />
                 </div>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Total del Concepto</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
-                        <p className="text-sm text-muted-foreground mb-2">{formatCurrency(selectedTirador.Precio)} / ud.</p>
-                        <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
-                        <p className="text-xs text-muted-foreground break-words">{details}</p>
-                    </CardContent>
-                </Card>
-                <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
+                 {!isEmbedded && (
+                    <>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Total del Concepto</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-3xl font-bold mb-2">{formatCurrency(total)}</p>
+                                <p className="text-sm text-muted-foreground mb-2">{formatCurrency(selectedTirador.Precio)} / ud.</p>
+                                <p className="font-semibold text-sm break-words">{name} (x{quantity})</p>
+                                <p className="text-xs text-muted-foreground break-words">{details}</p>
+                            </CardContent>
+                        </Card>
+                        <Button onClick={handleSaveItem} className="w-full">Añadir al Presupuesto</Button>
+                    </>
+                 )}
             </div>
         </div>
     );
+    
+    if (isEmbedded) {
+        return (
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-3 flex flex-col space-y-4">
+                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+                        <div className="space-y-2 sm:col-span-2">
+                            <Label className='mb-2 block'>Modelo de Tirador</Label>
+                            <ScrollArea className="h-72 w-full rounded-md border">
+                                <div className="p-2 pr-4 space-y-1">
+                                    {tarifa2025.Tiradores.map((t) => (
+                                        <button
+                                            key={t.Modulo}
+                                            type="button"
+                                            onClick={() => handleTiradorChange(t.Modulo)}
+                                            className={cn(
+                                                "w-full flex items-center gap-4 p-2 rounded-md text-left transition-colors",
+                                                selectedTirador.Modulo === t.Modulo
+                                                    ? "bg-accent text-accent-foreground"
+                                                    : "hover:bg-accent/50"
+                                            )}
+                                        >
+                                            <Image
+                                                src={tiradorSmallImages[t.Modulo] || 'https://placehold.co/100x100.png'}
+                                                alt={t.Modulo}
+                                                width={64}
+                                                height={64}
+                                                className="rounded-md object-cover bg-white w-16 h-16"
+                                            />
+                                            <div className="flex-grow">
+                                                <p className="font-semibold text-sm">{t.Modulo}</p>
+                                                <p className="text-xs text-muted-foreground">{t.Acabado}</p>
+                                            </div>
+                                            {selectedTirador.Modulo === t.Modulo && (
+                                                <Check className="h-5 w-5 text-primary ml-auto" />
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </ScrollArea>
+                        </div>
+                        <div>
+                            <div className="space-y-2">
+                                <Label className='mb-2 block'>Cantidad</Label>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                    <Input type="number" className="text-center w-20" value={quantity} onChange={e => setQuantity(Number(e.target.value) || 1)} />
+                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                                </div>
+                            </div>
+                             <div className="mt-4 space-y-2">
+                                <Label className='mb-2 block'>Acabado / Color</Label>
+                                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                    {selectedTirador.colors.map((color, index) => (
+                                        <ColorSwatch
+                                            key={`${color}-${index}`}
+                                            color={colorHexMap[color] || "#FFFFFF"}
+                                            name={color}
+                                            isSelected={selectedColor === color}
+                                            onClick={() => setSelectedColor(color)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return mainContent;
 };
 
     

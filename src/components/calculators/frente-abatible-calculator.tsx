@@ -24,6 +24,13 @@ interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
 }
 
+interface TiradorInfo {
+    name: string;
+    details: string;
+    quantity: number;
+    total: number;
+}
+
 export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorProps) {
     const [measurements, setMeasurements] = useState<{width: number | '', height: number | ''}>({ width: 1000, height: 2400 });
     const [doorCount, setDoorCount] = useState(2);
@@ -33,6 +40,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
     const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
     const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
     const [costadoVisto, setCostadoVisto] = useState<{ enabled: boolean, quantity: number }>({ enabled: false, quantity: 1 });
+    const [tiradorInfo, setTiradorInfo] = useState<TiradorInfo | null>(null);
     
     const showLacaColorSwatches = material.startsWith('Laca_');
     const showMelaminaColorSwatches = material === 'Melamina_colores';
@@ -153,9 +161,15 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                 }
             }
         });
+        
+        // Add tirador cost and details
+        if (tiradorInfo) {
+            finalTotal += tiradorInfo.total;
+            detailsArray.push(`${tiradorInfo.quantity}x ${tiradorInfo.name} (${tiradorInfo.details})`);
+        }
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount, costadoVisto]);
+    }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount, costadoVisto, tiradorInfo]);
 
     const handleSaveItem = () => {
         onSave({
@@ -306,7 +320,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                     
                     <div>
                         <h3 className="text-lg font-medium mb-4">Tiradores</h3>
-                        <TiradoresCalculator onSave={onSave} />
+                        <TiradoresCalculator onSave={setTiradorInfo} isEmbedded={true} />
                     </div>
 
                     <Separator className="my-4" />
@@ -399,5 +413,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
+
+    
 
     
