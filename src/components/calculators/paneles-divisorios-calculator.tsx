@@ -251,7 +251,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onValueChange={(value) => handleMeasurementChange('height', value[0])}
                                         max={4000}
                                         min={500}
-                                        step={10}
+                                        step={1}
                                     />
                                     {(Number(measurements.height) || 0) > 2700 && (
                                         <p className="text-xs text-destructive mt-1">Altura superior a 2700mm, consultar.</p>
@@ -268,7 +268,7 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
                                         onValueChange={(value) => handleMeasurementChange('width', value[0])}
                                         max={6000}
                                         min={500}
-                                        step={10}
+                                        step={1}
                                     />
                                 </div>
                                  <div>
@@ -480,5 +480,3 @@ export const PanelesDivisoriosCalculator: React.FC<PanelesDivisoriosCalculatorPr
         </div>
     );
 };
-
-    

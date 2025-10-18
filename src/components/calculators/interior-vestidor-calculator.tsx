@@ -182,7 +182,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     onValueChange={(value) => handleMeasurementChange('height', value[0])}
                                     max={4000}
                                     min={500}
-                                    step={10}
+                                    step={1}
                                 />
                                 {(Number(measurements.height) || 0) > 2400 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+10% cada 10cm)</p>
@@ -202,7 +202,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     onValueChange={(value) => handleMeasurementChange('width', value[0])}
                                     max={6000}
                                     min={500}
-                                    step={10}
+                                    step={1}
                                 />
                             </div>
                             <div>
@@ -213,7 +213,7 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
                                     onValueChange={(value) => handleMeasurementChange('depth', value[0])}
                                     max={1000}
                                     min={300}
-                                    step={10}
+                                    step={1}
                                 />
                                 {(Number(measurements.depth) || 0) > 650 && (
                                     <p className="text-xs text-muted-foreground mt-1">Sup. fondo &gt; 650mm (+10% cada 10cm)</p>
@@ -375,5 +375,3 @@ export const InteriorVestidorCalculator: React.FC<InteriorVestidorCalculatorProp
         </div>
     );
 };
-
-    

@@ -133,7 +133,7 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
                             onValueChange={(value) => setWidth(value[0])}
                             max={1100}
                             min={200}
-                            step={10}
+                            step={1}
                         />
                     </div>
                     <div>
@@ -238,5 +238,3 @@ export const CajonesCalculator: React.FC<CajonesCalculatorProps> = ({ onSave }) 
         </div>
     );
 }
-
-    
