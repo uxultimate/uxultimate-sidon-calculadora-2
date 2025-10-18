@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '../ui/scroll-area';
 import { Check, Minus, Plus } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
+import { TiradoresCalculator } from './tiradores-calculator';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -179,7 +180,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                  <Tabs defaultValue="config" className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="config">Configuración</TabsTrigger>
-                        <TabsTrigger value="suplementos">Suplementos</TabsTrigger>
+                        <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
                     </TabsList>
                     <TabsContent value="config" className="pt-4 space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -336,37 +337,43 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                              </div>
                         </div>
 
-                    </TabsContent>
-                    <TabsContent value="suplementos" className="pt-4">
-                        <ScrollArea className="h-72 border rounded-md p-4">
-                            <div className="space-y-2">
-                                {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
-                                    if (supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar') || supp.Concepto === "Laca RAL o según muestra") return null;
-                                    const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
-                                    return (
-                                        <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
-                                            <div className="flex items-center gap-2">
-                                                <Checkbox
-                                                    id={`supp-abatible-${supp.Concepto}`}
-                                                    onCheckedChange={(checked) => handleSupplementChange(supp.Concepto, !!checked)}
-                                                    checked={supplements[supp.Concepto]?.checked || false}
-                                                />
-                                                <Label htmlFor={`supp-abatible-${supp.Concepto}`} className="font-normal text-sm">{supp.Concepto} <span className="text-xs text-muted-foreground">({supp.Valor})</span></Label>
+                         <div className="border-t pt-4 space-y-2">
+                            <Label>Otros Suplementos</Label>
+                             <ScrollArea className="h-48 border rounded-md p-4">
+                                <div className="space-y-2">
+                                    {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
+                                        if (["Madera tinte según muestra", "Laca RAL o según muestra", "Puerta pico gorrión"].includes(supp.Concepto) || supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
+                                        const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
+                                        return (
+                                            <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
+                                                <div className="flex items-center gap-2">
+                                                    <Checkbox
+                                                        id={`supp-abatible-${supp.Concepto}`}
+                                                        onCheckedChange={(checked) => handleSupplementChange(supp.Concepto, !!checked)}
+                                                        checked={supplements[supp.Concepto]?.checked || false}
+                                                    />
+                                                    <Label htmlFor={`supp-abatible-${supp.Concepto}`} className="font-normal text-sm">{supp.Concepto} <span className="text-xs text-muted-foreground">({supp.Valor})</span></Label>
+                                                </div>
+                                                {needsQuantity && supplements[supp.Concepto]?.checked && (
+                                                    <Input
+                                                        type="number"
+                                                        className="w-20 h-8"
+                                                        min="1"
+                                                        value={supplements[supp.Concepto]?.quantity || doorCount}
+                                                        onChange={(e) => handleSupplementQuantityChange(supp.Concepto, parseInt(e.target.value) || 1)}
+                                                    />
+                                                )}
                                             </div>
-                                            {needsQuantity && supplements[supp.Concepto]?.checked && (
-                                                <Input
-                                                    type="number"
-                                                    className="w-20 h-8"
-                                                    min="1"
-                                                    value={supplements[supp.Concepto]?.quantity || doorCount}
-                                                    onChange={(e) => handleSupplementQuantityChange(supp.Concepto, parseInt(e.target.value) || 1)}
-                                                />
-                                            )}
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </ScrollArea>
+                                        )
+                                    })}
+                                </div>
+                            </ScrollArea>
+                        </div>
+
+
+                    </TabsContent>
+                    <TabsContent value="tiradores" className="pt-4">
+                        <TiradoresCalculator onSave={onSave} />
                     </TabsContent>
                  </Tabs>
             </div>

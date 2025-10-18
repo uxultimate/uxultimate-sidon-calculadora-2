@@ -53,19 +53,15 @@ export function AddLineItemForm({ onAddItem }: AddLineItemFormProps) {
 
                     <TabsContent value="armarios" className="mt-4">
                         <Tabs defaultValue="abatible" className="w-full">
-                            <TabsList className="grid w-full grid-cols-3 h-auto mb-4">
+                            <TabsList className="grid w-full grid-cols-2 h-auto mb-4">
                                 <TabsTrigger value="abatible">Abatible</TabsTrigger>
                                 <TabsTrigger value="corredera">Corredera</TabsTrigger>
-                                <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
                             </TabsList>
                             <TabsContent value="abatible" className="mt-4">
                                 <FrenteAbatibleCalculator onSave={handleSave} />
                             </TabsContent>
                             <TabsContent value="corredera" className="mt-4">
                                 <FrenteCorrederaCalculator onSave={handleSave} />
-                            </TabsContent>
-                            <TabsContent value="tiradores" className="mt-4">
-                                <TiradoresCalculator onSave={handleSave} />
                             </TabsContent>
                         </Tabs>
                     </TabsContent>
