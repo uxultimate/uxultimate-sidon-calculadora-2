@@ -31,6 +31,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
     const [supplements, setSupplements] = useState<Record<string, { checked: boolean, quantity: number }>>({});
     const [selectedLacaColor, setSelectedLacaColor] = useState<string>('Laca Blanca');
     const [selectedMelaminaColor, setSelectedMelaminaColor] = useState<string>('Blanco');
+    const [costadoVisto, setCostadoVisto] = useState<{ enabled: boolean, quantity: number }>({ enabled: false, quantity: 1 });
     
     const showLacaColorSwatches = material.startsWith('Laca_');
     const showMelaminaColorSwatches = material === 'Melamina_colores';
@@ -52,6 +53,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
 
     const { total, name, details } = useMemo(() => {
         const widthInMeters = (Number(measurements.width) || 0) / 1000;
+        const heightInMeters = (Number(measurements.height) || 0) / 1000;
         const heightInMm = Number(measurements.height) || 0;
         let basePricePerMeter = materials[material as keyof typeof materials] || 0;
         let baseTotal = basePricePerMeter * widthInMeters;
@@ -96,6 +98,35 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         if(heightSupplementText) detailsArray.push(heightSupplementText);
         if(discountText) detailsArray.push(discountText);
 
+        // Costado Visto Calculation
+        if (costadoVisto.enabled && costadoVisto.quantity > 0) {
+            let pricePerSqm = 0;
+            let costadoMaterial = "Pieza ";
+
+            if (material.includes('Melamina_blanco_liso')) {
+                 pricePerSqm = 80;
+                 costadoMaterial += "melamina 19mm";
+            } else if (material.includes('Melamina_colores')) {
+                 pricePerSqm = 80;
+                 costadoMaterial += "melamina 19mm (color)";
+            } else if (material.includes('Laca_blanca')) {
+                pricePerSqm = 150;
+                costadoMaterial += "laca blanca 19mm";
+            } else if (material.includes('Madera_roble')) {
+                pricePerSqm = 280;
+                costadoMaterial += "madera roble 19mm";
+            } else if (material.includes('Madera_nogal')) {
+                pricePerSqm = 336;
+                costadoMaterial += "madera nogal 19mm";
+            }
+            
+            if (pricePerSqm > 0) {
+                const areaCostado = heightInMeters * 0.65; // Alto x 65cm
+                const costadoTotal = areaCostado * pricePerSqm * costadoVisto.quantity;
+                finalTotal += costadoTotal;
+                detailsArray.push(`${costadoVisto.quantity}x Costado Visto (${costadoMaterial})`);
+            }
+        }
 
         Object.entries(supplements).forEach(([concepto, { checked, quantity }]) => {
             if (checked) {
@@ -123,7 +154,7 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         });
 
         return { name: finalName, total: finalTotal, details: detailsArray.join(', ') };
-    }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount]);
+    }, [measurements, material, materials, supplements, showLacaColorSwatches, selectedLacaColor, showMelaminaColorSwatches, selectedMelaminaColor, doorCount, costadoVisto]);
 
     const handleSaveItem = () => {
         onSave({
@@ -274,6 +305,37 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
                                 </div>
                             </div>
                         )}
+
+                        <div className="border-t pt-4 space-y-2">
+                             <Label>Costado Visto (Opcional)</Label>
+                             <div className="flex items-center justify-between p-2 rounded-md border">
+                                <div className="flex items-center gap-2">
+                                     <Checkbox
+                                        id="costado-visto-check"
+                                        checked={costadoVisto.enabled}
+                                        onCheckedChange={(checked) => setCostadoVisto(prev => ({...prev, enabled: !!checked}))}
+                                     />
+                                     <Label htmlFor="costado-visto-check" className="font-normal text-sm">
+                                        Añadir costado visto del mismo material que las puertas
+                                        <span className="text-xs text-muted-foreground"> (Alto x 650mm)</span>
+                                     </Label>
+                                </div>
+                                {costadoVisto.enabled && (
+                                    <div className="flex items-center gap-2">
+                                        <Label htmlFor="costado-visto-quantity" className="text-sm">Cant.</Label>
+                                        <Input
+                                            id="costado-visto-quantity"
+                                            type="number"
+                                            className="w-20 h-8 text-center"
+                                            min="1"
+                                            value={costadoVisto.quantity}
+                                            onChange={(e) => setCostadoVisto(prev => ({...prev, quantity: parseInt(e.target.value) || 1}))}
+                                        />
+                                    </div>
+                                )}
+                             </div>
+                        </div>
+
                     </TabsContent>
                     <TabsContent value="suplementos" className="pt-4">
                         <ScrollArea className="h-72 border rounded-md p-4">
