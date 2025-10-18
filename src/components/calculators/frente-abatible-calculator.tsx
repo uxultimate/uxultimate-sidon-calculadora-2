@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { lacaColorOptions, melaminaColorOptions } from './utils';
 import { formatCurrency } from '@/lib/utils';
 import { cn } from '@/lib/utils';
@@ -19,6 +18,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Check, Minus, Plus } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { TiradoresCalculator } from './tiradores-calculator';
+import { Separator } from '../ui/separator';
 
 interface FrenteAbatibleCalculatorProps {
     onSave: (item: Omit<LineItem, 'id'>) => void;
@@ -177,205 +177,205 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-2 space-y-4">
-                 <Tabs defaultValue="config" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="config">Configuración</TabsTrigger>
-                        <TabsTrigger value="tiradores">Tiradores</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="config" className="pt-4 space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <Label className='mb-2 block'>Alto (mm)</Label>
-                                <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} className="mb-[15px]" />
-                                <Slider
-                                    value={[Number(measurements.height) || 0]}
-                                    onValueChange={(value) => handleMeasurementChange('height', value[0])}
-                                    max={4000}
-                                    min={500}
-                                    step={1}
-                                />
-                                {(Number(measurements.height) || 0) > 2400 && (
-                                    <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil(((Number(measurements.height) || 0) - 2400) / 100) * 10}%)</p>
-                                )}
-                                {(Number(measurements.height) || 0) < 1500 && (Number(measurements.height) || 0) >= 800 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
-                                )}
-                                {(Number(measurements.height) || 0) < 800 && (Number(measurements.height) || 0) > 0 && (
-                                     <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
-                                )}
-                            </div>
-                            <div>
-                                <Label className='mb-2 block'>Ancho (mm)</Label>
-                                <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} className="mb-[15px]" />
-                                <Slider
-                                    value={[Number(measurements.width) || 0]}
-                                    onValueChange={(value) => handleMeasurementChange('width', value[0])}
-                                    max={6000}
-                                    min={500}
-                                    step={1}
-                                />
-                            </div>
-                            <div>
-                                <Label className='mb-2 block'>Nº Puertas</Label>
-                                <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                                    <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />
-                                    <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => q + 1)}><Plus className="h-4 w-4" /></Button>
-                                </div>
+                <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <Label className='mb-2 block'>Alto (mm)</Label>
+                            <Input name="height" type="number" value={measurements.height} onChange={(e) => handleMeasurementChange('height', e.target.value)} className="mb-[15px]" />
+                            <Slider
+                                value={[Number(measurements.height) || 0]}
+                                onValueChange={(value) => handleMeasurementChange('height', value[0])}
+                                max={4000}
+                                min={500}
+                                step={1}
+                            />
+                            {(Number(measurements.height) || 0) > 2400 && (
+                                <p className="text-xs text-muted-foreground mt-1">Sup. altura &gt; 2400mm (+{Math.ceil(((Number(measurements.height) || 0) - 2400) / 100) * 10}%)</p>
+                            )}
+                            {(Number(measurements.height) || 0) < 1500 && (Number(measurements.height) || 0) >= 800 && (
+                                 <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 1500mm (-30%)</p>
+                            )}
+                            {(Number(measurements.height) || 0) < 800 && (Number(measurements.height) || 0) > 0 && (
+                                 <p className="text-xs text-muted-foreground mt-1">Dto. altura &lt; 800mm (-50%)</p>
+                            )}
+                        </div>
+                        <div>
+                            <Label className='mb-2 block'>Ancho (mm)</Label>
+                            <Input name="width" type="number" value={measurements.width} onChange={(e) => handleMeasurementChange('width', e.target.value)} className="mb-[15px]" />
+                            <Slider
+                                value={[Number(measurements.width) || 0]}
+                                onValueChange={(value) => handleMeasurementChange('width', value[0])}
+                                max={6000}
+                                min={500}
+                                step={1}
+                            />
+                        </div>
+                        <div>
+                            <Label className='mb-2 block'>Nº Puertas</Label>
+                            <div className="flex items-center gap-2">
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                <Input type="number" className="text-center w-20" value={doorCount} onChange={e => setDoorCount(Number(e.target.value) || 1)} min="1" />
+                                <Button variant="outline" size="icon" className="h-10 w-10" onClick={() => setDoorCount(q => q + 1)}><Plus className="h-4 w-4" /></Button>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Material</Label>
-                            <Select value={material} onValueChange={setMaterial}>
-                                <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
-                                        <SelectGroup key={groupName}>
-                                            <SelectLabel>{groupName}</SelectLabel>
-                                            {groupMaterials.map((key) => {
-                                                const value = materials[key as keyof typeof materials];
-                                                if (!value) return null;
-                                                return (
-                                                    <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value)}/ml)</SelectItem>
-                                                )
-                                            })}
-                                        </SelectGroup>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        {showLacaColorSwatches && (
-                            <div>
-                                <Label className="mb-2 block">Color Laca</Label>
-                                <div className="flex flex-wrap gap-2 pb-4">
-                                    {lacaColorOptions.map((color, index) => (
-                                        <button type="button" key={`${color.name}-${index}`} onClick={() => setSelectedLacaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
-                                            <div className="relative">
-                                                <Image 
-                                                    src={color.imageUrl}
-                                                    alt={color.name}
-                                                    width={64}
-                                                    height={64}
-                                                    className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
-                                                        selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                        (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
-                                                    )}
-                                                />
-                                                 {selectedLacaColor === color.name && (
-                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                        <Check className="h-6 w-6 text-primary-foreground" />
-                                                    </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Material</Label>
+                        <Select value={material} onValueChange={setMaterial}>
+                            <SelectTrigger className="truncate"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
+                                    <SelectGroup key={groupName}>
+                                        <SelectLabel>{groupName}</SelectLabel>
+                                        {groupMaterials.map((key) => {
+                                            const value = materials[key as keyof typeof materials];
+                                            if (!value) return null;
+                                            return (
+                                                <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')} ({formatCurrency(value)}/ml)</SelectItem>
+                                            )
+                                        })}
+                                    </SelectGroup>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    {showLacaColorSwatches && (
+                        <div>
+                            <Label className="mb-2 block">Color Laca</Label>
+                            <div className="flex flex-wrap gap-2 pb-4">
+                                {lacaColorOptions.map((color, index) => (
+                                    <button type="button" key={`${color.name}-${index}`} onClick={() => setSelectedLacaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                        <div className="relative">
+                                            <Image 
+                                                src={color.imageUrl}
+                                                alt={color.name}
+                                                width={64}
+                                                height={64}
+                                                className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all', 
+                                                    selectedLacaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                    (color.name === 'Laca Blanca' || color.name === 'Laca RAL') && 'shadow-lg'
                                                 )}
-                                            </div>
-                                            <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
-                                                {color.name}
-                                            </p>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        {showMelaminaColorSwatches && (
-                            <div className="border-t pt-4">
-                                <Label className="mb-2 block">Color Melamina</Label>
-                                <div className="flex flex-wrap gap-4">
-                                    {melaminaColorOptions.map((color) => (
-                                        <button type="button" key={color.name} onClick={() => setSelectedMelaminaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
-                                            <div className="relative">
-                                                <Image
-                                                    src={color.imageUrl}
-                                                    alt={color.name}
-                                                    width={64}
-                                                    height={64}
-                                                    className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
-                                                        selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
-                                                        color.name === 'Blanco' && 'shadow-lg'
-                                                    )}
-                                                />
-                                                {selectedMelaminaColor === color.name && (
-                                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
-                                                        <Check className="h-6 w-6 text-primary-foreground" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
-                                                {color.name}
-                                            </p>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="border-t pt-4 space-y-2">
-                             <Label>Costado Visto (Opcional)</Label>
-                             <div className="flex items-center justify-between p-2 rounded-md border">
-                                <div className="flex items-center gap-2">
-                                     <Checkbox
-                                        id="costado-visto-check"
-                                        checked={costadoVisto.enabled}
-                                        onCheckedChange={(checked) => setCostadoVisto(prev => ({...prev, enabled: !!checked}))}
-                                     />
-                                     <Label htmlFor="costado-visto-check" className="font-normal text-sm">
-                                        Añadir costado visto del mismo material que las puertas
-                                        <span className="text-xs text-muted-foreground"> (Alto x 650mm)</span>
-                                     </Label>
-                                </div>
-                                {costadoVisto.enabled && (
-                                    <div className="flex items-center gap-2">
-                                        <Label htmlFor="costado-visto-quantity" className="text-sm">Cant.</Label>
-                                        <Input
-                                            id="costado-visto-quantity"
-                                            type="number"
-                                            className="w-20 h-8 text-center"
-                                            min="1"
-                                            value={costadoVisto.quantity}
-                                            onChange={(e) => setCostadoVisto(prev => ({...prev, quantity: parseInt(e.target.value) || 1}))}
-                                        />
-                                    </div>
-                                )}
-                             </div>
-                        </div>
-
-                         <div className="border-t pt-4 space-y-2">
-                            <Label>Otros Suplementos</Label>
-                             <ScrollArea className="h-48 border rounded-md p-4">
-                                <div className="space-y-2">
-                                    {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
-                                        if (["Madera tinte según muestra", "Laca RAL o según muestra", "Puerta pico gorrión"].includes(supp.Concepto) || supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
-                                        const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
-                                        return (
-                                            <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
-                                                <div className="flex items-center gap-2">
-                                                    <Checkbox
-                                                        id={`supp-abatible-${supp.Concepto}`}
-                                                        onCheckedChange={(checked) => handleSupplementChange(supp.Concepto, !!checked)}
-                                                        checked={supplements[supp.Concepto]?.checked || false}
-                                                    />
-                                                    <Label htmlFor={`supp-abatible-${supp.Concepto}`} className="font-normal text-sm">{supp.Concepto} <span className="text-xs text-muted-foreground">({supp.Valor})</span></Label>
+                                            />
+                                             {selectedLacaColor === color.name && (
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                    <Check className="h-6 w-6 text-primary-foreground" />
                                                 </div>
-                                                {needsQuantity && supplements[supp.Concepto]?.checked && (
-                                                    <Input
-                                                        type="number"
-                                                        className="w-20 h-8"
-                                                        min="1"
-                                                        value={supplements[supp.Concepto]?.quantity || doorCount}
-                                                        onChange={(e) => handleSupplementQuantityChange(supp.Concepto, parseInt(e.target.value) || 1)}
-                                                    />
-                                                )}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            </ScrollArea>
+                                            )}
+                                        </div>
+                                        <p className={`text-xs text-center w-full ${selectedLacaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                            {color.name}
+                                        </p>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
+                    )}
+                    {showMelaminaColorSwatches && (
+                        <div className="border-t pt-4">
+                            <Label className="mb-2 block">Color Melamina</Label>
+                            <div className="flex flex-wrap gap-4">
+                                {melaminaColorOptions.map((color) => (
+                                    <button type="button" key={color.name} onClick={() => setSelectedMelaminaColor(color.name)} className="flex flex-col items-center gap-2 w-20 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-1">
+                                        <div className="relative">
+                                            <Image
+                                                src={color.imageUrl}
+                                                alt={color.name}
+                                                width={64}
+                                                height={64}
+                                                className={cn('h-16 w-16 rounded-full object-cover border-2 transition-all',
+                                                    selectedMelaminaColor === color.name ? 'border-primary' : 'border-transparent',
+                                                    color.name === 'Blanco' && 'shadow-lg'
+                                                )}
+                                            />
+                                            {selectedMelaminaColor === color.name && (
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-primary/30">
+                                                    <Check className="h-6 w-6 text-primary-foreground" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <p className={`text-xs text-center w-full ${selectedMelaminaColor === color.name ? 'font-semibold text-primary' : 'text-muted-foreground'}`}>
+                                            {color.name}
+                                        </p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
-
-                    </TabsContent>
-                    <TabsContent value="tiradores" className="pt-4">
+                    <Separator className="my-4" />
+                    
+                    <div>
+                        <h3 className="text-lg font-medium mb-4">Tiradores</h3>
                         <TiradoresCalculator onSave={onSave} />
-                    </TabsContent>
-                 </Tabs>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    <div className="pt-4 space-y-2">
+                         <Label>Costado Visto (Opcional)</Label>
+                         <div className="flex items-center justify-between p-2 rounded-md border">
+                            <div className="flex items-center gap-2">
+                                 <Checkbox
+                                    id="costado-visto-check"
+                                    checked={costadoVisto.enabled}
+                                    onCheckedChange={(checked) => setCostadoVisto(prev => ({...prev, enabled: !!checked}))}
+                                 />
+                                 <Label htmlFor="costado-visto-check" className="font-normal text-sm">
+                                    Añadir costado visto del mismo material que las puertas
+                                    <span className="text-xs text-muted-foreground"> (Alto x 650mm)</span>
+                                 </Label>
+                            </div>
+                            {costadoVisto.enabled && (
+                                <div className="flex items-center gap-2">
+                                    <Label htmlFor="costado-visto-quantity" className="text-sm">Cant.</Label>
+                                    <Input
+                                        id="costado-visto-quantity"
+                                        type="number"
+                                        className="w-20 h-8 text-center"
+                                        min="1"
+                                        value={costadoVisto.quantity}
+                                        onChange={(e) => setCostadoVisto(prev => ({...prev, quantity: parseInt(e.target.value) || 1}))}
+                                    />
+                                </div>
+                            )}
+                         </div>
+                    </div>
+
+                     <div className="pt-4 space-y-2">
+                        <Label>Otros Suplementos</Label>
+                         <ScrollArea className="h-48 border rounded-md p-4">
+                            <div className="space-y-2">
+                                {tarifa2025["Frente Abatible y Plegable"].Suplementos_y_Accesorios.map((supp, index) => {
+                                    if (["Madera tinte según muestra", "Laca RAL o según muestra", "Puerta pico gorrión"].includes(supp.Concepto) || supp.Concepto.startsWith('Alturas') || supp.Valor.includes('dto') || supp.Valor.includes('€ m2') || supp.Valor.includes('m/l') || supp.Valor.includes('consultar')) return null;
+                                    const needsQuantity = supp.Valor.includes('ud') || supp.Valor.includes('cada');
+                                    return (
+                                        <div key={`${supp.Concepto}-${index}`} className="flex items-center justify-between p-2 rounded-md border">
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox
+                                                    id={`supp-abatible-${supp.Concepto}`}
+                                                    onCheckedChange={(checked) => handleSupplementChange(supp.Concepto, !!checked)}
+                                                    checked={supplements[supp.Concepto]?.checked || false}
+                                                />
+                                                <Label htmlFor={`supp-abatible-${supp.Concepto}`} className="font-normal text-sm">{supp.Concepto} <span className="text-xs text-muted-foreground">({supp.Valor})</span></Label>
+                                            </div>
+                                            {needsQuantity && supplements[supp.Concepto]?.checked && (
+                                                <Input
+                                                    type="number"
+                                                    className="w-20 h-8"
+                                                    min="1"
+                                                    value={supplements[supp.Concepto]?.quantity || doorCount}
+                                                    onChange={(e) => handleSupplementQuantityChange(supp.Concepto, parseInt(e.target.value) || 1)}
+                                                />
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
+
+
+                </div>
             </div>
             <div className="md:col-span-1 space-y-4 self-start md:sticky md:top-20">
                 <Image
@@ -399,3 +399,5 @@ export function FrenteAbatibleCalculator({ onSave }: FrenteAbatibleCalculatorPro
         </div>
     );
 }
+
+    
